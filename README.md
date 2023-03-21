@@ -9,7 +9,7 @@ README
 ## Table des matières
 1. [Informations](#Informations)
 2. [Description](#Description)
-3. [Pre-requis](#Pre-requis)
+3. [Pré-requis](#Pré-requis)
 4. [Contenu](#Contenu)
 
 # Informations
@@ -24,7 +24,7 @@ Victor COINDET, responsable de la filière TSI.
 #### **URL du site, de la solution** :
 *https://XXXXXXXX*
 #### **Le projet et ses objectifs** :
-Ce projet a été réalisé dans le cadre du module Projet de Fin d'Etudes de la formation TSI. Nous intégrons le projet INONDATA de l'IGN. L'objectif est de réaliser un prototype visuel permettant l'aide à la gestion de crises liées aux inondation et aux submersions marines.
+Ce projet a été réalisé dans le cadre du module Projet de Fin d'Etudes de la formation TSI. Nous intégrons le projet INONDATA de l'IGN. L'objectif est de réaliser un prototype visuel permettant l'aide à la gestion de crises liées aux inondations et aux submersions marines.
 #### **Langages utilisés** :
 + HTML5, CSS3, XML ;
 + JavaScript ;
@@ -46,19 +46,14 @@ Oui, il est responsive.
 ***
 
 # Description
-The master's students of the program Information System Technologies at France's National School of Geographical Sciences - ENSG, were invited to take part in a software development project. The project consists of developing a 2D/3D GIS using C++, Qt and OpenGL.
+La promo de TSI (Technologies des Systèmes d'Information) de l'École Nationale des Sciences Géographiques (ENSG) ont été invité à participer au Projet de Fin d'Etudes (PFE) par la rencontre d'un commanditaire de projet. Le projet consiste à développer un prototype/une solution comportant une composante 3D en utilisant les différentes architectures, infrastructures et technologies de développement approchées en cours ainsi que la gestion de projet étudiée en cours.
 
-
-MiniGIS is a GIS Desktop application capable of displaying, manipulating, and analyzing the various forms of spatial data. MiniGIS supports Vector and Raster data format. The data represented in the application will come from web feeds, existing databases, or files from local or remote repositories.
-
-La promo de TSI (Technologies des Systèmes d'Information) de l'École Nationale des Sciences Géographiques (ENSG) ont été invités à participer au Projet de Fin d'Etudes par la rencontre d'un commanditaire de projet. Le projet consiste à développer un prototype/une solution comportant une composante 3D en utilisant les différentes architectures, infrastructures et technologies de développement approchés en cours ainsi que la gestion de projet étudiées en cours.
-
-TRIvial s'intègre dans le projet INONDATA de l'IGN. Il s'agit d'un prototype visuel, une preuve de concept sur un modèle déjà calculé. L'objectif est d'apporter une visualisation pour représenter les différents impacts des scénarios d’inondation/crue par rapport aux données TRI. En effet, Les données représentées dans la solution proviennent de Bases de Données retravaillées et recoupées.
+TRIvial s'intègre dans le projet INONDATA de l'IGN. Il s'agit d'un prototype visuel, une preuve de concept sur un modèle déjà calculé. L'objectif est d'apporter une visualisation pour représenter les différents impacts des scénarios d’inondations/crues par rapport aux données TRI. En effet, Les données représentées dans la solution proviennent de Bases de Données retravaillées et recoupées.
 
 # Pré-requis
 + Une connection internet pour l'affichage de la solution ;
 + De l'espace en local pour stocker les données ;
-+ Utilisation d'un moteur de recherche (éviter Microsoft Edge and Internet Explorer).
++ Un moteur de recherche (éviter Microsoft Edge and Internet Explorer).
 ***
 
 # Contenu
