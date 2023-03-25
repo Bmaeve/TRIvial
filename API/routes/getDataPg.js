@@ -14,40 +14,57 @@ const pool = new Pool({
 
 
 
-/* GET home page. */
+/* GET  request */
 router.get('/', async function(req, res, next) {
-  var query = 'select id,prec_plani, prec_alti,origin_bat,hauteur,z_min,z_max,ST_AsGeoJSON(geom)::json as geometry from bati_indiferrencie LIMIT 2000;'
+
+  //SQL request
+  var query = 'select *,ST_AsGeoJSON(geom)::json as geometry from bati_indiferrencie;'
+
+
+  // send and retrieve data
   await pool.query(query,(error,results)=>{
      if (error) {
        throw error
     }
     var features = []
-
+// build the features data lists
     results.rows.forEach(element => {
+      // get properties keys
+      const listKeys = Object.keys(element)
+
+      //empty properties clone
+      const properties = {}
+
+      // clone and copy data source properties
+      listKeys.forEach(el=>{
+        if(el != 'geom' && el != 'geometry'){
+           properties[el] = element[el]
+        }
+      })
+
+      // create the geojson feature
       var feature = {
         "type":"Feature",
-        "properties":{
-          "id":element.id,
-          "prec_plani":element.prec_plani,
-          "prec_alti":element.prec_alti,
-          "origin_bat":element.origin_bat,
-          "hauteur":element.hauteur,
-          "z_min":element.z_min,
-          "z_max":element.z_max
-        },
+        "properties":properties,
         "geometry":{
           "type":element.geometry.type,
           "coordinates":element.geometry.coordinates
         }
       }
 
+
+      // push feature in features list
       features.push(feature)
     });
+
+    // geojson data
       const GeoJson = {
     "type":"FeatureCollection",
     "crs":{ "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::2154" } },
     "features":features
       }
+
+    // api response
      res.status(200).jsonp(GeoJson)
    })
   
