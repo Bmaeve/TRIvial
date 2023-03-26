@@ -6,7 +6,7 @@
   
   <script>
   // @ is an alias to /src
-  import ITowns from '@/components/Home/ITowns.vue'
+  import ITowns from '@/components/Analyse/ITowns.vue'
   
   export default {
     name: 'TRIVialView',

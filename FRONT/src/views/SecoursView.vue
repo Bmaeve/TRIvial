@@ -1,6 +1,6 @@
 <template>
     <div class="secoure">
-        <p>Secoure</p>
+        <p>Mode Secouriste</p>
     </div>
     
   </template>
