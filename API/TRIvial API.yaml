@@ -1,0 +1,233 @@
+openapi: 3.0.3
+info:
+  title: TRIvial API 
+  description: |-
+    server based on TRI data combined with several other databases 
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: repository github
+  url: https://github.com/Bmaeve/TRIvial
+paths:
+  /data/getTables:
+    get:
+      tags:
+        - data
+      summary: Finds every available table
+      operationId: findTables
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: ["BDTopoEnrichie","BDTRI"]
+  /data/{table}:
+    get:
+      tags:
+          - data
+      summary: Find table information
+      description: Returns table name, number of rows and columns 
+      operationId: getTableInfo
+      parameters:
+        - name: table
+          in: path
+          description: name of the table
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Table'      
+        '400':
+          description: Invalid table name supplied
+        '404':
+          description: Table not found
+  /data/{table}/{column}/getMinMax:
+    get:
+      tags:
+          - data
+      summary: Find the minimum and maximum values of the column
+      description: The column has to have a number for type
+      operationId: getColMinMax
+      parameters:
+        - name: table
+          in: path
+          description: name of the table
+          required: true
+          schema:
+            type: string
+        - name: column
+          in: path
+          description: name of the column
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/MinMax'
+        '400':
+          description: Column is not a number
+        '404':
+          description: Table and column not found
+  /data/{table}/{column}/getDistinctValues:
+    get:
+      tags:
+          - data
+      summary: Find the distinct values of the column
+      description: The column has to have a string for type, this should not be not be used to require on ids 
+      operationId: getColDistValues
+      parameters:
+        - name: table
+          in: path
+          description: name of the table
+          required: true
+          schema:
+            type: string
+        - name: column
+          in: path
+          description: name of the column
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/DistinctValues'
+        '400':
+          description: Column is not a string
+        '404':
+          description: Table and column not found
+  /data/{table}/AccessData:
+    post:
+      tags:
+        - data
+      summary: Finds data according to parameters
+      description: |-
+        Returns the requested data, multi parameters are send to the body of the request. 
+        
+        This body is a json (JSON.stringify(data)) of which keys are columns of the table with the following rules :
+          
+          - for numbers : the value is an array with min and max values to select
+          - for strings : the value is an array with every categities to select
+        
+        For example :
+        ```
+          data = {
+            type: ["hopital"] # only features with type "hopital" will be selected in the column "type"
+            hauteur: [0,12] # "hauteur" is a number, it has to be between 0 and 12
+          }
+        ```
+          
+        
+        
+      operationId: postFetchData
+      parameters:
+        - name: table
+          in: path
+          description: name of the table
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Data'
+        '405':
+          description: Invalid input
+components:
+  schemas:
+    Table:
+      type: object
+      properties:
+        name:
+          type: string
+          example: BDTopoEnrichie
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Column'
+    Column:
+      type: object
+      properties:
+        name:
+          type: string
+          example: hauteur
+        type:
+          type: string
+          example: number
+    Data:
+      type: object
+      properties:
+        name:
+          type: string
+          example: batiremarquable
+        type:
+          type: string
+          example: FeatureCollection
+        features:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Feature'
+    Feature:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Feature
+        properties:
+          type: string
+          example: object of features (refere to geojson structure)
+        geometry: 
+          type: string
+          example: object of geometry (refere to geojson structure)
+    DistinctValues:
+      type: array
+      items:
+        type: string
+        example: hopital
+    MinMax:
+      type: object
+      properties:
+        minimum:
+          type: number
+          example: 4.3
+          default: null
+          description: if the column type is a number, get the minimum value. else return null
+        maximum:
+          type: number
+          example: 12.5
+          default: null
+          description: if the column type is a number, get the maximum value. else return null
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
