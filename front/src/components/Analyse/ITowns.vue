@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { FileSource, THREE, proj4, Extent, PlanarView, WMSSource, ColorLayer, ElevationLayer, Style, FeatureGeometryLayer } from "../../node_modules/itowns/dist/itowns";
+import { FileSource, THREE, proj4, Extent, PlanarView, WMSSource, ColorLayer, ElevationLayer, Style, FeatureGeometryLayer } from "../../../node_modules/itowns/dist/itowns";
 
 export default {
   name: 'MyItowns',
