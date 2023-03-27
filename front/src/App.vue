@@ -1,9 +1,9 @@
 <template>
-   <!-- <nav>
+  <!-- <nav>
     <router-link to="/TRIVial">Trivial</router-link> |
   </nav> -->
-  <router-view/>
-</template>
+  <router-view />
+</template> 
 
 <style>
 #app {
