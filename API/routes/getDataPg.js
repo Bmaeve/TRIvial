@@ -1,33 +1,32 @@
 var express = require('express');
 var router = express.Router();
 
-const {Pool} = require('pg')
+const { Pool } = require('pg')
 
 const pool = new Pool({
-  host: 'localhost',
-  port: 5432,
+  host: 'db',
   user: 'postgres',
-  password:'postgres',
-  database:'postgres',
+  password: 'postgresql',
+  database: 'open_data',
 
 })
 
 
 
 /* GET  request */
-router.get('/', async function(req, res, next) {
+router.get('/', async function (req, res, next) {
 
   //SQL request
   var query = 'select *,ST_AsGeoJSON(geom)::json as geometry from bati_indiferrencie;'
 
 
   // send and retrieve data
-  await pool.query(query,(error,results)=>{
-     if (error) {
-       throw error
+  await pool.query(query, (error, results) => {
+    if (error) {
+      throw error
     }
     var features = []
-// build the features data lists
+    // build the features data lists
     results.rows.forEach(element => {
       // get properties keys
       const listKeys = Object.keys(element)
@@ -36,19 +35,19 @@ router.get('/', async function(req, res, next) {
       const properties = {}
 
       // clone and copy data source properties
-      listKeys.forEach(el=>{
-        if(el != 'geom' && el != 'geometry'){
-           properties[el] = element[el]
+      listKeys.forEach(el => {
+        if (el != 'geom' && el != 'geometry') {
+          properties[el] = element[el]
         }
       })
 
       // create the geojson feature
       var feature = {
-        "type":"Feature",
-        "properties":properties,
-        "geometry":{
-          "type":element.geometry.type,
-          "coordinates":element.geometry.coordinates
+        "type": "Feature",
+        "properties": properties,
+        "geometry": {
+          "type": element.geometry.type,
+          "coordinates": element.geometry.coordinates
         }
       }
 
@@ -58,16 +57,16 @@ router.get('/', async function(req, res, next) {
     });
 
     // geojson data
-      const GeoJson = {
-    "type":"FeatureCollection",
-    "crs":{ "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::2154" } },
-    "features":features
-      }
+    const GeoJson = {
+      "type": "FeatureCollection",
+      "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::2154" } },
+      "features": features
+    }
 
     // api response
-     res.status(200).jsonp(GeoJson)
-   })
-  
+    res.status(200).jsonp(GeoJson)
+  })
+
 
 });
 
