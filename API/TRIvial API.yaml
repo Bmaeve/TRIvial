@@ -12,7 +12,7 @@ externalDocs:
   description: repository github
   url: https://github.com/Bmaeve/TRIvial
 paths:
-  /data/getTables:
+  /dbInfo/getTables:
     get:
       tags:
         - data
@@ -28,7 +28,7 @@ paths:
                 items:
                   type: string
                 example: ["BDTopoEnrichie","BDTRI"]
-  /data/{table}:
+  /dbInfo/{table}:
     get:
       tags:
           - data
@@ -53,7 +53,7 @@ paths:
           description: Invalid table name supplied
         '404':
           description: Table not found
-  /data/{table}/{column}/getMinMax:
+  /dbInfo/{table}/{column}/getMinMax:
     get:
       tags:
           - data
@@ -84,7 +84,7 @@ paths:
           description: Column is not a number
         '404':
           description: Table and column not found
-  /data/{table}/{column}/getDistinctValues:
+  /dbInfo/{table}/{column}/getDistinctValues:
     get:
       tags:
           - data
@@ -115,7 +115,7 @@ paths:
           description: Column is not a string
         '404':
           description: Table and column not found
-  /data/{table}/AccessData:
+  /data/{table}/SelectData:
     post:
       tags:
         - data
@@ -231,3 +231,4 @@ components:
           type: string
       xml:
         name: '##default'
+
