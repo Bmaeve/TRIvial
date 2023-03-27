@@ -1,4 +1,4 @@
-# front
+# vue-cli-app
 
 ## Project setup
 ```
