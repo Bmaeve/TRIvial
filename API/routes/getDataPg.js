@@ -4,12 +4,10 @@ var router = express.Router();
 const { Pool } = require('pg')
 
 const pool = new Pool({
-  host: 'localhost',
-  port: 5432,
+  host: 'db',
   user: 'postgres',
-  password: 'postgres',
-  database: 'postgres',
-
+  password: 'postgresql',
+  database: 'open_data'
 })
 
 /* GET  request */
@@ -51,6 +49,7 @@ router.get('/', async function (req, res, next) {
           }
         }
 
+
         // push feature in features list
         features.push(feature)
       });
@@ -66,6 +65,7 @@ router.get('/', async function (req, res, next) {
       res.status(200).jsonp(GeoJson)
     }
   })
+
 });
 
 module.exports = router;
