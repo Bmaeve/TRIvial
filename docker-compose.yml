@@ -23,7 +23,7 @@ services:
       - "8080:8080"
     networks:
       - tcp1
-    command:   npm run serve
+    command: npm run serve
     depends_on:
       - api
   db:
@@ -36,19 +36,19 @@ services:
       POSTGRES_DB: open_data
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-       - ./database:/var/lib/postgresql/data
+      - ./database:/var/lib/postgresql/data
     networks:
-       - tcp1
+      - tcp1
   adminer:
     image: adminer
     restart: always
     ports:
-       - 5433:8080
+      - 5433:8080
     networks:
-       - tcp1    
+      - tcp1
 volumes:
-   API:
-   front:
-   database:
+  API:
+  front:
+  database:
 networks:
-  tcp1:  
+  tcp1:

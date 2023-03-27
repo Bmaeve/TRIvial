@@ -32,7 +32,7 @@ Database: open_data
 
 ```
 Host: localhost
-Port: 5233
+Port: 5432
 Username: postgres
 Password: postgresql
 Database: open_data
