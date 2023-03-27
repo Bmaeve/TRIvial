@@ -23,7 +23,9 @@ services:
       - "8080:8080"
     networks:
       - tcp1
-    command: npm run serve
+    command: >
+      bash -c "npm install -s vue-router && npm run serve"
+
     depends_on:
       - api
   db:
