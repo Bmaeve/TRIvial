@@ -71,7 +71,7 @@ router.get('/:table', async function (req, res, next) {
 
     if (features.length == 0) {
       // check if the table exists
-      res.status(400).send("there is no table called " + table_name);
+      res.status(400).send('relation "' + table_name + '" does not exist');
     } else {
       // api response
       res.status(200).jsonp({
@@ -98,8 +98,6 @@ router.get('/:table/:column/getMinMax', async function (req, res, next) {
         FROM " + table_name + " \
         ";
 
-  console.log(query);
-
   // send and retrieve data
   let promise = pool.query(query);
 
@@ -109,7 +107,7 @@ router.get('/:table/:column/getMinMax', async function (req, res, next) {
 
     if (isNaN(minimum)) {
       // check if the result is a number
-      res.status(400).send(column_name + " has not a number for type");
+      res.status(400).send("column" + column_name + " is not a number type");
     } else {
       // api response
       res.status(200).jsonp({
@@ -119,10 +117,8 @@ router.get('/:table/:column/getMinMax', async function (req, res, next) {
     }
   })
     .catch((err) => {
-      if (err.code == "42P01") {
-        res.status(400).send("there is no table called " + table_name);
-      } else if (err.code == "42703") {
-        res.status(400).send("there is no column called " + column_name);
+      if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
+        res.status(400).send(err.message);
       } else {
         console.log("error in promise : " + err);
         res.status(500).send("Internal error");

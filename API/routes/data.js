@@ -90,8 +90,8 @@ function dataSelection(table_name, body, req, res) {
     res.status(200).jsonp(GeoJson)
   })
     .catch((err) => {
-      if (err.code == "42P01") {
-        res.status(400).send("there is no table called " + table_name);
+      if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
+        res.status(400).send(err.message);
       } else {
         console.log("error in promise : " + err);
         res.status(500).send("Internal error");
