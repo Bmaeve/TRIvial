@@ -1,13 +1,15 @@
 <template>
-  <div id="viewerDiv">
+  <div id="an_itowns_container">
+    <div id="viewerDiv">
 
+    </div>
   </div>
 </template>
 
 <script>
-import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "itowns/dist/itowns";
+import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
 //iTowns Widgets 
-import { Navigation } from "itowns/dist/itowns_widgets";
+import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
 export default {
   name: 'MyItowns',
@@ -31,7 +33,7 @@ export default {
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
-      translate: { y: -40 },
+      translate: { y: 75 },
     });
 
 
@@ -130,11 +132,13 @@ export default {
 </script>
 
 
-<style scoped>
+<style >
+#an_itowns_container {
+  grid-area: auto;
+}
+
 #viewerDiv {
-  margin: auto;
-  height: 800px;
+  height: 100vh;
   width: 100%;
-  padding: 0;
 }
 </style>
