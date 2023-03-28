@@ -14,10 +14,8 @@
             </select>
             <br>
             <div class="d-grid gap-2 col-12 mx-auto">
-                <button class="btn btn-primary" type="button">Importer</button>
+                <button class="btn btn-info" type="button">Importer</button>
             </div>
-
-
 
         </div>
         <br>
@@ -40,9 +38,25 @@
                 </tbody>
             </table>
         </div>
-        <div class="sec_calcul_itin">
 
+        <div class="sec_calcul_itin">
+            <div>
+                <button type="button" class="btn btn-secondary rounded float-start">
+                    <img src="../../assets/start.png" width="35" height="35" />
+                    <span>Start</span>
+                </button>
+                <button type="button" class="btn btn-secondary rounded float-end">
+                    <span>End</span>
+                    <img src="../../assets/end.png" width="35" height="35" />
+                </button>
+
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <br>
+                    <button class="btn btn-info" type="button">Calculer</button>
+                </div>
+            </div>
         </div>
+        <br>
     </div>
 </template>
 
@@ -50,27 +64,29 @@
 import $ from 'jquery'
 
 console.log($)
-const featureInfo = [{
-    "id": 1,
-    "name": "Sentier",
-    "hauteur": 15,
-    "code": "A231"
-}]
 
-const listKeys = Object.keys(featureInfo[0])
+
+const getKeys = (object) => {
+    return Object.keys(object)
+}
+
 export default {
     name: 'sec_Section',
     props: {
-
+        featureInfoData: Array
     },
     data() {
         return {
-            featureInfo: featureInfo,
-            featureKeys: listKeys
+            featureInfo: this.$props.featureInfoData,
+            featureKeys: getKeys(this.$props.featureInfoData[0]),
         }
+    },
+    mounted() {
     }
 
 }
+
+
 
 </script>
 
@@ -88,19 +104,22 @@ export default {
 }
 
 .sec_vue_save {
-    height: 20vh;
+    height: 25vh;
     overflow-y: auto;
 }
 
 .sec_info_enjeux {
-    height: 50vh;
+    height: 44vh;
     overflow-y: auto;
     color: white !important;
     background-color: white;
 }
 
 .sec_calcul_itin {
-    height: 30vh;
+    height: 18vh;
     overflow-y: auto;
+    background-color: white;
+    margin-top: 10px;
+    padding: 10px;
 }
 </style>

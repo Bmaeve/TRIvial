@@ -1,6 +1,10 @@
 <template>
-  <div id="sec_viewerDiv">
-
+  <div id="sec_panel">
+    <SectionInfo :featureInfoData="getFeatureInfos" />
+  </div>
+  <div id="sec_map">
+    <div id="sec_viewerDiv">
+    </div>
   </div>
 </template>
 
@@ -9,11 +13,48 @@ import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, Glo
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
+import SectionInfo from '@/components/Secours/Section.vue'
+import $ from 'jquery'
+import { store } from '../Store.js'
+console.log($)
+store.featureInfo = [{
+  "id": 2,
+  "name": "Sentier",
+  "hauteur": 15,
+  "code": "A231"
+}]
+
 export default {
   name: 'MyItowns',
+  components: {
+    SectionInfo
+  },
+  data() {
+    return {
+      getFeatureInfos: store.featureInfo,
+      store
+    }
+  },
+  methods: {
+    updatedata(data) {
+      this.store.featureInfo = data
+    }
+  },
   mounted() {
     // Retrieve the view container
     const viewerDiv = document.getElementById('sec_viewerDiv');
+
+    $('#sec_viewerDiv').click(() => {
+      const newobject = [{
+        "id": 5,
+        "name": "Sentier",
+        "hauteur": 20,
+        "code": "A231"
+      }]
+
+      this.updatedata(newobject)
+
+    })
 
     // Define the view geographic extent
     proj4.defs(
@@ -98,32 +139,32 @@ export default {
 
     // Api rest solution  
 
-    // fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
+    fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
 
-    //   function setExtrusions(properties) {
-    //     return properties.hauteur;
-    //   }
+      function setExtrusions(properties) {
+        return properties.hauteur;
+      }
 
-    //   let marne = new FeatureGeometryLayer('Marne', {
-    //     // Use a FileSource to load a single file once
-    //     source: new FileSource({
-    //       fetchedData: data,
-    //       crs: 'EPSG:2154',
-    //       format: 'application/json',
-    //     }),
-    //     transparent: true,
-    //     opacity: 0.7,
-    //     style: new Style({
-    //       fill: {
-    //         color: new THREE.Color(0xbbffbb),
-    //         base_altitude: 28,
-    //         extrusion_height: setExtrusions,
-    //       }
-    //     })
+      let marne = new FeatureGeometryLayer('Marne', {
+        // Use a FileSource to load a single file once
+        source: new FileSource({
+          fetchedData: data,
+          crs: 'EPSG:2154',
+          format: 'application/json',
+        }),
+        transparent: true,
+        opacity: 0.7,
+        style: new Style({
+          fill: {
+            color: new THREE.Color(0xbbffbb),
+            base_altitude: 28,
+            extrusion_height: setExtrusions,
+          }
+        })
 
-    //   });
-    //   view.addLayer(marne);
-    // })
+      });
+      view.addLayer(marne);
+    })
 
   }
 }

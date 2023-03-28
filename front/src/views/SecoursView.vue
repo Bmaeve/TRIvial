@@ -1,25 +1,18 @@
 <template>
   <div class="secoure">
-    <div id="sec_panel">
-      <SectionInfo />
-    </div>
-    <div id="sec_map">
-      <ITowns />
-    </div>
-
+    <ITowns />
   </div>
 </template>
   
 <script>
 // @ is an alias to /src
 import ITowns from '@/components/Secours/ITowns.vue'
-import SectionInfo from '@/components/Secours/Section.vue'
+//import SectionInfo from '@/components/Secours/Section.vue'
 
 export default {
   name: 'SecoursView',
   components: {
-    ITowns,
-    SectionInfo
+    ITowns
   }
 }
 
