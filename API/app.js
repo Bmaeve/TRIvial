@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var dataRouter = require('./routes/dbInfo');
+var dbInfoRouter = require('./routes/dbInfo');
+var dataRouter = require('./routes/data');
 var getEnergieRouter = require('./routes/getDataPg');
 
 
@@ -24,7 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 app.use('/', indexRouter);
-app.use('/dbInfo', dataRouter);
+app.use('/dbInfo', dbInfoRouter);
+app.use('/data', dataRouter);
 app.use('/getBatis', getEnergieRouter);
 
 // catch 404 and forward to error handler
