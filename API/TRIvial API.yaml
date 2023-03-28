@@ -115,7 +115,7 @@ paths:
           description: Column is not a string
         '404':
           description: Table and column not found
-  /data/{table}/SelectData:
+  /data/{table}/selectData:
     post:
       tags:
         - data
@@ -123,16 +123,24 @@ paths:
       description: |-
         Returns the requested data, multi parameters are send to the body of the request. 
         
-        This body is a json (JSON.stringify(data)) of which keys are columns of the table with the following rules :
+        This body is a json (JSON.stringify(data)) of which keys are columns of the table with the following attributes :
           
-          - for numbers : the value is an array with min and max values to select
-          - for strings : the value is an array with every categities to select
+          - values : array of values which are selected
+          - min : only for numbers, minimum of the selected values for this column
+          - max : only for numbers, maximum of the selected values for this column
         
         For example :
         ```
           data = {
-            type: ["hopital"] # only features with type "hopital" will be selected in the column "type"
-            hauteur: [0,12] # "hauteur" is a number, it has to be between 0 and 12
+              "hauteur":
+                  { // looking for column "hauteur" between 50 and 100
+                      "min": 50,
+                      "max":100
+                  },
+              "origin_bat":
+                  { // looking for column "origin_bat" having for value Hopital or Autre
+                      "values": ["Hopital", "Autre"]
+                  }
           }
         ```
           

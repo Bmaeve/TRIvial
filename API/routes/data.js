@@ -11,21 +11,43 @@ const pool = new Pool({
 })
 
 /* POST  request */
-router.post('/', function (req, res) {
-  console.log(request.body);      // your JSON
-  response.send(request.body);    // echo the result back
+router.post('/:table/selectData', function (req, res) {
+  let table_name = req.params.table;
+  let body = req.body;
+
+  dataSelection(table_name, body, req, res);
 });
 
 /* GET  request */
-router.get('/:table/selectData', function (req, res, next) {
+router.get('/:table/selectData', function (req, res) {
   let table_name = req.params.table;
+  let body = {};
+
+  dataSelection(table_name, body, req, res);
+});
+
+
+function dataSelection(table_name, body, req, res) {
+
   let features = [];
 
-  //SQL request
+  //SQL query
   var query = " \
         SELECT *,ST_AsGeoJSON(geom)::json as geometry \
-        FROM " + table_name + "; \
+        FROM " + table_name + " \
+        WHERE 1=1 \
         ";
+
+  // adding filters to query according to body
+  Object.keys(body).forEach(column => {
+    if (body[column].min !== undefined) {
+      query += " AND " + column + " > " + body[column].min;
+    } else if (body[column].max !== undefined) {
+      query += " AND " + column + " < " + body[column].max;
+    } else if (body[column].values !== undefined) {
+      query += " AND " + column + " IN ('" + body[column].values.join("', '") + "')";
+    }
+  })
 
   // send and retrieve data
   let promise = pool.query(query);
@@ -33,11 +55,10 @@ router.get('/:table/selectData', function (req, res, next) {
   promise.then((results) => {
     // build the features data lists
     results.rows.forEach(element => {
-      const listKeys = Object.keys(element) // get properties keys
       const properties = {} //empty properties clone
 
       // clone and copy data source properties
-      listKeys.forEach(el => {
+      Object.keys(element).forEach(el => {
         if (el != 'geom' && el != 'geometry') {
           properties[el] = element[el]
         }
@@ -72,6 +93,6 @@ router.get('/:table/selectData', function (req, res, next) {
       console.log("error in promise : " + err);
       res.status(500).send("Internal error");
     })
-});
+}
 
 module.exports = router;
