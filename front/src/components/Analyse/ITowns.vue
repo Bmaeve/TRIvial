@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import { FileSource, THREE, Coordinates, proj4, GlobeView, WMTSSource, ColorLayer, ElevationLayer, Style, FeatureGeometryLayer, } from "../../../node_modules/itowns/dist/itowns";
-//iTowns Widgets
+import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
+//iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
 export default {
@@ -20,27 +20,13 @@ export default {
       'EPSG:2154',
       '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
     );
-    // const viewExtent = new Extent(
-    //   'EPSG:2154',
-    //   644500.0, 659499.99,
-    //   6857500.0, 6867499.99,
-    // );
-
-    // Define the camera initial placement
-    // const placement = {
-    //   coord: viewExtent.center(),
-    //   tilt: 12,
-    //   heading: 40,
-    //   range: 16000,
-    // };
+    //Center the view on Paris
     const placement = {
-      coord: new Coordinates('EPSG:4978'),
-      range: 25e6
+      coord: new Coordinates("EPSG:4326", 2.340, 48.858),
+      range: 20000
     };
     // Create the globe  view
-    const view = new GlobeView(viewerDiv, {
-      placement: placement,
-    });
+    const view = new GlobeView(viewerDiv, placement);
 
     //Adding navigation controls
     new Navigation(view, {
