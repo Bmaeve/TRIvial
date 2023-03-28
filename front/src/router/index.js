@@ -1,12 +1,12 @@
-import { createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import AnalyseView from '../views/AnalyseView.vue'
 import LoginView from '../views/LoginView.vue'
 import SecoursView from '../views/SecoursView.vue'
 
 const routes = [
   {
-    path: '/TRIVial/Analyse',
-    name: 'TRIVial',
+    path: '/TRIvial/Analyse',
+    name: 'TRIvial',
     component: AnalyseView
   },
   {
@@ -15,8 +15,8 @@ const routes = [
     component: LoginView
   },
   {
-    path: '/TRIVial/Secours',
-    name: 'Secoure',
+    path: '/TRIvial/Secours',
+    name: 'Secours',
     component: SecoursView
   },
 ]
