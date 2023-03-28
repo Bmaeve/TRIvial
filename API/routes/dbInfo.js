@@ -69,15 +69,64 @@ router.get('/:table', async function (req, res, next) {
       })
     })
 
-    // api response
-    res.status(200).jsonp({
-      name: table_name,
-      columns: features
-    })
+    if (features.length == 0) {
+      // check if the table exists
+      res.status(400).send("there is no table called " + table_name);
+    } else {
+      // api response
+      res.status(200).jsonp({
+        name: table_name,
+        columns: features
+      })
+    }
   })
     .catch((err) => {
       console.log("error in promise : " + err);
       res.status(500).send("Internal error");
+    })
+});
+
+/* GET  request */
+router.get('/:table/:column/getMinMax', async function (req, res, next) {
+  let table_name = req.params.table;
+  let column_name = req.params.column;
+  let features = [];
+
+  //SQL request
+  var query = " \
+        SELECT MIN(" + column_name + "), MAX(" + column_name + ") \
+        FROM " + table_name + " \
+        ";
+
+  console.log(query);
+
+  // send and retrieve data
+  let promise = pool.query(query);
+
+  promise.then((results) => {
+    let minimum = results.rows[0].min;
+    let maximum = results.rows[0].max;
+
+    if (isNaN(minimum)) {
+      // check if the result is a number
+      res.status(400).send(column_name + " has not a number for type");
+    } else {
+      // api response
+      res.status(200).jsonp({
+        minimum: minimum,
+        maximum: maximum
+      })
+    }
+  })
+    .catch((err) => {
+      if (err.code == "42P01") {
+        res.status(400).send("there is no table called " + table_name);
+      } else if (err.code == "42703") {
+        res.status(400).send("there is no column called " + column_name);
+      } else {
+        console.log("error in promise : " + err);
+        res.status(500).send("Internal error");
+      }
     })
 });
 
