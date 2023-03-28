@@ -9,6 +9,7 @@ import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, Glo
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
+import api2itowns from '../../js/api2itowns'
 export default {
   name: 'MyItowns',
   mounted() {
@@ -60,7 +61,6 @@ export default {
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);
 
-
     // Static Json solution
 
     function setExtrusion(properties) {
@@ -89,41 +89,10 @@ export default {
         }
       })
     });
-
-
     view.addLayer(basic);
 
-
-
-
-    // Api rest solution  
-
-    fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
-
-      function setExtrusions(properties) {
-        return properties.hauteur;
-      }
-
-      let marne = new FeatureGeometryLayer('Marne', {
-        // Use a FileSource to load a single file once
-        source: new FileSource({
-          fetchedData: data,
-          crs: 'EPSG:2154',
-          format: 'application/json',
-        }),
-        transparent: true,
-        opacity: 0.7,
-        style: new Style({
-          fill: {
-            color: new THREE.Color(0xbbffbb),
-            base_altitude: 28,
-            extrusion_height: setExtrusions,
-          }
-        })
-
-      });
-      view.addLayer(marne);
-    })
+    let body = { "hauteur": { "min": 0, "max": 100 }, "origin_bat": { "values": ["Autre"] } }
+    api2itowns.addLayerToView(view, "bati_indiferrencie", body)
 
   }
 }
