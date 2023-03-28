@@ -52,7 +52,9 @@ router.get('/:table', async function (req, res, next) {
         FROM INFORMATION_SCHEMA.COLUMNS \
         WHERE \
           TABLE_SCHEMA = 'public' AND \
-          TABLE_NAME   = '" + table_name + "' \
+          TABLE_NAME   = '" + table_name + "' AND \
+          COLUMN_NAME != 'geom' AND \
+          COLUMN_NAME != 'id' \
         ";
 
   // send and retrieve data

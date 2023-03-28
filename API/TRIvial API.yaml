@@ -33,7 +33,7 @@ paths:
       tags:
           - data
       summary: Find table information
-      description: Returns table name, number of rows and columns 
+      description: Returns table name and columns  information
       operationId: getTableInfo
       parameters:
         - name: table
