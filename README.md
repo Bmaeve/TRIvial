@@ -56,6 +56,11 @@ TRIvial s'intègre dans le projet INONDATA de l'IGN. Il s'agit d'un prototype vi
 + Un moteur de recherche (éviter Microsoft Edge and Internet Explorer).
 ***
 
+# Deploiement
+
+Se référer au [tutoriel docker](https://github.com/Bmaeve/TRIvial/blob/dev/guide_docker.md)
+
+
 # Contenu
 Vous trouverez ci-dessous une liste de tous les fichiers, documents et sous-dossiers de ce répertoire.
 + Ce fichier *README.md* contenant le contenu détaillé de notre répertoire de projet ;
