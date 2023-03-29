@@ -1,0 +1,56 @@
+version: "3"
+services:
+  api:
+    build:
+      context: API
+      dockerfile: Dockerfile
+    volumes:
+      - ./API:/usr/src/app
+    ports:
+      - "3000:3000"
+    networks:
+      - tcp1
+    command: npm start
+    depends_on:
+      - db
+  app:
+    build:
+      context: front
+      dockerfile: Dockerfile
+    volumes:
+      - ./front:/usr/src/app
+    ports:
+      - "8080:8080"
+    networks:
+      - tcp1
+    command: >
+      bash -c "npm install -s vue-router && npm run test"
+
+    depends_on:
+      - api
+  db:
+    image: postgis/postgis
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgresql
+      POSTGRES_DB: open_data
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./database-test:/var/lib/postgresql/data
+    networks:
+      - tcp1
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 5433:8080
+    networks:
+      - tcp1
+volumes:
+  API:
+  front:
+  database:
+networks:
+  tcp1:
