@@ -13,25 +13,30 @@
                             id="rangeScenario">
                         <span>{{ rangeValue }}</span>
                     </li>
-                    <li><i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
-                        <div class="form-check" v-for="enjeu in enjeux" :key="enjeu.id" data-bs-toggle="collapse"
-                            :data-bs-target="enjeu.target_collapse">
+                    <li>
+                        <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
+                        <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
+                            data-bs-toggle="collapse" :data-bs-target="enjeu.target_collapse">
                             <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id">
                             <label class="form-check-label" :for="enjeu.id">
                                 {{ enjeu.text }}
                             </label>
-                            <div class="collapse" :id="enjeu.id_collapse" data-bs-parent="#menu">
-                                <div class="form-check" v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.id">
-                                    <input class="form-check-input" type="checkbox" :value="typeEnjeu.value"
-                                        :id="typeEnjeu.id">
-                                    <label class="form-check-label" :for="typeEnjeu.id">
-                                        {{ typeEnjeu.text }}
-                                    </label>
-                                </div>
+
+                            <div class="form-check collapse" :id="enjeu.id_collapse" v-for="typeEnjeu in types_enjeux"
+                                :key="typeEnjeu.id">
+                                <input class="form-check-input" type="checkbox" :value="typeEnjeu.value"
+                                    :id="enjeu.id_collapse" v-on:change="preventCollapse">
+                                <label class="form-check-label" :for="typeEnjeu.id">
+                                    {{ typeEnjeu.text }}
+                                </label>
                             </div>
                         </div>
+                    </li>
+                    <li>
+                        <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Informations</span>
+                        <div id="an_infos">
 
-
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -41,17 +46,21 @@
 
 <script>
 
+import $ from '../../../node_modules/jquery';
+
+console.log($);
 
 export default {
     name: "AnSelection",
     data() {
         return {
+            value: null,
             rangeValue: "Fort",
             enjeux: [
-                { text: "Enjeu 1", value: 1, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1" },
-                { text: "Enjeu 2", value: 2, id: "check2", target_collapse: "#collapse2", id_collapse: "collapse2" },
-                { text: "Enjeu 3", value: 3, id: "check3", target_collapse: "#collapse3", id_collapse: "collapse3" },
-                { text: "Enjeu 4", value: 4, id: "check4", target_collapse: "#collapse4", id_collapse: "collapse4" },
+                { text: "Enjeu 1", value: 1, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1", id_parent: "parent1" },
+                { text: "Enjeu 2", value: 2, id: "check2", target_collapse: "#collapse2", id_collapse: "collapse2", id_parent: "parent2" },
+                { text: "Enjeu 3", value: 3, id: "check3", target_collapse: "#collapse3", id_collapse: "collapse3", id_parent: "parent3" },
+                { text: "Enjeu 4", value: 4, id: "check4", target_collapse: "#collapse4", id_collapse: "collapse4", id_parent: "parent4" },
             ],
             types_enjeux: [
                 { text: "Type 1", value: 1, id: "type1" },
@@ -59,6 +68,9 @@ export default {
                 { text: "Type 3", value: 3, id: "type3" },
             ]
         }
+    },
+    computed: {
+
     },
     methods: {
         rangeChange() {
@@ -72,6 +84,14 @@ export default {
             else if (range.value == 3) {
                 this.rangeValue = "Fort";
             }
+        },
+        preventCollapse(e) {
+            e.preventDefault();
+            let parents = document.querySelectorAll("#" + e.target.id);
+
+            parents.forEach(parent => {
+                parent.classList.add('show');
+            });
         }
     }
 }

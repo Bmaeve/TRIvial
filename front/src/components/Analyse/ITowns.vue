@@ -10,7 +10,7 @@
 import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
-import '../../css/widgets.css';
+import '../../css/widgets.css'
 export default {
   name: 'MyItowns',
   mounted() {
