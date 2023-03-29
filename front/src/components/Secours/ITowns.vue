@@ -1,6 +1,6 @@
 <template>
   <div id="sec_panel">
-    <SectionInfo :featureInfoData="getFeatureInfos" />
+    <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
   </div>
   <div id="sec_map">
     <div id="sec_viewerDiv">
@@ -16,7 +16,9 @@ import '../../css/widgets.css';
 import SectionInfo from '@/components/Secours/Section.vue'
 import $ from 'jquery'
 import { store } from '../Store.js'
-console.log($)
+
+import { ref } from 'vue';
+
 store.featureInfo = [{
   "id": 2,
   "name": "Sentier",
@@ -31,28 +33,40 @@ export default {
   },
   data() {
     return {
-      getFeatureInfos: store.featureInfo,
-      store
+      store,
+      componentKey: ref(0)
     }
   },
   methods: {
-    updatedata(data) {
+    changefeatureInfo(data) {
       this.store.featureInfo = data
+    },
+    forceRerender() {
+      this.componentKey += 1;
+    }
+  },
+  computed: {
+    featureInfo() {
+      return this.store.featureInfo
     }
   },
   mounted() {
     // Retrieve the view container
     const viewerDiv = document.getElementById('sec_viewerDiv');
 
+
     $('#sec_viewerDiv').click(() => {
-      const newobject = [{
-        "id": 5,
-        "name": "Sentier",
-        "hauteur": 20,
-        "code": "A231"
+      const newfeature = [{
+        "id": this.store.featureInfo[0].id += 1,
+        "titre": "Avenue",
+        "taille": 20,
+        "RN": "A231",
+        "Nombre": 4543,
+        "enabled": true
       }]
 
-      this.updatedata(newobject)
+      this.changefeatureInfo(newfeature)
+      this.forceRerender()
 
     })
 
@@ -139,7 +153,7 @@ export default {
 
     // Api rest solution  
 
-    /*fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
+    fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
 
       function setExtrusions(properties) {
         return properties.hauteur;
@@ -164,7 +178,7 @@ export default {
 
       });
       view.addLayer(marne);
-    })*/
+    })
 
   }
 }

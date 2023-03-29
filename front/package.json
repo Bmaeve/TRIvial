@@ -16,7 +16,8 @@
     "run": "^1.4.0",
     "serve": "^14.2.0",
     "vue": "^3.2.13",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

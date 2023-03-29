@@ -25,10 +25,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template v-for="(properties, key) in featureKeys" :key='key'>
+                    <template v-for="(properties, key) in getfeatureKeys" :key='key'>
                         <tr>
                             <th>{{ properties }}</th>
-                            <td>{{ featureInfo[0][properties] }}</td>
+                            <td>{{ getfeatureinfo[0][properties] }}</td>
                         </tr>
 
                     </template>
@@ -55,7 +55,7 @@
         </div>
         <br>
         <div class="sec_secour_logo">
-            <img src="../../assets/logo.png" width="70" height="70" />
+            <img src="../../assets/logo.png" width="60" height="60" />
         </div>
     </div>
 </template>
@@ -103,6 +103,14 @@ export default {
             ]
         }
     },
+    computed: {
+        getfeatureinfo() {
+            return this.featureInfo
+        },
+        getfeatureKeys() {
+            return this.featureKeys
+        }
+    },
     mounted() {
 
     }
@@ -127,19 +135,19 @@ export default {
 }
 
 .sec_vue_save {
-    height: 20vh;
+    height: 25vh;
     overflow-y: auto;
 }
 
 .sec_info_enjeux {
-    height: 40vh;
+    height: 35vh;
     overflow-y: auto;
     color: white !important;
     background-color: white;
 }
 
 .sec_calcul_itin {
-    height: 18vh;
+    height: 16vh;
     overflow-y: auto;
     background-color: white;
     margin-top: 10px;
