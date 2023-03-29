@@ -6,7 +6,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3 
+      - name: npm install API
+        working-directory: ./API
+        run: npm install
+      - name: npm install front
+        working-directory: ./front
+        run: npm install
       - uses: isbang/compose-action@v1.4.1
+        working-directory: ./
         with:
           compose-file: "docker-compose-test.yml"
           up-flags: "--exit-code-from api"
