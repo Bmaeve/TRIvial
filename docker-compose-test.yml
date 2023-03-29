@@ -10,24 +10,23 @@ services:
       - "3000:3000"
     networks:
       - tcp1
-    command: npm start
+    command: npm test
     depends_on:
       - db
-  app:
-    build:
-      context: front
-      dockerfile: Dockerfile
-    volumes:
-      - ./front:/usr/src/app
-    ports:
-      - "8080:8080"
-    networks:
-      - tcp1
-    command: >
-      bash -c "npm install -s vue-router && npm run test"
-
-    depends_on:
-      - api
+  # app:
+  #   build:
+  #     context: front
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./front:/usr/src/app
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - tcp1
+  #   command: >
+  #     bash -c "npm install -s vue-router && npm run test"
+  #   depends_on:
+  #     - api
   db:
     image: postgis/postgis
     restart: always
