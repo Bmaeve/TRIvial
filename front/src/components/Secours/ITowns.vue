@@ -139,7 +139,7 @@ export default {
 
     // Api rest solution  
 
-    fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
+    /*fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
 
       function setExtrusions(properties) {
         return properties.hauteur;
@@ -164,7 +164,7 @@ export default {
 
       });
       view.addLayer(marne);
-    })
+    })*/
 
   }
 }

@@ -7,10 +7,7 @@
         <div class="sec_vue_save">
             <span>Importer une vue enregistrée</span>
             <select class="form-select" size="3" aria-label="size 3 select example">
-                <option selected>Plan 1</option>
-                <option value="1">Plan 2</option>
-                <option value="2">Plan 3</option>
-                <option value="3">Plan 4</option>
+                <option v-for="item in plans" :value="item.id" :key="item.id">{{ item.title }}</option>
             </select>
             <br>
             <div class="d-grid gap-2 col-12 mx-auto">
@@ -82,9 +79,32 @@ export default {
         return {
             featureInfo: this.$props.featureInfoData,
             featureKeys: getKeys(this.$props.featureInfoData[0]),
+            plans: [{
+                "id": 1,
+                "title": "Plan 1",
+                "Script": {
+                    "sql": "select * from A"
+                }
+            },
+            {
+                "id": 2,
+                "title": "Plan 2",
+                "Script": {
+                    "sql": "select * from A"
+                }
+            },
+            {
+                "id": 3,
+                "title": "Plan 3",
+                "Script": {
+                    "sql": "select * from A"
+                }
+            }
+            ]
         }
     },
     mounted() {
+
     }
 
 }
