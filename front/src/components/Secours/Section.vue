@@ -57,6 +57,9 @@
             </div>
         </div>
         <br>
+        <div class="sec_secour_logo">
+            <img src="../../assets/logo.png" width="70" height="70" />
+        </div>
     </div>
 </template>
 
@@ -104,12 +107,12 @@ export default {
 }
 
 .sec_vue_save {
-    height: 25vh;
+    height: 20vh;
     overflow-y: auto;
 }
 
 .sec_info_enjeux {
-    height: 44vh;
+    height: 40vh;
     overflow-y: auto;
     color: white !important;
     background-color: white;
@@ -121,5 +124,9 @@ export default {
     background-color: white;
     margin-top: 10px;
     padding: 10px;
+}
+
+.sec_secour_logo {
+    text-align: center;
 }
 </style>
