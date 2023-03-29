@@ -15,30 +15,47 @@
                     </li>
                     <li>
                         <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
-                        <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
-                            data-bs-toggle="collapse" :data-bs-target="enjeu.target_collapse">
-                            <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id">
-                            <label class="form-check-label" :for="enjeu.id">
-                                {{ enjeu.text }}
-                            </label>
-
-                            <div class="form-check collapse" :id="enjeu.id_collapse" v-for="typeEnjeu in types_enjeux"
-                                :key="typeEnjeu.id">
-                                <input class="form-check-input" type="checkbox" :value="typeEnjeu.value"
-                                    :id="enjeu.id_collapse" v-on:change="preventCollapse">
-                                <label class="form-check-label" :for="typeEnjeu.id">
-                                    {{ typeEnjeu.text }}
+                        <div class="form" data-bs-spy="scroll">
+                            <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
+                                data-bs-toggle="collapse" :data-bs-target="enjeu.target_collapse">
+                                <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id">
+                                <label class="form-check-label" :for="enjeu.id">
+                                    {{ enjeu.text }}
                                 </label>
+
+                                <div class="form-check collapse" :id="enjeu.id_collapse" v-for="typeEnjeu in types_enjeux"
+                                    :key="typeEnjeu.id">
+                                    <input class="form-check-input" type="checkbox" :value="typeEnjeu.value"
+                                        :id="enjeu.id_collapse" v-on:change="preventCollapse">
+                                    <label class="form-check-label" :for="typeEnjeu.id">
+                                        {{ typeEnjeu.text }}
+                                    </label>
+                                </div>
                             </div>
+                            <button class="btn btn-success" type="submit">Valider</button>
                         </div>
                     </li>
                     <li>
                         <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Informations</span>
                         <div id="an_infos">
-
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Propriété</th>
+                                        <th scope="col">Valeur</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Nature</td>
+                                        <td>Bâtiment industriel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </li>
                 </ul>
+
             </div>
         </div>
     </div>
@@ -66,7 +83,10 @@ export default {
                 { text: "Type 1", value: 1, id: "type1" },
                 { text: "Type 2", value: 2, id: "type2" },
                 { text: "Type 3", value: 3, id: "type3" },
-            ]
+            ],
+            infos_json: {
+
+            }
         }
     },
     computed: {
@@ -99,6 +119,10 @@ export default {
 
 <style>
 #an_selection {
-    grid-area: auto;
+    grid-area: "b";
+}
+
+.table {
+    color: white;
 }
 </style>
