@@ -6,19 +6,19 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3 
-      - name: npm install API
-        working-directory: ./API
-        run: npm install
-      - name: npm install front
-        working-directory: ./front
-        run: npm install
+      # - name: npm install API
+      #   working-directory: ./API
+      #   run: npm install
+      # - name: npm install front
+      #   working-directory: ./front
+      #   run: npm install
       - uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "docker-compose-test.yml"
           #up-flags: "--exit-code-from api"
           #compose-file: "docker-compose -f docker-compose-test.yml up --exit-code-from api"
-      - name: docker container test
-        run: docker container ls
+      - name: docker container logs
+        run: docker logs trivial_db_1
       - name: API test
         working-directory: ./API
         run: npm run test
