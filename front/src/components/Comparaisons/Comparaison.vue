@@ -49,7 +49,13 @@ export default {
         /*new itowns.Navigation(view, {
             position: 'bottom-left',
             translate: { y: 75 },
+        });
+        new itowns.Navigation(planarView, {
+            position: 'bottom-right',
+            translate: { y: 75 },
         });*/
+
+
         var promises = [];
         //var menuGlobe = new GuiTools('menuDiv', view);
         var overGlobe = true;
@@ -132,6 +138,7 @@ export default {
                                 itowns.CameraUtils
                                     .transformCameraToLookAtTarget(
                                         planarView, planarCamera, params);
+
                             } else {
                                 params = itowns.CameraUtils
                                     .getTransformCameraLookingAtTarget(
@@ -151,10 +158,7 @@ export default {
                     }).catch(console.error);
                 });
 
-        /*new itowns.Navigation(view, {
-                    position: 'bottom-left',
-                    translate: { y: 75 },
-                });*/
+
         var json2 = require('./Ortho.json')
         var wmsImageryLayer = new itowns.ColorLayer(json2.id, json2);
         planarView.addLayer(wmsImageryLayer);
@@ -200,6 +204,29 @@ export default {
             });
             planarView.addLayer(marne);
         })
+
+
+        const batsource2 = new itowns.FileSource({
+            url: "http://localhost:3000/",
+            crs: 'EPSG:2154',
+            format: 'application/json',
+        });
+
+        let basic2 = new itowns.FeatureGeometryLayer('basic', {
+            // Use a FileSource to load a single file once
+            source: batsource2,
+            transparent: true,
+            opacity: 0.7,
+            //zoom: { min: 10 },
+            style: new itowns.Style({
+                fill: {
+                    color: setColor,
+                    base_altitude: 28,
+                    extrusion_height: setExtrusion,
+                }
+            })
+        });
+        planarView.addLayer(basic2);
     }
 }
 
