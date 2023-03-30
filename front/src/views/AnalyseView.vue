@@ -30,10 +30,9 @@ export default {
 #Analyse {
   display: grid;
   grid-template-columns: 25% 1fr;
-  grid-template-rows: 1.7fr 0.3fr;
+  grid-template-rows: 1fr 15%;
   gap: 0px 0px;
-  grid-template-areas:
-    "b c"
-    "a a";
+  width: 100vw;
+  height: 100vh;
 }
 </style>

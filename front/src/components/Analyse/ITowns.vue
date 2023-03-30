@@ -134,7 +134,7 @@ export default {
 
 <style >
 #an_itowns_container {
-  grid-area: "c";
+  grid-row: 0/1;
 }
 
 #viewerDiv {

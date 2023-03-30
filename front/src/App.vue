@@ -28,7 +28,7 @@ nav a.router-link-exact-active {
 } */
 
 body {
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 canvas {

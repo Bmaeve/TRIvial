@@ -1,6 +1,7 @@
 <template>
-    <div id="an_stats" class="row">
-        <button type="button" class="btn btn-outline-success btn-lg">Enregister la vue</button>
+    <div id="an_stats" class="row bg-dark">
+
+        <button id="an_bouton" type="button" class="btn btn-outline-success  ">Enregister la vue</button>
     </div>
 </template>
 
@@ -13,6 +14,14 @@ export default {
 
 <style>
 #an_stats {
-    grid-area: "a";
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    grid-column: 1/3;
+    grid-row: 2/3;
+
+}
+
+#an_bouton {
+    grid-column: 4/5;
 }
 </style>

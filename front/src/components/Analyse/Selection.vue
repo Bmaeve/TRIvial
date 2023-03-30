@@ -119,7 +119,7 @@ export default {
 
 <style>
 #an_selection {
-    grid-area: "b";
+    grid-row: 0/1;
 }
 
 .table {
