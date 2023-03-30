@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AnalyseView from '../views/AnalyseView.vue'
 import LoginView from '../views/LoginView.vue'
 import SecoursView from '../views/SecoursView.vue'
+import ComparaisonView from '../views/ComparaisonView.vue'
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/TRIvial/Secours',
     name: 'Secours',
     component: SecoursView
+  },
+  {
+    path: '/TRIvial/Comparaisons',
+    name: 'Comparaisons',
+    component: ComparaisonView
   },
 ]
 
