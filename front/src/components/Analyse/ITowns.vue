@@ -1,6 +1,8 @@
 <template>
-  <div id="viewerDiv">
+  <div id="an_itowns_container">
+    <div id="viewerDiv">
 
+    </div>
   </div>
 </template>
 
@@ -28,12 +30,12 @@ export default {
     };
     // Create the globe  view
     const view = new GlobeView(viewerDiv, placement);
-
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
-      translate: { y: -40 },
+      translate: { y: 0 },
     });
+
 
 
     // Define the source of the ortho-images
@@ -46,7 +48,7 @@ export default {
     });
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
-    view.addLayer(layerOrtho);
+    view.addLayer(layerOrtho)
 
     // Define the source of the dem data
     var elevationSource = new WMTSSource({
@@ -99,11 +101,15 @@ export default {
 </script>
 
 
-<style scoped>
+<style >
+#an_itowns_container {
+  width: 75%;
+  height: 90vh;
+  overflow: auto;
+}
+
 #viewerDiv {
-  margin: auto;
-  height: 800px;
+  height: 100vh;
   width: 100%;
-  padding: 0;
 }
 </style>
