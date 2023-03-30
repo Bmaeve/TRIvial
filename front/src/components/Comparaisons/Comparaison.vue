@@ -19,28 +19,24 @@ export default {
     mounted() {
 
         // Define crs projection that we will use (taken from https://epsg.io/3946, Proj4js section)
-        /*itowns.proj4.defs(
-            'EPSG:2154',
-            '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
-        );*/
 
-        itowns.proj4.defs('EPSG:3946', '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
-        /*itowns.proj4.defs(
+
+        // itowns.proj4.defs('EPSG:3946', '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
+
+        /*const placement = {
+            coord: new itowns.Coordinates("EPSG:3946", 1651269, 5519421),
+            range: 20000
+        };*/
+        // Define the view geographic extent
+        itowns.proj4.defs(
             'EPSG:2154',
             '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
-        );*/
-        var placement = {
-            coord: new itowns.Coordinates('EPSG:4326', 4.838, 45.756),
-            range: 1000,
-        }
-        var extent = new itowns.Extent(
-            'EPSG:3946',
-            1837816.94334, 1847692.32501,
-            5170036.4587, 5178412.82698);
-        /*var extent = new itowns.Extent(
-            'EPSG:2154',
-            -378305.81, 6005281.2,
-            1320649.57, 7235612.72);*/
+        );
+        //Center the view on Paris
+        const placement = {
+            coord: new itowns.Coordinates("EPSG:4326", 2.340, 48.858),
+            range: 20000
+        };
 
         // `viewerDiv` will contain iTowns' rendering area (`<canvas>`)
         var viewerDiv = document.getElementById('com_Itowns1');
@@ -48,12 +44,12 @@ export default {
 
         // Instanciate iTowns GlobeView*
         var view = new itowns.GlobeView(viewerDiv, placement);
-        var planarView = new itowns.PlanarView(planarDiv, extent, { placement });
+        var planarView = new itowns.GlobeView(planarDiv, placement);
 
-        /* new itowns.Navigation(planarView, {
-             position: 'bottom-right',
-             translate: { y: 75 },
-         });*/
+        /*new itowns.Navigation(view, {
+            position: 'bottom-left',
+            translate: { y: 75 },
+        });*/
         var promises = [];
         //var menuGlobe = new GuiTools('menuDiv', view);
         var overGlobe = true;
@@ -65,6 +61,7 @@ export default {
         planarDiv.addEventListener('mousemove', function _() {
             overGlobe = false;
         }, false);
+
         var json = require('./Ortho.json')
 
         json.source = new itowns.WMTSSource(json.source);
@@ -72,7 +69,50 @@ export default {
         var layer = new itowns.ColorLayer(json.id, json);
         view.addLayer(layer);
 
+        // Define the source of the dem data
+        var elevationSource = new itowns.WMTSSource({
+            url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
+            crs: 'EPSG:4326',
+            name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
+            tileMatrixSet: 'WGS84G',
+            format: 'image/x-bil;bits=32',
+            zoom: { min: 3, max: 10 }
+        });
+        // Create the dem ElevationLayer and add it to the view
+        const layerDEM = new itowns.ElevationLayer('DEM', { source: elevationSource });
 
+        view.addLayer(layerDEM)
+        // Static Json solution
+
+        function setExtrusion(properties) {
+            return properties.HAUTEUR;
+        }
+        function setColor() {
+            return new itowns.THREE.Color(0xff0000);
+        }
+        const batsource = new itowns.FileSource({
+            url: "http://localhost:3000/",
+            crs: 'EPSG:2154',
+            format: 'application/json',
+        });
+
+        let basic = new itowns.FeatureGeometryLayer('basic', {
+            // Use a FileSource to load a single file once
+            source: batsource,
+            transparent: true,
+            opacity: 0.7,
+            //zoom: { min: 10 },
+            style: new itowns.Style({
+                fill: {
+                    color: setColor,
+                    base_altitude: 28,
+                    extrusion_height: setExtrusion,
+                }
+            })
+        });
+
+
+        view.addLayer(basic);
         // Listen for globe full initialisation event
         view
             .addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED,
@@ -83,8 +123,6 @@ export default {
                         var planarCamera = planarView.camera.camera3D;
                         var globeCamera = view.camera.camera3D;
                         var params;
-                        // menuGlobe.addImageryLayersGUI(view.getLayers(function filterColor(l) { return l.isColorLayer; }));
-                        //menuGlobe.addElevationLayersGUI(view.getLayers(function filterElevation(l) { return l.isElevationLayer; }));
 
                         function sync() {
                             if (overGlobe) {
@@ -113,32 +151,55 @@ export default {
                     }).catch(console.error);
                 });
 
-        var wmsImagerySource = new itowns.WMSSource({
-            extent: extent,
-            name: 'Ortho2009_vue_ensemble_16cm_CC46',
-            url: 'https://download.data.grandlyon.com/wms/grandlyon',
-            version: '1.3.0',
-            crs: 'EPSG:3946',
-            format: 'image/jpeg',
-        });
-        /*var orthoSource = new itowns.WMTSSource({
-            extent: extent,
-            url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-            crs: 'EPSG:3857',
-            name: 'ORTHOIMAGERY.ORTHOPHOTOS',
-            tileMatrixSet: 'PM',
-            format: 'image/jpeg',
-        });*/
-        var wmsImageryLayer = new itowns.ColorLayer('wms_imagery', {
-            updateStrategy: {
-                type: itowns.STRATEGY_DICHOTOMY,
-                options: {},
-            },
-            source: wmsImagerySource,
-        });
+        /*new itowns.Navigation(view, {
+                    position: 'bottom-left',
+                    translate: { y: 75 },
+                });*/
+        var json2 = require('./Ortho.json')
+        var wmsImageryLayer = new itowns.ColorLayer(json2.id, json2);
         planarView.addLayer(wmsImageryLayer);
-        //var d = new debug.Debug(view, menuGlobe.gui);
-        //debug.createTileDebugUI(menuGlobe.gui, view, view.tileLayer, d);
+
+        // Define the source of the dem data
+        var elevationSource2 = new itowns.WMTSSource({
+            url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
+            crs: 'EPSG:4326',
+            name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
+            tileMatrixSet: 'WGS84G',
+            format: 'image/x-bil;bits=32',
+            zoom: { min: 3, max: 10 }
+        });
+        // Create the dem ElevationLayer and add it to the view
+        const layerDEM2 = new itowns.ElevationLayer('DEM', { source: elevationSource2 });
+
+        planarView.addLayer(layerDEM2)
+        // Api rest solution  
+
+        fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
+
+            function setExtrusions(properties) {
+                return properties.hauteur;
+            }
+
+            let marne = new itowns.FeatureGeometryLayer('Marne', {
+                // Use a FileSource to load a single file once
+                source: new itowns.FileSource({
+                    fetchedData: data,
+                    crs: 'EPSG:2154',
+                    format: 'application/json',
+                }),
+                transparent: true,
+                opacity: 0.7,
+                style: new itowns.Style({
+                    fill: {
+                        color: new itowns.THREE.Color(0xbbffbb),
+                        base_altitude: 28,
+                        extrusion_height: setExtrusions,
+                    }
+                })
+
+            });
+            planarView.addLayer(marne);
+        })
     }
 }
 
