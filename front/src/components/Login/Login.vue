@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="d-grid gap-2 col-12 mx-auto">
-                <button class="btn btn-primary" type="button">Importer</button>
+                <button class="btn btn-secondary" type="button">Se sonnecter</button>
             </div>
         </div>
         <img src="../../assets/logo.png" width="150" height="150" class="sec_login_logo" />
