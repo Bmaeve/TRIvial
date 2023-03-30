@@ -15,7 +15,7 @@
                     </li>
                     <li>
                         <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
-                        <div class="form" data-bs-spy="scroll">
+                        <div class="form">
                             <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
                                 data-bs-toggle="collapse" :data-bs-target="enjeu.target_collapse">
                                 <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id">
