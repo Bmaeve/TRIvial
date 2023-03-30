@@ -13,7 +13,6 @@ jobs:
         working-directory: ./front
         run: npm install
       - uses: isbang/compose-action@v1.4.1
-        working-directory: ./
         with:
           compose-file: "docker-compose-test.yml"
           up-flags: "--exit-code-from api"
