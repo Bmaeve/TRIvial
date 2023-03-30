@@ -7,15 +7,16 @@
                     <span class="fs-5 d-none d-sm-inline">TRIvial - Analyse</span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <li class="nav-item">
-                        <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Scénario</span>
-                        <input v-on:change="rangeChange" type="range" class="form-range" min="1" max="3" step="1"
-                            id="rangeScenario">
-                        <span>{{ rangeValue }}</span>
-                    </li>
-                    <li>
-                        <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
-                        <div class="form">
+                    <div id="form">
+                        <li class="nav-item">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Scénario</span>
+                            <input v-on:change="rangeChange" type="range" class="form-range" min="1" max="3" step="1"
+                                id="rangeScenario">
+                            <span>{{ rangeValue }}</span>
+                        </li>
+                        <li>
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
+
                             <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
                                 :data-bs-target="enjeu.target_collapse">
                                 <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id"
@@ -34,8 +35,9 @@
                                 </div>
                             </div>
                             <button class="btn btn-success" type="submit">Valider</button>
-                        </div>
-                    </li>
+
+                        </li>
+                    </div>
                     <li>
                         <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Informations</span>
                         <div id="an_infos">
@@ -127,7 +129,8 @@ export default {
 }
 
 #col_select {
-    height: 95vh;
+    height: 90vh;
+    overflow: scroll;
 }
 
 .table {

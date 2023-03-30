@@ -33,7 +33,7 @@ export default {
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
-      translate: { y: 45 },
+      translate: { y: 0 },
     });
 
 
@@ -135,7 +135,7 @@ export default {
 <style >
 #an_itowns_container {
   width: 75%;
-  height: 95vh;
+  height: 90vh;
   overflow: auto;
 }
 
