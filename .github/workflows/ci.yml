@@ -6,6 +6,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3 
+      - name: npm install API
+        working-directory: ./API
+        run: npm install
       - uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "docker-compose-test.yml"
