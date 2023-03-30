@@ -92,7 +92,7 @@ Pour l'instant une seule donnée peut être récupérée à partir de PostGIS,
 il faut donc l'importer dans la base de donnée avec QGis et avec pour nom "bati_indiferrencie"
 
 
->* la couche géographique à importer est un fichier shp de la [BDTopo de Paris](https://ensgeu-my.sharepoint.com/:w:/r/personal/baptiste_riviere_ensg_eu/_layouts/15/Doc.aspx?sourcedoc=%7B87E7474B-5D48-4A9F-8879-69F217935497%7D&file=Rapport%20SI%20ext%C3%A9.docx&action=default&mobileredirect=true). Il se trouve dans le chemin suivant :
+>* la couche géographique à importer est un fichier shp de la [BDTopo de Paris](https://wxs.ign.fr/859x8t863h6a09o9o6fy4v60/telechargement/inspire/BDTOPO-TOUSTHEMES-2008-09-14$BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14/file/BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14.7z). Il se trouve dans le chemin suivant :
 >   * BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14
 >   * BDTOPO
 >   * 1_DONNEES_LIVRAISON_2019-05-00233
