@@ -12,8 +12,10 @@ jobs:
       - uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "docker-compose-test.yml"
-      # - name: import shapefiles
-      #   run: shp2pgsql -s 2154 ./database/data-test/bati_indiferrencie.shp | PGPASSWORD=postgresql psql -h localhost -d open_data -U postgres
+      - name: import postgis
+        run: sudo apt-get install postgis
+      - name: import shapefiles
+        run: shp2pgsql -s 2154 ./database/data-test/bati_indiferrencie.shp | PGPASSWORD=postgresql psql -h localhost -d open_data -U postgres
       - name: API test
         working-directory: ./API
         run: npm run test
