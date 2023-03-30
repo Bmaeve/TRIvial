@@ -1,6 +1,6 @@
 <template>
     <div id="an_selection">
-        <div class="col-auto  bg-dark">
+        <div class="col-auto  bg-dark" id="col_select">
 
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -123,7 +123,11 @@ export default {
 
 <style>
 #an_selection {
-    grid-row: 0/1;
+    width: 25%;
+}
+
+#col_select {
+    height: 95vh;
 }
 
 .table {

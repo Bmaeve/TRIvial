@@ -1,11 +1,14 @@
 <template>
   <div id="Analyse">
+    <div id="first_row">
+      <Selection />
 
-    <Selection />
+      <ITowns />
+    </div>
+    <div id="second_row">
+      <Stats />
+    </div>
 
-    <ITowns />
-
-    <Stats />
   </div>
 </template>
   
@@ -28,11 +31,25 @@ export default {
 
 <style>
 #Analyse {
-  display: grid;
-  grid-template-columns: 25% 1fr;
-  grid-template-rows: 1fr 15%;
-  gap: 0px 0px;
+  display: flex;
+  flex-direction: column;
+  /* grid-template-rows: 1fr 20%;
+  gap: 0px 0px;*/
   width: 100vw;
   height: 100vh;
+}
+
+#first_row {
+  width: 100%;
+  display: flex;
+  /* grid-row: 1/2;
+  display: grid;
+  grid-template-columns: 25% 1fr;
+  overflow-y: hidden; */
+}
+
+#second_row {
+  width: 100%;
+  /* grid-row: 2/3; */
 }
 </style>

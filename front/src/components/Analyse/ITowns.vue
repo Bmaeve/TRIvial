@@ -33,7 +33,7 @@ export default {
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
-      translate: { y: 75 },
+      translate: { y: 45 },
     });
 
 
@@ -134,7 +134,9 @@ export default {
 
 <style >
 #an_itowns_container {
-  grid-row: 0/1;
+  width: 75%;
+  height: 95vh;
+  overflow: auto;
 }
 
 #viewerDiv {

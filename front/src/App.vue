@@ -28,6 +28,7 @@ nav a.router-link-exact-active {
 } */
 
 body {
+  height: 100vh;
   overflow-x: hidden;
 }
 

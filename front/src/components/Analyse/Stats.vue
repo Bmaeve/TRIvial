@@ -1,5 +1,5 @@
 <template>
-    <div id="an_stats" class="row bg-dark">
+    <div id="an_stats" class=" bg-dark">
 
         <button id="an_bouton" type="button" class="btn btn-outline-success  ">Enregister la vue</button>
     </div>
@@ -14,10 +14,13 @@ export default {
 
 <style>
 #an_stats {
+    position: absolute;
+    bottom: 0;
+    height: 5vh;
+    z-index: 1000000;
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 25%);
-    grid-column: 1/3;
-    grid-row: 2/3;
 
 }
 
