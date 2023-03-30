@@ -29,7 +29,7 @@ describe('API', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     assert.equal(res.body.name, test_table_name);
-                    assert.equal(res.body.columns.length, 6);
+                    assert.equal(res.body.columns.length, 7);
                     done();
                 });
         });
