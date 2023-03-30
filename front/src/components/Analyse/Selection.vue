@@ -17,16 +17,17 @@
                         <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
                         <div class="form">
                             <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
-                                data-bs-toggle="collapse" :data-bs-target="enjeu.target_collapse">
-                                <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id">
+                                :data-bs-target="enjeu.target_collapse">
+                                <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id"
+                                    v-on:change="Collapse">
                                 <label class="form-check-label" :for="enjeu.id">
                                     {{ enjeu.text }}
                                 </label>
 
-                                <div class="form-check collapse" :id="enjeu.id_collapse" v-for="typeEnjeu in types_enjeux"
+                                <div class="form-check collapse " :id="enjeu.id_collapse" v-for="typeEnjeu in types_enjeux"
                                     :key="typeEnjeu.id">
                                     <input class="form-check-input" type="checkbox" :value="typeEnjeu.value"
-                                        :id="enjeu.id_collapse" v-on:change="preventCollapse">
+                                        :id="enjeu.id_collapse">
                                     <label class="form-check-label" :for="typeEnjeu.id">
                                         {{ typeEnjeu.text }}
                                     </label>
@@ -105,13 +106,16 @@ export default {
                 this.rangeValue = "Fort";
             }
         },
-        preventCollapse(e) {
+        Collapse(e) {
             e.preventDefault();
-            let parents = document.querySelectorAll("#" + e.target.id);
+            console.log(e.target.value);
+            let children = document.querySelectorAll("#collapse" + e.target.value);
+            console.log(children);
 
-            parents.forEach(parent => {
-                parent.classList.add('show');
+            children.forEach(child => {
+                child.classList.toggle('show');
             });
+
         }
     }
 }
