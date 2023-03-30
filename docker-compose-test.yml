@@ -3,6 +3,7 @@ services:
   db:
     image: postgis/postgis
     restart: always
+    command: shp2pgsql -s 2154 /var/lib/postgresql/data/data-test/bati_indiferrencie.shp | PGPASSWORD=postgresql psql -h localhost -d open_data -U postgres
     ports:
       - 5432:5432
     environment:
