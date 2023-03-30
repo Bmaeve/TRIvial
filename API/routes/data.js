@@ -1,14 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const { Pool } = require('pg')
-
-const pool = new Pool({
-  host: 'db',
-  user: 'postgres',
-  password: 'postgresql',
-  database: 'open_data'
-})
+let pool = require('./poolPg');
 
 /* POST  request */
 router.post('/:table/selectData', function (req, res) {
