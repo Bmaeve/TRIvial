@@ -15,7 +15,7 @@ paths:
   /dbInfo/getTables:
     get:
       tags:
-        - data
+        - dbInfo
       summary: Finds every available table
       operationId: findTables
       responses:
@@ -31,7 +31,7 @@ paths:
   /dbInfo/{table}:
     get:
       tags:
-          - data
+          - dbInfo
       summary: Find table information
       description: Returns table name and columns  information
       operationId: getTableInfo
@@ -50,13 +50,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Table'      
         '400':
-          description: Invalid table name supplied
-        '404':
-          description: Table not found
+          description: Table not exists
   /dbInfo/{table}/{column}/getMinMax:
     get:
       tags:
-          - data
+          - dbInfo
       summary: Find the minimum and maximum values of the column
       description: The column has to have a number for type
       operationId: getColMinMax
@@ -81,13 +79,11 @@ paths:
               schema:
                  $ref: '#/components/schemas/MinMax'
         '400':
-          description: Column is not a number
-        '404':
-          description: Table and column not found
+          description: Column is not a number or Table/column not found
   /dbInfo/{table}/{column}/getDistinctValues:
     get:
       tags:
-          - data
+          - dbInfo
       summary: Find the distinct values of the column
       description: The column has to have a string for type, this should not be not be used to require on ids 
       operationId: getColDistValues
@@ -112,10 +108,30 @@ paths:
               schema:
                  $ref: '#/components/schemas/DistinctValues'
         '400':
-          description: Column is not a string
-        '404':
-          description: Table and column not found
-  /data/{table}/SelectData:
+          description: Table or column not found
+  /data/{table}/selectData:
+    get:
+      tags:
+          - data
+      summary: Return every row of the table
+      description: every row is returned with its geometry and features in geojson format
+      operationId: getFetchData
+      parameters:
+        - name: table
+          in: path
+          description: name of the table
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Data'
+        '400':
+          description: table/column not exists
     post:
       tags:
         - data
@@ -123,21 +139,26 @@ paths:
       description: |-
         Returns the requested data, multi parameters are send to the body of the request. 
         
-        This body is a json (JSON.stringify(data)) of which keys are columns of the table with the following rules :
+        This body is a json (JSON.stringify(data)) of which keys are columns of the table with the following attributes :
           
-          - for numbers : the value is an array with min and max values to select
-          - for strings : the value is an array with every categities to select
+          - values : array of values which are selected
+          - min : only for numbers, minimum of the selected values for this column
+          - max : only for numbers, maximum of the selected values for this column
         
         For example :
         ```
           data = {
-            type: ["hopital"] # only features with type "hopital" will be selected in the column "type"
-            hauteur: [0,12] # "hauteur" is a number, it has to be between 0 and 12
+              "hauteur":
+                  { // looking for column "hauteur" between 50 and 100
+                      "min": 50,
+                      "max":100
+                  },
+              "origin_bat":
+                  { // looking for column "origin_bat" having for value Hopital or Autre
+                      "values": ["Hopital", "Autre"]
+                  }
           }
         ```
-          
-        
-        
       operationId: postFetchData
       parameters:
         - name: table
@@ -153,10 +174,41 @@ paths:
             application/json:
               schema:
                  $ref: '#/components/schemas/Data'
+        '400':
+          description: table/column not exists
         '405':
           description: Invalid input
+  /enjeux/getTypesEnjeu: 
+    get:
+      tags:
+          - enjeux
+      summary: returns types of enjeu
+      description: return the different types of available "enjeux" with their key and full name
+      operationId: enjeuTypes
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enjeu'
 components:
   schemas:
+    Enjeu:
+        type: object
+        properties:
+          key:
+            type: string
+            example: TRANS
+          fullName:
+            type: string
+            example: "Transorts"
+          columns:
+            type: array
+            items: 
+              $ref: '#/components/schemas/Column'
     Table:
       type: object
       properties:

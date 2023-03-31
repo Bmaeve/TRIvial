@@ -1,6 +1,8 @@
 <template>
-  <div id="viewerDiv">
+  <div id="an_itowns_container">
+    <div id="viewerDiv">
 
+    </div>
   </div>
 </template>
 
@@ -9,6 +11,7 @@ import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, Glo
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
+import api2itowns from '../../js/api2itowns'
 export default {
   name: 'MyItowns',
   mounted() {
@@ -27,12 +30,12 @@ export default {
     };
     // Create the globe  view
     const view = new GlobeView(viewerDiv, placement);
-
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
-      translate: { y: -40 },
+      translate: { y: 0 },
     });
+
 
 
     // Define the source of the ortho-images
@@ -45,7 +48,7 @@ export default {
     });
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
-    view.addLayer(layerOrtho);
+    view.addLayer(layerOrtho)
 
     // Define the source of the dem data
     var elevationSource = new WMTSSource({
@@ -59,7 +62,6 @@ export default {
     // Create the dem ElevationLayer and add it to the view
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);
-
 
     // Static Json solution
 
@@ -89,52 +91,25 @@ export default {
         }
       })
     });
-
-
     view.addLayer(basic);
 
-
-
-
-    // Api rest solution  
-
-    fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
-
-      function setExtrusions(properties) {
-        return properties.hauteur;
-      }
-
-      let marne = new FeatureGeometryLayer('Marne', {
-        // Use a FileSource to load a single file once
-        source: new FileSource({
-          fetchedData: data,
-          crs: 'EPSG:2154',
-          format: 'application/json',
-        }),
-        transparent: true,
-        opacity: 0.7,
-        style: new Style({
-          fill: {
-            color: new THREE.Color(0xbbffbb),
-            base_altitude: 28,
-            extrusion_height: setExtrusions,
-          }
-        })
-
-      });
-      view.addLayer(marne);
-    })
+    let body = { "hauteur": { "min": 0, "max": 100 }, "origin_bat": { "values": ["Autre"] } }
+    api2itowns.addLayerToView(view, "bati_indiferrencie", body)
 
   }
 }
 </script>
 
 
-<style scoped>
+<style >
+#an_itowns_container {
+  width: 75%;
+  height: 90vh;
+  overflow: auto;
+}
+
 #viewerDiv {
-  margin: auto;
-  height: 800px;
+  height: 100vh;
   width: 100%;
-  padding: 0;
 }
 </style>

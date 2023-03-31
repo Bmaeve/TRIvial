@@ -7,10 +7,15 @@ README
 *Ce fichier readme est un fichier contenant des informations sur les autres fichiers du même répertoire et sur le contenu du rendu de mon projet.*
 
 ## Table des matières
-1. [Informations](#Informations)
-2. [Description](#Description)
-3. [Pré-requis](#Pré-requis)
-4. [Contenu](#Contenu)
+1. [Deploiement](#Deploiement)
+2. [Informations](#Informations)
+3. [Description](#Description)
+4. [Pré-requis](#Pré-requis)
+5. [Contenu](#Contenu)
+
+# Deploiement
+
+Se référer au [tutoriel docker](https://github.com/Bmaeve/TRIvial/blob/dev/guide_docker.md)
 
 # Informations
 #### **Auteur·rice·s** :
@@ -55,6 +60,7 @@ TRIvial s'intègre dans le projet INONDATA de l'IGN. Il s'agit d'un prototype vi
 + De l'espace en local pour stocker les données ;
 + Un moteur de recherche (éviter Microsoft Edge and Internet Explorer).
 ***
+
 
 # Contenu
 Vous trouverez ci-dessous une liste de tous les fichiers, documents et sous-dossiers de ce répertoire.

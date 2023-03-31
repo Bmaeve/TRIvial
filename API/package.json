@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "test": "env HOST=localhost mocha"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -11,12 +12,18 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "mocha": "^10.2.0",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.22",
     "npm": "^9.6.2",
     "pg": "^8.10.0",
     "pug": "2.0.0-beta11",
     "start": "^5.1.0",
+    "swagger-ui-express": "^4.6.2",
     "undefined": "^0.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0"
   }
 }
