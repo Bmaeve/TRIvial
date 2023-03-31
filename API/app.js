@@ -4,11 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var dbInfoRouter = require('./routes/dbInfo');
-var dataRouter = require('./routes/data');
-var getEnergieRouter = require('./routes/getDataPg');
-
 const swaggerUi = require('swagger-ui-express')
 const swaggerDocument = require('./TRIvialAPI.json')
 
@@ -26,11 +21,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-app.use('/', indexRouter);
+app.use('/', require('./routes/index'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use('/dbInfo', dbInfoRouter);
-app.use('/data', dataRouter);
-app.use('/getBatis', getEnergieRouter);
+app.use('/dbInfo', require('./routes/dbInfo'));
+app.use('/data', require('./routes/data'));
+app.use('/enjeux', require('./routes/enjeux'));
+app.use('/getBatis', require('./routes/getDataPg'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
