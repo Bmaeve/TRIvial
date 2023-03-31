@@ -67,7 +67,7 @@ export default {
         planarDiv.addEventListener('mousemove', function _() {
             overGlobe = false;
         }, false);
-
+        // Ortho wmts config
         var json = require('./Ortho.json')
 
         json.source = new itowns.WMTSSource(json.source);

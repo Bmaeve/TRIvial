@@ -3,6 +3,7 @@
     <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
   </div>
   <div id="sec_map">
+
     <div id="sec_viewerDiv">
     </div>
   </div>
@@ -13,18 +14,16 @@ import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, Glo
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
+//import section component
 import SectionInfo from '@/components/Secours/Section.vue'
+//import jquery module
 import $ from 'jquery'
+//import the store
 import { store } from '../Store.js'
-
+//import the vuejs Dom reference function
 import { ref } from 'vue';
 
-store.featureInfo = [{
-  "id": 2,
-  "name": "Sentier",
-  "hauteur": 15,
-  "code": "A231"
-}]
+//Init feature info list
 
 export default {
   name: 'MyItowns',
@@ -57,7 +56,7 @@ export default {
 
     $('#sec_viewerDiv').click(() => {
       const newfeature = [{
-        "id": this.store.featureInfo[0].id += 1,
+        "id": this.store.featureInfo[0].id ? this.store.featureInfo[0].id += 1 : 1,
         "titre": "Avenue",
         "taille": 20,
         "RN": "A231",
@@ -191,5 +190,12 @@ export default {
   height: 100vh;
   width: 100%;
   padding: 0;
+}
+
+#sec_loading_gif {
+  position: absolute;
+  left: 52%;
+  top: 40vh;
+  z-index: 100;
 }
 </style>
