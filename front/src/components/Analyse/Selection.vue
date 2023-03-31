@@ -28,7 +28,7 @@
                                 <div class="form-check collapse " :id="enjeu.id_collapse" v-for="typeEnjeu in types_enjeux"
                                     :key="typeEnjeu.id">
                                     <input class="form-check-input" type="checkbox" :value="typeEnjeu.value"
-                                        :id="enjeu.id_collapse">
+                                        :id="typeEnjeu.id">
                                     <label class="form-check-label" :for="typeEnjeu.id">
                                         {{ typeEnjeu.text }}
                                     </label>
@@ -72,7 +72,6 @@ console.log($);
 
 export default {
     name: "AnSelection",
-    enjeux: [],
     data() {
         return {
             value: null,
@@ -93,14 +92,13 @@ export default {
             }
         }
     },
-    /*
     async created() {
 
         let new_enjeux = [];
         let res = await fetch("http://localhost:3000/enjeux/getTypesEnjeux");
-        let data = await res.json();
+        let data_fetched = await res.json();
 
-        data.forEach((enjeu) => {
+        data_fetched.forEach((enjeu) => {
             new_enjeux.push({
                 text: enjeu.fullName,
                 value: enjeu.key,
@@ -111,12 +109,12 @@ export default {
             });
         })
 
-        let { data: enjeux } = new_enjeux;
-        this.enjeux = enjeux;
+        this.enjeux = new_enjeux;
+        console.log(this.enjeux);
+
 
     }
     ,
-    */
     computed: {
 
     },
@@ -136,7 +134,7 @@ export default {
         Collapse(e) {
             e.preventDefault();
             console.log(e.target.value);
-            let children = document.querySelectorAll("#collapse" + e.target.value);
+            let children = document.querySelectorAll("#collapse_" + e.target.value);
             console.log(children);
 
             children.forEach(child => {
