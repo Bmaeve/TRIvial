@@ -10,7 +10,8 @@ services:
       - "3000:3000"
     networks:
       - tcp1
-    command: npm start
+    command: >
+      bash -c "npm install -s cors && npm start"
     depends_on:
       - db
   app:
