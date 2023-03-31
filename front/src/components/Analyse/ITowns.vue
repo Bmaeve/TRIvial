@@ -93,8 +93,9 @@ export default {
     });
     view.addLayer(basic);
 
-    let body = { "hauteur": { "min": 0, "max": 100 }, "origin_bat": { "values": ["Autre"] } }
-    api2itowns.addLayerToView(view, "bati_indiferrencie", body)
+    //let body = { "libelle_re": { "values": ["Ile-de-France"] } }
+    let body = {};
+    api2itowns.addLayerToView(view, "patrim", body);
 
   }
 }
