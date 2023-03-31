@@ -72,6 +72,7 @@ console.log($);
 
 export default {
     name: "AnSelection",
+    enjeux: [],
     data() {
         return {
             value: null,
@@ -92,6 +93,30 @@ export default {
             }
         }
     },
+    /*
+    async created() {
+
+        let new_enjeux = [];
+        let res = await fetch("http://localhost:3000/enjeux/getTypesEnjeux");
+        let data = await res.json();
+
+        data.forEach((enjeu) => {
+            new_enjeux.push({
+                text: enjeu.fullName,
+                value: enjeu.key,
+                id: "check_" + enjeu.key,
+                target_collapse: "#collapse_" + enjeu.key,
+                id_collapse: "collapse_" + enjeu.key,
+                id_parent: "parent_" + enjeu.key
+            });
+        })
+
+        let { data: enjeux } = new_enjeux;
+        this.enjeux = enjeux;
+
+    }
+    ,
+    */
     computed: {
 
     },
