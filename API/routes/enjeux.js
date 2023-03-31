@@ -21,9 +21,17 @@ router.get('/getTypesEnjeux', function (req, res, next) {
         WHERE TABLE_NAME = '" + enjeu + "' \
         ";
 
-    ignoredColumns.forEach((columnToignore) => {
-      query += "AND COLUMN_NAME != '" + columnToignore + "'";
-    })
+    for (let i = 0; i < enjeux[enjeu].columnsToKeep.length; i++) {
+      let columnToKeep = enjeux[enjeu].columnsToKeep[i];
+      if (i == 0) {
+        query += " AND ( COLUMN_NAME = '" + columnToKeep + "'";
+      }
+      if (i == enjeux[enjeu].columnsToKeep.length - 1) {
+        query += "OR COLUMN_NAME = '" + columnToKeep + "');"
+      } else {
+        query += "OR COLUMN_NAME = '" + columnToKeep + "'";
+      }
+    }
 
     // send and retrieve data
     let enjeuPromise = pool.query(query)
