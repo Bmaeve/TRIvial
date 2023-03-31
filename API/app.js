@@ -9,6 +9,8 @@ var dbInfoRouter = require('./routes/dbInfo');
 var dataRouter = require('./routes/data');
 var getEnergieRouter = require('./routes/getDataPg');
 
+const swaggerUi = require('swagger-ui-express')
+const swaggerDocument = require('./TRIvialAPI.json')
 
 var app = express();
 var cors = require("cors");
@@ -25,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 app.use('/', indexRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/dbInfo', dbInfoRouter);
 app.use('/data', dataRouter);
 app.use('/getBatis', getEnergieRouter);

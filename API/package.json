@@ -19,6 +19,7 @@
     "pg": "^8.10.0",
     "pug": "2.0.0-beta11",
     "start": "^5.1.0",
+    "swagger-ui-express": "^4.6.2",
     "undefined": "^0.1.0"
   },
   "devDependencies": {
