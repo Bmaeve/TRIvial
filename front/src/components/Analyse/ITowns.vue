@@ -1,5 +1,18 @@
 <template>
-  <div id="an_panel">
+  <div id="an_panel" class="col-auto  bg-dark">
+    <div id="an_selection">
+      <div id="col_select">
+
+        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh">
+          <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-5 d-none d-sm-inline">TRIvial - Analyse</span>
+          </a>
+          <Filter />
+
+        </div>
+
+      </div>
+    </div>
     <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
   </div>
   <div id="an_map">
@@ -16,6 +29,7 @@ import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
 import api2itowns from '../../js/api2itowns'
 import SectionInfo from '@/components/Analyse/Selection.vue'
+import Filter from '@/components/Analyse/Filter.vue'
 //import jquery module
 import $ from 'jquery'
 //import the store
@@ -25,7 +39,8 @@ import { ref } from 'vue';
 export default {
   name: 'MyItowns',
   components: {
-    SectionInfo
+    SectionInfo,
+    Filter
   },
   data() {
     return {
@@ -162,5 +177,9 @@ export default {
   height: 100vh;
   width: 100%;
   padding: 0;
+}
+
+#an_panel {
+  padding: 15px;
 }
 </style>
