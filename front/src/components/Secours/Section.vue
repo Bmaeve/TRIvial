@@ -25,12 +25,12 @@
             <!-- Feature information table block -->
             <div class="sec_info_enjeux_table">
                 <!-- Feature information table -->
-                <table class="table table-striped">
+                <table class="table table-striped sec_table_info">
                     <!-- Feature properties table header -->
                     <thead>
                         <tr>
-                            <th scope="col">Properties</th>
-                            <th scope="col">value</th>
+                            <th scope="col">Propriété</th>
+                            <th scope="col">Valeur</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -182,7 +182,7 @@ export default {
 }
 
 /* Feature information table */
-.sec_info_enjeux table {
+.sec_table_info {
     background-color: white;
 }
 
