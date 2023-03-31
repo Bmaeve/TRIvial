@@ -15,7 +15,7 @@ paths:
   /dbInfo/getTables:
     get:
       tags:
-        - data
+        - dbInfo
       summary: Finds every available table
       operationId: findTables
       responses:
@@ -31,7 +31,7 @@ paths:
   /dbInfo/{table}:
     get:
       tags:
-          - data
+          - dbInfo
       summary: Find table information
       description: Returns table name and columns  information
       operationId: getTableInfo
@@ -54,7 +54,7 @@ paths:
   /dbInfo/{table}/{column}/getMinMax:
     get:
       tags:
-          - data
+          - dbInfo
       summary: Find the minimum and maximum values of the column
       description: The column has to have a number for type
       operationId: getColMinMax
@@ -83,7 +83,7 @@ paths:
   /dbInfo/{table}/{column}/getDistinctValues:
     get:
       tags:
-          - data
+          - dbInfo
       summary: Find the distinct values of the column
       description: The column has to have a string for type, this should not be not be used to require on ids 
       operationId: getColDistValues
@@ -178,8 +178,37 @@ paths:
           description: table/column not exists
         '405':
           description: Invalid input
+  /enjeux/getTypesEnjeu: 
+    get:
+      tags:
+          - enjeux
+      summary: returns types of enjeu
+      description: return the different types of available "enjeux" with their key and full name
+      operationId: enjeuTypes
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enjeu'
 components:
   schemas:
+    Enjeu:
+        type: object
+        properties:
+          key:
+            type: string
+            example: TRANS
+          fullName:
+            type: string
+            example: "Transorts"
+          columns:
+            type: array
+            items: 
+              $ref: '#/components/schemas/Column'
     Table:
       type: object
       properties:

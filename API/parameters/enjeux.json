@@ -1,0 +1,11 @@
+{
+    "patrim": "patrimoine",
+    "autre": "autre",
+    "san": "santé",
+    "trans_l": "transport (réseau)",
+    "train_s": "transport (infrastructures)",
+    "indus": "industrie",
+    "ens": "enseignement",
+    "def": "défense",
+    "admin": "administration"
+}
