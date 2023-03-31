@@ -152,32 +152,32 @@ export default {
 
     // Api rest solution  
 
-    /* fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
- 
-       function setExtrusions(properties) {
-         return properties.hauteur;
-       }
- 
-       let marne = new FeatureGeometryLayer('Marne', {
-         // Use a FileSource to load a single file once
-         source: new FileSource({
-           fetchedData: data,
-           crs: 'EPSG:2154',
-           format: 'application/json',
-         }),
-         transparent: true,
-         opacity: 0.7,
-         style: new Style({
-           fill: {
-             color: new THREE.Color(0xbbffbb),
-             base_altitude: 28,
-             extrusion_height: setExtrusions,
-           }
-         })
- 
-       });
-       view.addLayer(marne);
-     })*/
+    fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
+
+      function setExtrusions(properties) {
+        return properties.hauteur;
+      }
+
+      let marne = new FeatureGeometryLayer('Marne', {
+        // Use a FileSource to load a single file once
+        source: new FileSource({
+          fetchedData: data,
+          crs: 'EPSG:2154',
+          format: 'application/json',
+        }),
+        transparent: true,
+        opacity: 0.7,
+        style: new Style({
+          fill: {
+            color: new THREE.Color(0xbbffbb),
+            base_altitude: 28,
+            extrusion_height: setExtrusions,
+          }
+        })
+
+      });
+      view.addLayer(marne);
+    })
 
   }
 }

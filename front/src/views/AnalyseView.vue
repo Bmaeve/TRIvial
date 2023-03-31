@@ -1,8 +1,6 @@
 <template>
   <div id="Analyse">
     <div id="first_row">
-      <Selection />
-
       <ITowns />
     </div>
     <div id="second_row">
@@ -15,13 +13,13 @@
 <script>
 // @ is an alias to /src
 import ITowns from '@/components/Analyse/ITowns.vue';
-import Selection from '@/components/Analyse/Selection.vue';
+//import Selection from '@/components/Analyse/Selection.vue';
 import Stats from '@/components/Analyse/Stats.vue'
 
 export default {
   name: 'TRIVialView',
   components: {
-    Selection,
+    //Selection,
     ITowns,
     Stats
   }
@@ -51,5 +49,14 @@ export default {
 #second_row {
   width: 100%;
   /* grid-row: 2/3; */
+}
+
+#an_panel {
+  width: 20%;
+  height: 100vh;
+}
+
+#an_map {
+  width: 80%;
 }
 </style>

@@ -1,7 +1,10 @@
 <template>
-  <div id="an_itowns_container">
-    <div id="viewerDiv">
+  <div id="an_panel">
+    <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
+  </div>
+  <div id="an_map">
 
+    <div id="viewerDiv">
     </div>
   </div>
 </template>
@@ -12,12 +15,58 @@ import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, Glo
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
 import api2itowns from '../../js/api2itowns'
+import SectionInfo from '@/components/Analyse/Selection.vue'
+//import jquery module
+import $ from 'jquery'
+//import the store
+import { store } from '../Store.js'
+//import the vuejs Dom reference function
+import { ref } from 'vue';
 export default {
   name: 'MyItowns',
+  components: {
+    SectionInfo
+  },
+  data() {
+    return {
+      store,
+      componentKey: ref(0)
+    }
+  },
+  methods: {
+    changefeatureInfo(data) {
+      this.store.featureInfo = data
+    },
+    forceRerender() {
+      this.componentKey += 1;
+    }
+  },
+  computed: {
+    featureInfo() {
+      return this.store.featureInfo
+    }
+  },
   mounted() {
     // Retrieve the view container
     const viewerDiv = document.getElementById('viewerDiv');
 
+    $('#viewerDiv').click(() => {
+      const newfeature = [{
+        "id": this.store.featureInfo[0].id ? this.store.featureInfo[0].id += 1 : 1,
+        "titre": "Avenue",
+        "taille": 20,
+        "RN": "A231",
+        "Nombre": 4543,
+        "enabled": true,
+        "Superficie": "A231",
+        "Capatite": 4543,
+        "vul": true
+      }]
+
+      this.changefeatureInfo(newfeature)
+      this.forceRerender()
+
+    })
     // Define the view geographic extent
     proj4.defs(
       'EPSG:2154',
@@ -109,7 +158,9 @@ export default {
 }
 
 #viewerDiv {
+  margin: auto;
   height: 100vh;
   width: 100%;
+  padding: 0;
 }
 </style>

@@ -6,8 +6,9 @@
                 <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                     <span class="fs-5 d-none d-sm-inline">TRIvial - Analyse</span>
                 </a>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <div id="form">
+                <div id="form" class="an_select_form">
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+
                         <li class="nav-item">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Scénario</span>
                             <input v-on:change="rangeChange" type="range" class="form-range" min="1" max="3" step="1"
@@ -37,28 +38,36 @@
                             <button class="btn btn-success" type="submit">Valider</button>
 
                         </li>
-                    </div>
-                    <li>
-                        <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Informations</span>
-                        <div id="an_infos">
-                            <table class="table table-bordered">
-                                <thead>
+                    </ul>
+                </div>
+                <!-- Feature information block -->
+                <div class="an_info_enjeux">
+                    <span>Informations</span>
+                    <!-- Feature information table block -->
+                    <div class="an_info_enjeux_table">
+                        <!-- Feature information table -->
+                        <table class="table table-striped an_table_info">
+                            <!-- Feature properties table header -->
+                            <thead>
+                                <tr>
+                                    <th scope="col">Propriété</th>
+                                    <th scope="col">Valeur</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Loop for show the properties informations -->
+                                <template v-for="(properties, key) in getfeatureKeys" :key='key'>
                                     <tr>
-                                        <th scope="col">Propriété</th>
-                                        <th scope="col">Valeur</th>
+                                        <th>{{ properties }}</th>
+                                        <td>{{ getfeatureinfo[0][properties] }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Nature</td>
-                                        <td>Bâtiment industriel</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                </ul>
 
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -69,9 +78,16 @@
 import $ from '../../../node_modules/jquery';
 
 console.log($);
-
+//function for return object properties
+const getKeys = (object) => {
+    return Object.keys(object)
+}
 export default {
     name: "AnSelection",
+    props: {
+        //feature information props config
+        featureInfoData: Array
+    },
     data() {
         return {
             value: null,
@@ -89,11 +105,22 @@ export default {
             ],
             infos_json: {
 
-            }
+            },
+            //get feature information object in array
+            featureInfo: this.$props.featureInfoData,
+            //get attributes properties list in array
+            featureKeys: getKeys(this.$props.featureInfoData[0]),
         }
     },
     computed: {
-
+        // return feature information data for the reactive vue
+        getfeatureinfo() {
+            return this.featureInfo
+        },
+        // return feature information properties for the reactive vue
+        getfeatureKeys() {
+            return this.featureKeys
+        }
     },
     methods: {
         rangeChange() {
@@ -125,15 +152,35 @@ export default {
 
 <style>
 #an_selection {
-    width: 25%;
+    /* width: 25%; */
 }
 
 #col_select {
-    height: 90vh;
+    height: 100vh;
     overflow: scroll;
 }
 
-.table {
-    color: white;
+/* Feature information block */
+.an_info_enjeux {
+    color: white !important;
+    width: 100%;
+
+}
+
+/* Feature information table */
+.an_table_info {
+    background-color: white;
+
+}
+
+/* Feature information table block*/
+.an_info_enjeux_table {
+    overflow-y: auto;
+    height: 40vh;
+}
+
+.an_select_form {
+    height: 40vh;
+    overflow-y: auto;
 }
 </style>
