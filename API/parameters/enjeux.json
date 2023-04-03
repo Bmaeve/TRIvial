@@ -22,8 +22,7 @@
     "trans_l": {
         "full_name": "transport (réseau)",
         "columnsToKeep": [
-            "nature",
-            "importance"
+            "nature"
         ]
     },
     "trans_s": {

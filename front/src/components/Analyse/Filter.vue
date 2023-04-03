@@ -20,13 +20,14 @@
                     </label>
                     <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
                         <div v-if="typeEnjeu.enjeu == enjeu.value">
-                            <div class="form-check collapse " :id="enjeu.id_collapse" v-for="tabType in typeEnjeu.types"
-                                :key="tabType.id">
-                                <input class="form-check-input" type="checkbox" :value="tabType.value"
-                                    :id="enjeu.id_collapse">
-                                <label class="form-check-label" :for="tabType.id">
-                                    {{ tabType.text }}
-                                </label>
+                            <div v-for="tab in typeEnjeu.types" :key="tab.id">
+                                <div class="form-check collapse " :id="enjeu.id_collapse">
+                                    <input class="form-check-input" type="checkbox" :value="tab.value"
+                                        :id="enjeu.id_collapse">
+                                    <label class="form-check-label" :for="tab.id">
+                                        {{ tab.text }}
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -65,7 +66,8 @@ export default {
             }
         }
 
-    }, async created() {
+    },
+    async mounted() {
 
         let new_enjeux = [];
         let res = await fetch("http://localhost:3000/enjeux/getTypesEnjeux");
@@ -90,23 +92,39 @@ export default {
 
         //types enjeux
         data_fetched.forEach((enjeu) => {
-            let types_fetched = [];
+            let enjeu_name = enjeu.key;
+            // let types_fetched = [];
             for (let i = 0; i < enjeu.columns.length; i++) {
-                let column = enjeu.columns[i];
-                if (column.column_name != "hauteur") {
-                    types_fetched.push({ text: column.column_name, value: i, id: "type_" + enjeu.key + "_" + i })
+                let column_name = enjeu.columns[i].column_name;
+                if (column_name != "hauteur") {
+                    let list = [];
+                    //    types_fetched.push({ text: column.column_name, value: i, id: "type_" + enjeu.key + "_" + i })
+                    fetch("http://localhost:3000/dbInfo/" + enjeu_name + "/" + column_name + "/getDistinctValues")
+                        .then((res) => {
+                            return res.json();
+                        })
+                        .then((data) => {
+                            let j = 0;
+                            data.forEach(el => {
+                                j++;
+                                if (el != "null") {
+                                    list.push({ text: el, value: j, id: "type_" + enjeu.key + "_" + j })
+                                }
+                            });
+                            // console.log(list);
+                            types.push({ enjeu: enjeu_name, types: list });
+                        })
                 }
             }
-            types.push({ enjeu: enjeu.key, types: types_fetched });
         })
 
         console.log(types);
-        console.log(types[0]);
         this.types_enjeux = types;
     },
     methods: {
         rangeChange() {
             let range = document.getElementById("rangeScenario");
+            console.log("ok")
             if (range.value == 1) {
                 this.rangeValue = "Faible";
             }
