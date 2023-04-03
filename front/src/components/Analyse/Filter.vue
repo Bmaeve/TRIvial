@@ -18,16 +18,20 @@
                     <label class="form-check-label" :for="enjeu.id">
                         {{ enjeu.text }}
                     </label>
-
-                    <div class="form-check collapse " :id="enjeu.id_collapse" v-for="typeEnjeu in types_enjeux"
-                        :key="typeEnjeu.id">
-                        <input class="form-check-input" type="checkbox" :value="typeEnjeu.value" :id="enjeu.id_collapse">
-                        <label class="form-check-label" :for="typeEnjeu.id">
-                            {{ typeEnjeu.text }}
-                        </label>
+                    <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
+                        <div v-if="typeEnjeu.enjeu == enjeu.value">
+                            <div class="form-check collapse " :id="enjeu.id_collapse" v-for="tabType in typeEnjeu.types"
+                                :key="tabType.id">
+                                <input class="form-check-input" type="checkbox" :value="tabType.value"
+                                    :id="enjeu.id_collapse">
+                                <label class="form-check-label" :for="tabType.id">
+                                    {{ tabType.text }}
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <button class="btn btn-success" id="val" type="submit">Valider</button>
+                <button class="btn btn-success" type="submit">Valider</button>
 
             </li>
         </ul>
@@ -82,17 +86,23 @@ export default {
         this.enjeux = new_enjeux;
         console.log(this.enjeux);
 
-        // let types = [];
+        let types = [];
 
         //types enjeux
         data_fetched.forEach((enjeu) => {
-            // let types_fetched = [];
-            console.log(enjeu.columns);
-            for (let i = 0; enjeu.columns.length; i++) {
-                console.log(enjeu.columns[i]);
+            let types_fetched = [];
+            for (let i = 0; i < enjeu.columns.length; i++) {
+                let column = enjeu.columns[i];
+                if (column.column_name != "hauteur") {
+                    types_fetched.push({ text: column.column_name, value: i, id: "type_" + enjeu.key + "_" + i })
+                }
             }
+            types.push({ enjeu: enjeu.key, types: types_fetched });
         })
 
+        console.log(types);
+        console.log(types[0]);
+        this.types_enjeux = types;
     },
     methods: {
         rangeChange() {

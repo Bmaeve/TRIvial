@@ -48,11 +48,10 @@ router.get('/getTypesEnjeux', function (req, res, next) {
         if (features.length != 0) {
           result_array.push({
             key: enjeu,
-            fullName: enjeux[enjeu],
+            fullName: enjeux[enjeu].full_name,
             columns: features
           })
         }
-
       })
 
     promises.push(enjeuPromise);
