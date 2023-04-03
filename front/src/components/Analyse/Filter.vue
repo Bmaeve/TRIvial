@@ -34,8 +34,7 @@
                         </label>
                     </div>
                 </div>
-                <button class="btn btn-success" type="submit">Valider</button>
-
+                <button class="btn btn-success" v-on:click="btnValidate" type="submit">Valider</button>
             </li>
         </ul>
     </div>
@@ -81,7 +80,11 @@ export default {
             barMaxValue: 300
         }
 
-    }, methods: {
+    },
+    mounted() {
+
+    },
+    methods: {
         rangeChange() {
             let range = document.getElementById("rangeScenario");
             if (range.value == 1) {
@@ -99,12 +102,32 @@ export default {
             console.log(e.target.value);
             let children = document.querySelectorAll("#collapse" + e.target.value);
             console.log(children);
-
             children.forEach(child => {
                 child.classList.toggle('show');
             });
 
         },
+
+        btnValidate() {
+            let enjeux = document.querySelectorAll("div.form-check");
+            let params = {};
+            for (var i = 0; i < enjeux.length; i++) {
+                let filters = [];
+                if (enjeux[i].getAttribute('id').indexOf("parent") == 0 && enjeux[i].firstElementChild.checked) {
+                    enjeux[i].childNodes.forEach(type => {
+                        if (type.className == "form-check collapse show" && type.firstChild.checked) {
+                            filters.push(type.innerText);
+                        }
+                    });
+                    let enjeuName = enjeux[i].innerHTML.slice(115, 115 + enjeux[i].innerHTML.slice(115, 150).indexOf("/") - 1);
+                    params[enjeuName] = {};
+                    params[enjeuName].filters = filters;
+                }
+            }
+            console.log(params);
+            //api2itowns.addLayerToView(view, params, body);
+        },
+
         UpdateValues(e) {
             this.barMinValue = e.minValue;
             this.barMaxValue = e.maxValue;
@@ -114,11 +137,9 @@ export default {
         $('#viewerDiv').click(() => {
             console.log(this.barMinValue, this.barMaxValue)
         })
-
-
     }
-
 }
+
 </script>
 <style>
 .MultiRangeSliderContainer {
