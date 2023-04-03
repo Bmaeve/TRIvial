@@ -51,11 +51,12 @@
         <div id="com_Itowns2" class="com_itown"></div>
     </div>
     <div id="com_footer">
-        <img src="../../assets/logo.png" width="70" height="70" />
+        <img src="../../assets/logo.png" width="60" height="60" />
     </div>
 </template>
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
+import itownApi from './api2ITwithColor'
 
 //iTowns Widgets 
 //import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
@@ -86,26 +87,6 @@ export default {
 
         let layerlist = fetch('http://localhost:3000/dbInfo/getTables').then(res => res.json())
 
-        layerlist.then(data => {
-            const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
-            const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
-            //const lineLayer = spatialLayer.filter(el => { return el == 'trans_l' })
-            const scenario = polyLayer.filter(el => { return el == 'scenarios' })
-            const admin = polyLayer.filter(el => { return el == 'arrond' || el == 'comm' })
-            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' })
-
-            console.log(scenario, batis, admin)
-        })
-
-        $('.scen1').change((e) => {
-            const value = e.target.value
-            console.log(value)
-        })
-
-        $('.scen2').change((e) => {
-            const value = e.target.value
-            console.log(value)
-        })
         // Define the view geographic extent
         itowns.proj4.defs(
             'EPSG:2154',
@@ -124,6 +105,8 @@ export default {
         // Instanciate iTowns GlobeView*
         var view = new itowns.GlobeView(viewerDiv, placement);
         var planarView = new itowns.GlobeView(planarDiv, placement);
+
+
 
         /*new itowns.Navigation(view, {
             position: 'bottom-left',
@@ -155,20 +138,42 @@ export default {
         view.addLayer(layer);
 
         // Define the source of the dem data
-        var elevationSource = new itowns.WMTSSource({
-            url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-            crs: 'EPSG:4326',
-            name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
-            tileMatrixSet: 'WGS84G',
-            format: 'image/x-bil;bits=32',
-            zoom: { min: 3, max: 10 }
-        });
-        // Create the dem ElevationLayer and add it to the view
-        const layerDEM = new itowns.ElevationLayer('DEM', { source: elevationSource });
+        /* var elevationSource = new itowns.WMTSSource({
+             url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
+             crs: 'EPSG:4326',
+             name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
+             tileMatrixSet: 'WGS84G',
+             format: 'image/x-bil;bits=32',
+             zoom: { min: 3, max: 10 }
+         });
+         // Create the dem ElevationLayer and add it to the view
+         const layerDEM = new itowns.ElevationLayer('DEM', { source: elevationSource });
+ 
+         view.addLayer(layerDEM)*/
 
-        view.addLayer(layerDEM)
+        layerlist.then(data => {
+            const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
+            const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
+            //const lineLayer = spatialLayer.filter(el => { return el == 'trans_l' })
+            const scenario = polyLayer.filter(el => { return el == 'scenarios' })
+            const admin = polyLayer.filter(el => { return el == 'arrond' || el == 'comm' })
+            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' })
+
+            console.log(scenario, batis, admin)
+
+            batis.forEach((layer, index) => {
+                console.log(layer, index)
+                //const colors = ['#6465A5', '#6975A6', '#F3E96B', '#F28A30', '#F05837', '#9EF1EE', '#B1F4F1', '#C1F6F4', '#CDF8F6', '#D7F9F8', '#DFFAF9', '#E5FBFA', '#EAFCFB']
+                itownApi.addLayerToView(view, layer, {}, '#BBFFBB')
+            })
 
 
+        })
+
+        $('.scen1').change((e) => {
+            const value = e.target.value
+            console.log(value)
+        })
         /*function setExtrusion(properties) {
             return properties.HAUTEUR;
         }*/
@@ -221,18 +226,46 @@ export default {
         planarView.addLayer(wmsImageryLayer);
 
         // Define the source of the dem data
-        var elevationSource2 = new itowns.WMTSSource({
-            url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-            crs: 'EPSG:4326',
-            name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
-            tileMatrixSet: 'WGS84G',
-            format: 'image/x-bil;bits=32',
-            zoom: { min: 3, max: 10 }
-        });
-        // Create the dem ElevationLayer and add it to the view
-        const layerDEM2 = new itowns.ElevationLayer('DEM', { source: elevationSource2 });
+        /* var elevationSource2 = new itowns.WMTSSource({
+             url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
+             crs: 'EPSG:4326',
+             name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
+             tileMatrixSet: 'WGS84G',
+             format: 'image/x-bil;bits=32',
+             zoom: { min: 3, max: 10 }
+         });
+         // Create the dem ElevationLayer and add it to the view
+         const layerDEM2 = new itowns.ElevationLayer('DEM', { source: elevationSource2 });
+ 
+         planarView.addLayer(layerDEM2)*/
 
-        planarView.addLayer(layerDEM2)
+        layerlist.then(data => {
+            const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
+            const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
+            //const lineLayer = spatialLayer.filter(el => { return el == 'trans_l' })
+            const scenario = polyLayer.filter(el => { return el == 'scenarios' })
+            const admin = polyLayer.filter(el => { return el == 'arrond' || el == 'comm' })
+            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' })
+
+            console.log(scenario, batis, admin)
+
+            batis.forEach((layer, index) => {
+                console.log(layer, index)
+                //const colors = ['#6465A5', '#6975A6', '#F3E96B', '#F28A30', '#F05837', '#9EF1EE', '#B1F4F1', '#C1F6F4', '#CDF8F6', '#D7F9F8', '#DFFAF9', '#E5FBFA', '#EAFCFB']
+                itownApi.addLayerToView(planarView, layer, {}, '#BBFFBB')
+            })
+
+
+        })
+
+
+
+
+
+        $('.scen2').change((e) => {
+            const value = e.target.value
+            console.log(value)
+        })
 
     }
 }
@@ -290,7 +323,7 @@ export default {
 #com_footer img {
     position: absolute;
     right: 10px;
-    bottom: 10px;
+    bottom: 5px;
 }
 
 #com_scen1 {
@@ -300,7 +333,7 @@ export default {
     left: 2%;
     top: 5vh;
     width: 10%;
-    height: 12vh;
+    height: 15vh;
     z-index: 100;
     color: white;
     padding-left: 10px;
@@ -313,7 +346,7 @@ export default {
     right: 2%;
     top: 5vh;
     width: 10%;
-    height: 12vh;
+    height: 15vh;
     z-index: 100;
     color: white;
     padding-left: 10px;
