@@ -2,9 +2,9 @@ const host = 'http://localhost:3000/'
 import { FileSource, THREE, Style, FeatureGeometryLayer } from "../../node_modules/itowns/dist/itowns";
 
 let api2itowns = {
-    addLayerToView(view, table_name, parameters = {}, color = undefined) {
-
-        if (color == undefined) {
+    addLayerToView(view, table_name, parameters = {}) {
+        let color;
+        if (parameters.color == undefined) {
             color = new THREE.Color(Math.random() * 0xffffff)
         }
 
@@ -69,7 +69,7 @@ let api2itowns = {
 
     addEnjeuxToView(view, parameters) {
         Object.keys(parameters).forEach((table) => {
-            this.addLayerToView(view, table, parameters[table].filters, parameters[table].color);
+            this.addLayerToView(view, table, parameters[table]);
         })
     }
 

@@ -15,7 +15,7 @@ router.post('/:table/selectData', function (req, res) {
 /* GET  request */
 router.get('/:table/selectData', function (req, res) {
   let table_name = req.params.table;
-  let body = {};
+  let body = { GETrequest: true };
 
   dataSelection(table_name, body, req, res);
 });
@@ -45,9 +45,14 @@ function dataSelection(table_name, body, req, res) {
   })
   */
 
-  enjeux[table_name].columnsToKeep.forEach((col) => {
-    query += " AND " + col + " IN ('" + body.join("', '") + "')";
-  });
+  // filtering
+  if (body.GETrequest != true) { // if the request is GET, there are no filters
+    if (body.columnFiltered == undefined) { // if the colummnFiltered parameters has'nt been defined
+      body.columnFiltered = enjeux[table_name].columnsToKeep[0]
+    }
+    // adding filters in SQL query
+    query += " AND " + body.columnFiltered + " IN ('" + body.filters.join("', '") + "')";
+  }
 
   // send and retrieve data
   let promise = pool.query(query);
