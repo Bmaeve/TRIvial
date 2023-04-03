@@ -8,32 +8,32 @@
                     id="rangeScenario">
                 <span>{{ rangeValue }}</span>
             </li>
-            <li>
+            <li class="nav-item">
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
-
-                <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
-                    :data-bs-target="enjeu.target_collapse">
-                    <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id"
-                        v-on:change="Collapse">
-                    <label class="form-check-label" :for="enjeu.id">
-                        {{ enjeu.text }}
-                    </label>
-                    <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
-                        <div v-if="typeEnjeu.enjeu == enjeu.value">
-                            <div v-for="tab in typeEnjeu.types" :key="tab.id">
-                                <div class="form-check collapse " :id="enjeu.id_collapse">
-                                    <input class="form-check-input" type="checkbox" :value="tab.value"
-                                        :id="enjeu.id_collapse">
-                                    <label class="form-check-label" :for="tab.id">
-                                        {{ tab.text }}
-                                    </label>
+                <div>
+                    <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
+                        :data-bs-target="enjeu.target_collapse">
+                        <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id"
+                            v-on:change="Collapse">
+                        <label class="form-check-label" :for="enjeu.id">
+                            {{ enjeu.text }}
+                        </label>
+                        <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
+                            <div v-if="typeEnjeu.enjeu == enjeu.value">
+                                <div v-for="tab in typeEnjeu.types" :key="tab.id">
+                                    <div class="form-check collapse " :id="enjeu.id_collapse">
+                                        <input class="form-check-input" type="checkbox" :value="tab.value"
+                                            :id="enjeu.id_collapse">
+                                        <label class="form-check-label" :for="tab.id">
+                                            {{ tab.text }}
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <button class="btn btn-success" type="submit">Valider</button>
                 </div>
-                <button class="btn btn-success" type="submit">Valider</button>
-
             </li>
         </ul>
     </div>
@@ -43,12 +43,8 @@
 
 export default {
     name: "FilterSelection",
-    props: {
-
-    },
     data() {
         return {
-            value: null,
             rangeValue: "Fort",
             enjeux: [
                 { text: "Enjeu 1", value: 1, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1", id_parent: "parent1" },
@@ -67,64 +63,66 @@ export default {
         }
 
     },
-    async mounted() {
+    created() {
 
         let new_enjeux = [];
-        let res = await fetch("http://localhost:3000/enjeux/getTypesEnjeux");
-        let data_fetched = await res.json();
-
-        //enjeux
-        data_fetched.forEach((enjeu) => {
-            new_enjeux.push({
-                text: enjeu.fullName,
-                value: enjeu.key,
-                id: "check_" + enjeu.key,
-                target_collapse: "#collapse_" + enjeu.key,
-                id_collapse: "collapse_" + enjeu.key,
-                id_parent: "parent_" + enjeu.key
-            });
-        })
-
-        this.enjeux = new_enjeux;
-        console.log(this.enjeux);
 
         let types = [];
+        fetch("http://localhost:3000/enjeux/getTypesEnjeux")
+            .then((res) => {
+                return res.json()
+            }).then((data_fetched) => {
+                //enjeux
+                data_fetched.forEach((enjeu) => {
+                    new_enjeux.push({
+                        text: enjeu.fullName,
+                        value: enjeu.key,
+                        id: "check_" + enjeu.key,
+                        target_collapse: "#collapse_" + enjeu.key,
+                        id_collapse: "collapse_" + enjeu.key,
+                        id_parent: "parent_" + enjeu.key
+                    });
+                })
 
-        //types enjeux
-        data_fetched.forEach((enjeu) => {
-            let enjeu_name = enjeu.key;
-            // let types_fetched = [];
-            for (let i = 0; i < enjeu.columns.length; i++) {
-                let column_name = enjeu.columns[i].column_name;
-                if (column_name != "hauteur") {
-                    let list = [];
-                    //    types_fetched.push({ text: column.column_name, value: i, id: "type_" + enjeu.key + "_" + i })
-                    fetch("http://localhost:3000/dbInfo/" + enjeu_name + "/" + column_name + "/getDistinctValues")
-                        .then((res) => {
-                            return res.json();
-                        })
-                        .then((data) => {
-                            let j = 0;
-                            data.forEach(el => {
-                                j++;
-                                if (el != "null") {
-                                    list.push({ text: el, value: j, id: "type_" + enjeu.key + "_" + j })
-                                }
-                            });
-                            // console.log(list);
-                            types.push({ enjeu: enjeu_name, types: list });
-                        })
-                }
-            }
-        })
+                this.enjeux = new_enjeux;
 
-        console.log(types);
-        this.types_enjeux = types;
+                //types enjeux
+                data_fetched.forEach((enjeu) => {
+                    let enjeu_name = enjeu.key;
+                    // let types_fetched = [];
+                    for (let i = 0; i < enjeu.columns.length; i++) {
+                        let column_name = enjeu.columns[i].column_name;
+                        if (column_name != "hauteur") {
+                            let list = [];
+                            //    types_fetched.push({ text: column.column_name, value: i, id: "type_" + enjeu.key + "_" + i })
+                            fetch("http://localhost:3000/dbInfo/" + enjeu_name + "/" + column_name + "/getDistinctValues")
+                                .then((res) => {
+                                    return res.json();
+                                })
+                                .then((data) => {
+                                    let j = 0;
+                                    data.forEach(el => {
+                                        j++;
+                                        if (el != null) {
+                                            list.push({ text: el, value: j, id: "type_" + enjeu.key + "_" + j })
+                                        }
+                                    });
+                                    // console.log(list);
+                                    types.push({ enjeu: enjeu_name, types: list });
+                                })
+                        }
+                    }
+                })
+
+                this.types_enjeux = types;
+            })
+
+
     },
     methods: {
-        rangeChange() {
-            let range = document.getElementById("rangeScenario");
-            console.log("ok")
+        rangeChange(e) {
+            let range = e.target;
+
             if (range.value == 1) {
                 this.rangeValue = "Faible";
             }
