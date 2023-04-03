@@ -25,7 +25,7 @@ services:
     networks:
       - tcp1
     command: >
-      bash -c "npm install -s vue-router && npm install -s jquery && npm install -s vuex && npm run serve"
+      bash -c "npm install -s vue-router && npm install -s jquery && npm install -s vuex && npm install -s multi-range-slider-vue && npm run serve"
 
     depends_on:
       - api

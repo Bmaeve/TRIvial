@@ -1,6 +1,6 @@
 name: continuousIntegration
 on:
-  - push
+  - [push, pull_request]
 jobs:
   testAPI:
     runs-on: ubuntu-22.04

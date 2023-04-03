@@ -8,6 +8,13 @@
                     id="rangeScenario">
                 <span>{{ rangeValue }}</span>
             </li>
+            <li class="MultiRangeSliderContainer">
+                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Hauteur de bâtiment</span>
+                <MultiRangeSlider baseClassName="multi-range-slider" :min="0" :max="300" :step="20" :ruler="true"
+                    :label="true" :minValue="barMinValue" :maxValue="barMaxValue" @input="UpdateValues" />
+                <span style="float:left;font-size: 0.8em;">Min:{{ barMinValue }}</span> <span
+                    style="float:right;font-size: 0.8em;">Max:{{ barMaxValue }}</span>
+            </li>
             <li>
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
 
@@ -34,11 +41,22 @@
 </template>
 <script>
 
+import $ from 'jquery'
+import MultiRangeSlider from 'multi-range-slider-vue'
+import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
+
+import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
+
+console.log($)
+
 
 export default {
     name: "FilterSelection",
     props: {
 
+    },
+    components: {
+        MultiRangeSlider
     },
     data() {
         return {
@@ -57,7 +75,9 @@ export default {
             ],
             infos_json: {
 
-            }
+            },
+            barMinValue: 0,
+            barMaxValue: 300
         }
 
     },
@@ -87,6 +107,7 @@ export default {
             });
 
         },
+
         btnValidate() {
             let enjeux = document.querySelectorAll("div.form-check");
             let params = {};
@@ -106,8 +127,24 @@ export default {
             console.log(params);
             //api2itowns.addLayerToView(view, params, body);
         },
+
+        UpdateValues(e) {
+            this.barMinValue = e.minValue;
+            this.barMaxValue = e.maxValue;
+        }
+    },
+    mounted() {
+        $('#viewerDiv').click(() => {
+            console.log(this.barMinValue, this.barMaxValue)
+        })
     }
 }
 
 </script>
-<style></style>
+<style>
+.MultiRangeSliderContainer {
+    margin: auto;
+    width: 100%;
+    padding-right: 10px;
+}
+</style>
