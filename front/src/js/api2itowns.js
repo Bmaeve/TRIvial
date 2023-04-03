@@ -11,6 +11,13 @@ let api2itowns = {
         })
             .then(res => res.json())
             .then(data => {
+
+                try {
+                    view.removeLayer(table_name);
+                } catch (e) {
+                    // pass
+                }
+
                 let newLayer = new FeatureGeometryLayer(table_name, {
                     // Use a FileSource to load a single file once
                     source: new FileSource({
@@ -28,9 +35,19 @@ let api2itowns = {
                         }
                     })
                 });
+
+
+
                 view.addLayer(newLayer);
             })
+    },
+
+    addEnjeuxToView(view, parameters) {
+        Object.keys(parameters).forEach((table) => {
+            this.addLayerToView(view, table, parameters[table]);
+        })
     }
+
 }
 
 function setExtrusions(properties) {

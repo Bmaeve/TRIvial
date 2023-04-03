@@ -157,9 +157,21 @@ export default {
     });
     view.addLayer(basic);
 
-    //let body = { "libelle_re": { "values": ["Ile-de-France"] } }
-    let body = {};
-    api2itowns.addLayerToView(view, "patrim", body);
+    //let params = { "libelle_re": { "values": ["Ile-de-France"] } }
+    //api2itowns.addLayerToView(view, "patrim", params);
+
+    let params = {
+      patrim: {
+        nature: {
+          values: ["Chapelle", "Arc de triomphe", "Culte catholique ou orthodoxe"]
+        }
+      }
+    }
+    api2itowns.addEnjeuxToView(view, params);
+
+    let params2 = { patrim: {} }
+    api2itowns.addEnjeuxToView(view, params2);
+    //fetch('localhost:3000/enjeux/
 
   }
 }
