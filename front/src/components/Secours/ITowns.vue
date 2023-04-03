@@ -1,5 +1,10 @@
 <template>
-  <div id="sec_panel">
+  <div id="sec_panel" class="container">
+    <!-- Section title -->
+    <div class="sec_info_title">
+      <h4>TRIvial - Secours</h4>
+    </div>
+    <viewImport />
     <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
   </div>
   <div id="sec_map">
@@ -16,6 +21,8 @@ import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
 //import section component
 import SectionInfo from '@/components/Secours/Section.vue'
+//import decision view component
+import viewImport from "@/components/Secours/viewImport.vue";
 //import jquery module
 import $ from 'jquery'
 //import the store
@@ -28,6 +35,7 @@ import { ref } from 'vue';
 export default {
   name: 'MyItowns',
   components: {
+    viewImport,
     SectionInfo
   },
   data() {
@@ -85,7 +93,7 @@ export default {
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
-      translate: { y: 75 },
+      translate: { y: 0 },
     });
 
 
@@ -113,42 +121,6 @@ export default {
     // Create the dem ElevationLayer and add it to the view
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);
-
-
-    // Static Json solution
-
-    function setExtrusion(properties) {
-      return properties.HAUTEUR;
-    }
-    function setColor() {
-      return new THREE.Color(0xff0000);
-    }
-    const batsource = new FileSource({
-      url: "http://localhost:3000/",
-      crs: 'EPSG:2154',
-      format: 'application/json',
-    });
-
-    let basic = new FeatureGeometryLayer('basic', {
-      // Use a FileSource to load a single file once
-      source: batsource,
-      transparent: true,
-      opacity: 0.7,
-      //zoom: { min: 10 },
-      style: new Style({
-        fill: {
-          color: setColor,
-          base_altitude: 28,
-          extrusion_height: setExtrusion,
-        }
-      })
-    });
-
-
-    view.addLayer(basic);
-
-
-
 
     // Api rest solution  
 
@@ -185,6 +157,13 @@ export default {
 
 
 <style scoped>
+#sec_panel {
+  height: 100vh;
+
+  background-color: black;
+  color: white;
+}
+
 #sec_viewerDiv {
   margin: auto;
   height: 100vh;
