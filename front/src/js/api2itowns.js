@@ -15,24 +15,45 @@ let api2itowns = {
         })
             .then(res => res.json())
             .then(data => {
-
-                let newLayer = new FeatureGeometryLayer(table_name, {
-                    // Use a FileSource to load a single file once
-                    source: new FileSource({
-                        fetchedData: data,
-                        crs: 'EPSG:2154',
-                        format: 'application/json',
-                    }),
-                    transparent: true,
-                    opacity: 0.7,
-                    style: new Style({
-                        fill: {
-                            color: color,
-                            base_altitude: setAltitude,
-                            extrusion_height: setExtrusions,
-                        }
-                    })
+                let newLayer;
+                let source = new FileSource({
+                    fetchedData: data,
+                    crs: 'EPSG:2154',
+                    format: 'application/json',
                 });
+                if (table_name == "scenarios") {
+                    newLayer = new FeatureGeometryLayer(table_name, {
+                        transparent: true,
+                        source: source,
+                        style: new Style({
+                            fill: {
+                                color: 'orange',
+                                opacity: 0.5,
+                                base_altitude: setAltitude,
+                                extrusion_height: 50
+                            },
+                            stroke: {
+                                color: 'white',
+                            },
+                        }),
+                    });
+                } else {
+                    newLayer = new FeatureGeometryLayer(table_name, {
+                        // Use a FileSource to load a single file once
+                        source: source,
+                        transparent: true,
+                        opacity: 0.7,
+                        style: new Style({
+                            fill: {
+                                color: color,
+                                base_altitude: setAltitude,
+                                extrusion_height: setExtrusions,
+                            }
+                        })
+                    });
+                }
+
+
 
                 view.getLayers().forEach((l) => {
                     // if the table is updated, remove the previous layer 

@@ -157,24 +157,16 @@ export default {
     });
     view.addLayer(basic);
 
-    //let params = { "libelle_re": { "values": ["Ile-de-France"] } }
-    //api2itowns.addLayerToView(view, "patrim");
+    let paramsScen = { "scenario": { "values": ["04Fai"] } }
+    api2itowns.addLayerToView(view, "scenarios", paramsScen);
 
     let params = {
       patrim: {
-        filters: {
-          nature: {
-            values: ["Chapelle", "Arc de triomphe", "Culte catholique ou orthodoxe"]
-          }
-        },
+        filters: ["Chapelle", "Arc de triomphe", "Culte catholique ou orthodoxe"],
         color: new THREE.Color(0xffffff)
       },
       san: {
-        filters: {
-          detail_enj: {
-            values: ["Maison de retraite", "Hôpital"]
-          }
-        }
+        filters: ["Maison de retraite", "Hôpital"]
       }
     }
     api2itowns.addEnjeuxToView(view, params);
