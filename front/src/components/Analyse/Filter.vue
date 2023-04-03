@@ -16,7 +16,7 @@
                 <span style="float:left;font-size: 0.8em;">Min:{{ barMinValue }}</span> <span
                     style="float:right;font-size: 0.8em;">Max:{{ barMaxValue }}</span>
             </li>
-           <li class="nav-item">
+            <li class="nav-item">
 
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
                 <div>
@@ -31,8 +31,7 @@
                             <div v-if="typeEnjeu.enjeu == enjeu.value">
                                 <div v-for="tab in typeEnjeu.types" :key="tab.id">
                                     <div class="form-check collapse " :id="enjeu.id_collapse">
-                                        <input class="form-check-input" type="checkbox" :value="tab.value"
-                                            :id="enjeu.id_collapse">
+                                        <input class="form-check-input" type="checkbox" :value="tab.value" :id="tab.text">
                                         <label class="form-check-label" :for="tab.id">
                                             {{ tab.text }}
                                         </label>
@@ -41,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                     <button class="btn btn-success" v-on:click="btnValidate" type="submit">Valider</button>
+                    <button class="btn btn-success" v-on:click="btnValidate" type="submit">Valider</button>
                 </div>
 
             </li>
@@ -107,7 +106,7 @@ export default {
                         id_parent: "parent_" + enjeu.key
                     });
                 })
-
+                console.log(new_enjeux);
                 this.enjeux = new_enjeux;
 
                 //types enjeux
@@ -137,7 +136,7 @@ export default {
                         }
                     }
                 })
-
+                console.log(types);
                 this.types_enjeux = types;
             })
 
@@ -173,12 +172,27 @@ export default {
             for (var i = 0; i < enjeux.length; i++) {
                 let filters = [];
                 if (enjeux[i].getAttribute('id').indexOf("parent") == 0 && enjeux[i].firstElementChild.checked) {
+                    //console.log(enjeux[i]);
                     enjeux[i].childNodes.forEach(type => {
-                        if (type.className == "form-check collapse show" && type.firstChild.checked) {
-                            filters.push(type.innerText);
-                        }
+                        console.log(type);
+                        //console.log("un  mot!");
+                        //console.log(type.firstElementChild.childNodes[0].firstChild);
+                        // if (type.firstElementChild.childNodes[0].firstChild.checked) {
+                        //     //type.className == "form-check collapse show" && type.firstChild.checked
+                        //     console.log("type");
+                        //     console.log(type);
+                        //     filters.push(type.innerText);
+                        // }
                     });
-                    let enjeuName = enjeux[i].innerHTML.slice(115, 115 + enjeux[i].innerHTML.slice(115, 150).indexOf("/") - 1);
+                    let enjeuName = enjeux[i].innerText.split("\n")[0];
+                    // console.log(enjeux[i].innerText);
+                    // console.log(enjeux[i].innerText.split("\n"));
+                    for (var j = 1; j < enjeux[i].innerText.split("\n").length; j++) {
+                        console.log(document.querySelectorAll("#" + enjeux[i].innerText.split("\n")[j]));
+                        //console.log(enjeux[i].innerText.split("\n")[j])
+                        filters.push(enjeux[i].innerText.split("\n")[j]);
+                    }
+                    //  console.log(enjeuName);
                     params[enjeuName] = {};
                     params[enjeuName].filters = filters;
                 }
