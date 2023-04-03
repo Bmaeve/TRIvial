@@ -20,7 +20,7 @@
             "nature"
         ]
     },
-    "train_s": {
+    "trans_s": {
         "full_name": "transport (bâtiments)",
         "columnsToKeep": [
             "nature"
