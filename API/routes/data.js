@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 let pool = require('./poolPg');
+let enjeux = require('../parameters/enjeux.json')
 
 /* POST  request */
 router.post('/:table/selectData', function (req, res) {
@@ -31,6 +32,7 @@ function dataSelection(table_name, body, req, res) {
         WHERE 1=1 \
         ";
 
+  /*
   // adding filters to query according to body
   Object.keys(body).forEach(column => {
     if (body[column].min !== undefined) {
@@ -41,6 +43,11 @@ function dataSelection(table_name, body, req, res) {
       query += " AND " + column + " IN ('" + body[column].values.join("', '") + "')";
     }
   })
+  */
+
+  enjeux[table_name].columnsToKeep.forEach((col) => {
+    query += " AND " + col + " IN ('" + body.join("', '") + "')";
+  });
 
   // send and retrieve data
   let promise = pool.query(query);
