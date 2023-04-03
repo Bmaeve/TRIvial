@@ -27,7 +27,7 @@
                         </label>
                     </div>
                 </div>
-                <button class="btn btn-success" type="submit">Valider</button>
+                <button class="btn btn-success" id="val" type="submit">Valider</button>
 
             </li>
         </ul>
@@ -61,7 +61,40 @@ export default {
             }
         }
 
-    }, methods: {
+    }, async created() {
+
+        let new_enjeux = [];
+        let res = await fetch("http://localhost:3000/enjeux/getTypesEnjeux");
+        let data_fetched = await res.json();
+
+        //enjeux
+        data_fetched.forEach((enjeu) => {
+            new_enjeux.push({
+                text: enjeu.fullName,
+                value: enjeu.key,
+                id: "check_" + enjeu.key,
+                target_collapse: "#collapse_" + enjeu.key,
+                id_collapse: "collapse_" + enjeu.key,
+                id_parent: "parent_" + enjeu.key
+            });
+        })
+
+        this.enjeux = new_enjeux;
+        console.log(this.enjeux);
+
+        // let types = [];
+
+        //types enjeux
+        data_fetched.forEach((enjeu) => {
+            // let types_fetched = [];
+            console.log(enjeu.columns);
+            for (let i = 0; enjeu.columns.length; i++) {
+                console.log(enjeu.columns[i]);
+            }
+        })
+
+    },
+    methods: {
         rangeChange() {
             let range = document.getElementById("rangeScenario");
             if (range.value == 1) {
@@ -77,7 +110,7 @@ export default {
         Collapse(e) {
             e.preventDefault();
             console.log(e.target.value);
-            let children = document.querySelectorAll("#collapse" + e.target.value);
+            let children = document.querySelectorAll("#collapse_" + e.target.value);
             console.log(children);
 
             children.forEach(child => {
