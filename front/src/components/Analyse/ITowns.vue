@@ -157,8 +157,8 @@ export default {
     });
     view.addLayer(basic);
 
-    let paramsScen = { "scenario": { "values": ["04Fai"] } }
-    api2itowns.addLayerToView(view, "scenarios", paramsScen);
+    // let paramsScen = { "scenario": { "values": ["04Fai"] } }
+    // api2itowns.addLayerToView(view, "scenarios", paramsScen);
 
     let params = {
       patrim: {
