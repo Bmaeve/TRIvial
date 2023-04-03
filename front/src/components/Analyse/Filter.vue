@@ -81,9 +81,6 @@ export default {
         }
 
     },
-    mounted() {
-
-    },
     methods: {
         rangeChange() {
             let range = document.getElementById("rangeScenario");
