@@ -8,7 +8,16 @@
                     id="rangeScenario">
                 <span>{{ rangeValue }}</span>
             </li>
-            <li class="nav-item">
+
+            <li class="MultiRangeSliderContainer">
+                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Hauteur de bâtiment</span>
+                <MultiRangeSlider baseClassName="multi-range-slider" :min="0" :max="300" :step="20" :ruler="true"
+                    :label="true" :minValue="barMinValue" :maxValue="barMaxValue" @input="UpdateValues" />
+                <span style="float:left;font-size: 0.8em;">Min:{{ barMinValue }}</span> <span
+                    style="float:right;font-size: 0.8em;">Max:{{ barMaxValue }}</span>
+            </li>
+           <li class="nav-item">
+
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
                 <div>
                     <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
@@ -32,17 +41,30 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-success" type="submit">Valider</button>
+                     <button class="btn btn-success" v-on:click="btnValidate" type="submit">Valider</button>
                 </div>
+
             </li>
         </ul>
     </div>
 </template>
 <script>
 
+import $ from 'jquery'
+import MultiRangeSlider from 'multi-range-slider-vue'
+import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
+
+import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
+
+console.log($)
+
 
 export default {
     name: "FilterSelection",
+    components: {
+        MultiRangeSlider
+    },
+
     data() {
         return {
             rangeValue: "Fort",
@@ -59,7 +81,9 @@ export default {
             ],
             infos_json: {
 
-            }
+            },
+            barMinValue: 0,
+            barMaxValue: 300
         }
 
     },
@@ -122,7 +146,6 @@ export default {
     methods: {
         rangeChange(e) {
             let range = e.target;
-
             if (range.value == 1) {
                 this.rangeValue = "Faible";
             }
@@ -138,14 +161,49 @@ export default {
             console.log(e.target.value);
             let children = document.querySelectorAll("#collapse_" + e.target.value);
             console.log(children);
-
             children.forEach(child => {
                 child.classList.toggle('show');
             });
 
-        }
-    }
+        },
 
+        btnValidate() {
+            let enjeux = document.querySelectorAll("div.form-check");
+            let params = {};
+            for (var i = 0; i < enjeux.length; i++) {
+                let filters = [];
+                if (enjeux[i].getAttribute('id').indexOf("parent") == 0 && enjeux[i].firstElementChild.checked) {
+                    enjeux[i].childNodes.forEach(type => {
+                        if (type.className == "form-check collapse show" && type.firstChild.checked) {
+                            filters.push(type.innerText);
+                        }
+                    });
+                    let enjeuName = enjeux[i].innerHTML.slice(115, 115 + enjeux[i].innerHTML.slice(115, 150).indexOf("/") - 1);
+                    params[enjeuName] = {};
+                    params[enjeuName].filters = filters;
+                }
+            }
+            console.log(params);
+            //api2itowns.addLayerToView(view, params, body);
+        },
+
+        UpdateValues(e) {
+            this.barMinValue = e.minValue;
+            this.barMaxValue = e.maxValue;
+        }
+    },
+    mounted() {
+        $('#viewerDiv').click(() => {
+            console.log(this.barMinValue, this.barMaxValue)
+        })
+    }
 }
+
 </script>
-<style></style>
+<style>
+.MultiRangeSliderContainer {
+    margin: auto;
+    width: 100%;
+    padding-right: 10px;
+}
+</style>

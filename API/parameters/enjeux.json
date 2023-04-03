@@ -2,20 +2,15 @@
     "patrim": {
         "full_name": "patrimoine",
         "columnsToKeep": [
-            "hauteur",
             "nature"
         ]
     },
     "autre": {
-        "full_name": "autre",
-        "columnsToKeep": [
-            "hauteur"
-        ]
+        "full_name": "autre"
     },
     "san": {
         "full_name": "santé",
         "columnsToKeep": [
-            "hauteur",
             "liblongcat"
         ]
     },
@@ -28,35 +23,30 @@
     "trans_s": {
         "full_name": "transport (bâtiments)",
         "columnsToKeep": [
-            "hauteur",
             "nature"
         ]
     },
     "indus": {
         "full_name": "industrie",
         "columnsToKeep": [
-            "hauteur",
             "detail_enj"
         ]
     },
     "ens": {
         "full_name": "enseignement",
         "columnsToKeep": [
-            "hauteur",
             "denominati"
         ]
     },
     "def": {
         "full_name": "défense",
         "columnsToKeep": [
-            "hauteur",
             "detail_enj"
         ]
     },
     "admin": {
         "full_name": "administration",
         "columnsToKeep": [
-            "hauteur",
             "detail_enj"
         ]
     }

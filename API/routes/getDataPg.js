@@ -7,7 +7,7 @@ let pool = require('./poolPg');
 router.get('/', async function (req, res, next) {
 
   //SQL request
-  var query = 'select *,ST_AsGeoJSON(geom)::json as geometry from bati_indiferrencie;'
+  var query = 'select *,ST_AsGeoJSON(geom)::json as geometry from patrim;'
 
   // send and retrieve data
   await pool.query(query, (error, results) => {
