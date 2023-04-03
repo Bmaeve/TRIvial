@@ -1,7 +1,57 @@
 <template>
+    <div id="com_scen1">
+        <span>Scenario 1</span>
+        <div class="form-check">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked
+                value="faible">
+            <label class="form-check-label " for="flexRadioDefault1">
+                Faible
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="moyen">
+            <label class="form-check-label" for="flexRadioDefault2">
+                Moyen
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="fort">
+            <label class="form-check-label" for="flexRadioDefault3">
+                Fort
+            </label>
+        </div>
+    </div>
+    <div id="com_scen2">
+        <span>Scenario 2</span>
+        <div class="form-check">
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4"
+                value="faible" checked>
+            <label class="form-check-label" for="flexRadioDefault4">
+                Faible
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault5"
+                value="moyen">
+            <label class="form-check-label" for="flexRadioDefault5">
+                Moyen
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault6" value="fort">
+            <label class="form-check-label" for="flexRadioDefault6">
+                Fort
+            </label>
+        </div>
+    </div>
     <div id="com_box">
-        <div id="com_Itowns1" class="com_itown"></div>
+        <div id="com_Itowns1" class="com_itown">
+
+        </div>
         <div id="com_Itowns2" class="com_itown"></div>
+    </div>
+    <div id="com_footer">
+        <img src="../../assets/logo.png" width="70" height="70" />
     </div>
 </template>
 <script>
@@ -10,23 +60,52 @@ import * as itowns from "../../../node_modules/itowns/dist/itowns";
 //iTowns Widgets 
 //import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
+import $ from 'jquery'
+
+
 
 export default {
     name: 'ComparaisonTRIvial',
     props: {
 
     },
+    data() {
+        return {
+            layerlist: []
+        }
+    },
+    computed: {
+
+    },
+    methods: {
+
+
+    },
     mounted() {
 
-        // Define crs projection that we will use (taken from https://epsg.io/3946, Proj4js section)
 
+        let layerlist = fetch('http://localhost:3000/dbInfo/getTables').then(res => res.json())
 
-        // itowns.proj4.defs('EPSG:3946', '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
+        layerlist.then(data => {
+            const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
+            const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
+            //const lineLayer = spatialLayer.filter(el => { return el == 'trans_l' })
+            const scenario = polyLayer.filter(el => { return el == 'scenarios' })
+            const admin = polyLayer.filter(el => { return el == 'arrond' || el == 'comm' })
+            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' })
 
-        /*const placement = {
-            coord: new itowns.Coordinates("EPSG:3946", 1651269, 5519421),
-            range: 20000
-        };*/
+            console.log(scenario, batis, admin)
+        })
+
+        $('.scen1').change((e) => {
+            const value = e.target.value
+            console.log(value)
+        })
+
+        $('.scen2').change((e) => {
+            const value = e.target.value
+            console.log(value)
+        })
         // Define the view geographic extent
         itowns.proj4.defs(
             'EPSG:2154',
@@ -68,11 +147,11 @@ export default {
             overGlobe = false;
         }, false);
         // Ortho wmts config
-        var json = require('./Ortho.json')
+        var orthoScene1 = require('./Ortho.json')
 
-        json.source = new itowns.WMTSSource(json.source);
+        orthoScene1.source = new itowns.WMTSSource(orthoScene1.source);
 
-        var layer = new itowns.ColorLayer(json.id, json);
+        var layer = new itowns.ColorLayer(orthoScene1.id, orthoScene1);
         view.addLayer(layer);
 
         // Define the source of the dem data
@@ -88,37 +167,15 @@ export default {
         const layerDEM = new itowns.ElevationLayer('DEM', { source: elevationSource });
 
         view.addLayer(layerDEM)
-        // Static Json solution
 
-        function setExtrusion(properties) {
+
+        /*function setExtrusion(properties) {
             return properties.HAUTEUR;
-        }
-        function setColor() {
+        }*/
+        /*function setColor() {
             return new itowns.THREE.Color(0xff0000);
-        }
-        const batsource = new itowns.FileSource({
-            url: "http://localhost:3000/",
-            crs: 'EPSG:2154',
-            format: 'application/json',
-        });
+        }*/
 
-        let basic = new itowns.FeatureGeometryLayer('basic', {
-            // Use a FileSource to load a single file once
-            source: batsource,
-            transparent: true,
-            opacity: 0.7,
-            //zoom: { min: 10 },
-            style: new itowns.Style({
-                fill: {
-                    color: setColor,
-                    base_altitude: 28,
-                    extrusion_height: setExtrusion,
-                }
-            })
-        });
-
-
-        view.addLayer(basic);
         // Listen for globe full initialisation event
         view
             .addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED,
@@ -159,8 +216,8 @@ export default {
                 });
 
 
-        var json2 = require('./Ortho.json')
-        var wmsImageryLayer = new itowns.ColorLayer(json2.id, json2);
+        var orthoScene2 = require('./Ortho.json')
+        var wmsImageryLayer = new itowns.ColorLayer(orthoScene2.id, orthoScene2);
         planarView.addLayer(wmsImageryLayer);
 
         // Define the source of the dem data
@@ -176,57 +233,7 @@ export default {
         const layerDEM2 = new itowns.ElevationLayer('DEM', { source: elevationSource2 });
 
         planarView.addLayer(layerDEM2)
-        // Api rest solution  
 
-        fetch('http://localhost:3000/getBatis').then(res => res.json()).then(data => {
-
-            function setExtrusions(properties) {
-                return properties.hauteur;
-            }
-
-            let marne = new itowns.FeatureGeometryLayer('Marne', {
-                // Use a FileSource to load a single file once
-                source: new itowns.FileSource({
-                    fetchedData: data,
-                    crs: 'EPSG:2154',
-                    format: 'application/json',
-                }),
-                transparent: true,
-                opacity: 0.7,
-                style: new itowns.Style({
-                    fill: {
-                        color: new itowns.THREE.Color(0xbbffbb),
-                        base_altitude: 28,
-                        extrusion_height: setExtrusions,
-                    }
-                })
-
-            });
-            planarView.addLayer(marne);
-        })
-
-
-        const batsource2 = new itowns.FileSource({
-            url: "http://localhost:3000/",
-            crs: 'EPSG:2154',
-            format: 'application/json',
-        });
-
-        let basic2 = new itowns.FeatureGeometryLayer('basic', {
-            // Use a FileSource to load a single file once
-            source: batsource2,
-            transparent: true,
-            opacity: 0.7,
-            //zoom: { min: 10 },
-            style: new itowns.Style({
-                fill: {
-                    color: setColor,
-                    base_altitude: 28,
-                    extrusion_height: setExtrusion,
-                }
-            })
-        });
-        planarView.addLayer(basic2);
     }
 }
 
@@ -237,14 +244,14 @@ export default {
 #com_box {
     margin: 0;
     overflow: hidden;
-    height: 100%;
+    height: 90vh;
 }
 
 #com_Itowns1 {
     position: absolute;
     left: 0%;
     width: 50%;
-    height: 100%;
+    height: 90vh;
 
 }
 
@@ -252,7 +259,8 @@ export default {
     position: absolute;
     left: 50%;
     width: 50%;
-    height: 100%;
+    height: 90vh;
+    border-left: 5px solid black;
 
 }
 
@@ -271,5 +279,43 @@ export default {
     user-select: none;
     z-index: 2 !important;
     /* TODO Solve this in HTML, Problem from copy from main.css examples THREE */
+}
+
+#com_footer {
+    width: 100%;
+    height: 10vh;
+    background-color: black;
+}
+
+#com_footer img {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+#com_scen1 {
+    background-color: black;
+    opacity: 0.8;
+    position: absolute;
+    left: 2%;
+    top: 5vh;
+    width: 10%;
+    height: 12vh;
+    z-index: 100;
+    color: white;
+    padding-left: 10px;
+}
+
+#com_scen2 {
+    background-color: black;
+    opacity: 0.8;
+    position: absolute;
+    right: 2%;
+    top: 5vh;
+    width: 10%;
+    height: 12vh;
+    z-index: 100;
+    color: white;
+    padding-left: 10px;
 }
 </style>
