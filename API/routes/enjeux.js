@@ -5,6 +5,7 @@ let pool = require('./poolPg');
 let enjeux = require('../parameters/enjeux.json');
 let dataSelection = require('../js/dataSelection');
 let typesEnjeux = require('../js/typesEnjeux');
+let computeRowsConcernedByScenario = require('../js/computeRowsConcerned');
 
 /* GET  request */
 router.get('/getTypesEnjeux', function (req, res, next) {
@@ -41,6 +42,26 @@ router.post('/:enjeu/selectData', function (req, res, next) {
   body.columnFiltered = enjeux[table_name].columnsToKeep;
   let response = dataSelection(table_name, body);
   response.then((GeoJson) => { res.status(200).jsonp(GeoJson) })
+    .catch((err) => {
+      if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
+        res.status(400).send(err.message);
+      } else {
+        console.log("error in promise : " + err);
+        res.status(500).send("Internal error");
+      }
+    })
+});
+
+router.put('/:enjeu/:scenario/computeConcernedRows', function (req, res, next) {
+  let table_name_enjeu = req.params.enjeu;
+  let table_name_scenario = req.params.scenario;
+  let distinctScenario = req.query.distinctScenario;
+
+  let promises = computeRowsConcernedByScenario(table_name_enjeu, table_name_scenario, distinctScenario);
+  Promise.all(promises)
+    .then(() => {
+      res.status(200).jsonp({ status: true })
+    })
     .catch((err) => {
       if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
         res.status(400).send(err.message);
