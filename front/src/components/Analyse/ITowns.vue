@@ -156,6 +156,7 @@ export default {
       })
     });
     view.addLayer(basic);
+    console.log(api2itowns)
   }
 }
 </script>

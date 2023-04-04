@@ -2,8 +2,7 @@
     <div id="com_scen1">
         <span>Scenario 1</span>
         <div class="form-check">
-            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked
-                value="04Fai">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="04Fai">
             <label class="form-check-label " for="flexRadioDefault1">
                 Faible
             </label>
@@ -24,8 +23,8 @@
     <div id="com_scen2">
         <span>Scenario 2</span>
         <div class="form-check">
-            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4" value="04Fai"
-                checked>
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4"
+                value="04Fai">
             <label class="form-check-label" for="flexRadioDefault4">
                 Faible
             </label>
@@ -81,7 +80,7 @@ export default {
         return {
             layerlist: [],
             scen1: ["04Fai"],
-            scen2: ["02Moy"],
+            scen2: ["04Fai"],
             componentKey: ref(0)
         }
     },
@@ -98,7 +97,7 @@ export default {
             this.scen1 = Object([value])
         },
         changeScene2(value) {
-            this.scen2 = [value]
+            this.scen2 = Object([value])
         },
         forceRerender() {
             this.componentKey += 1;
@@ -117,9 +116,11 @@ export default {
             '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
         );
         //Center the view on Paris
-        const placement = {
+        let placement = {
             coord: new itowns.Coordinates("EPSG:4326", 2.340, 48.858),
-            range: 20000
+            range: 30000,
+            tilt: 0,
+            heading: 110.9
         };
 
         // `viewerDiv` will contain iTowns' rendering area (`<canvas>`)
@@ -132,14 +133,14 @@ export default {
 
 
 
-        /*new itowns.Navigation(view, {
+        /*new itowns.Navigation(planarView, {
             position: 'bottom-left',
-            translate: { y: 75 },
+            translate: { y: 0 },
         });
-        new itowns.Navigation(planarView, {
-            position: 'bottom-right',
-            translate: { y: 75 },
-        });*/
+         new itowns.Navigation(planarView, {
+             position: 'bottom-right',
+             translate: { y: 75 },
+         });*/
 
 
         var promises = [];
@@ -176,8 +177,7 @@ export default {
          const layerDEM = new itowns.ElevationLayer('DEM', { source: elevationSource });
  
          view.addLayer(layerDEM)*/
-        let paramsScen = { filters: this.getScen1, columnFiltered: "scenario" };
-        itownApi.addLayerToView(view, "scenarios", paramsScen);
+
         layerlist.then(data => {
             const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
             const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
@@ -247,6 +247,8 @@ export default {
 
 
         })
+        /*let paramsScen = { filters: this.getScen1, columnFiltered: "scenario" };
+        itownApi.addLayerToView(view, "scenarios", paramsScen);*/
 
         /*let params = {
             patrim: {
@@ -293,11 +295,14 @@ export default {
         $('.scen1').change((e) => {
             const value = e.target.value
             this.changeScene1(value)
-            view.removeLayer('scenarios')
+            try {
+                view.removeLayer('scenarios')
+            } catch (err) {
+                console.log(err)
+            }
+
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
             itownApi.addLayerToView(view, "scenarios", paramsScentest);
-
-            console.log(value, getProxy(this.getScen1))
 
         })
         /*function setExtrusion(properties) {
@@ -308,17 +313,33 @@ export default {
         }*/
 
         // Listen for globe full initialisation event
+        const time = 5000;
+        const pathTravel = [];
+        pathTravel.push({ coord: new itowns.Coordinates('EPSG:4326', 2.340, 48.858), range: 20000, time: time * 0.4 });
+        //pathTravel.push({ range: 10000, time: time * 0.2, tilt: 0, heading: 110.9 });
+        pathTravel.push({ tilt: 15, time: time * 0.6 });
+
+
+        async function travel(views) {
+            return itowns.CameraUtils
+                .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, pathTravel);
+        }
+        console.log(travel)
+
         view
             .addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED,
                 function globeInitialized() {
                     // eslint-disable-next-line no-console
                     console.info('Globe initialized');
+
                     Promise.all(promises).then(function init() {
+                        travel(view).then(travel).catch(console.error);
                         var planarCamera = planarView.camera.camera3D;
                         var globeCamera = view.camera.camera3D;
                         var params;
 
                         function sync() {
+
                             if (overGlobe) {
                                 params = itowns.CameraUtils
                                     .getTransformCameraLookingAtTarget(
@@ -326,6 +347,7 @@ export default {
                                 itowns.CameraUtils
                                     .transformCameraToLookAtTarget(
                                         planarView, planarCamera, params);
+
 
                             } else {
                                 params = itowns.CameraUtils
@@ -364,8 +386,7 @@ export default {
          const layerDEM2 = new itowns.ElevationLayer('DEM', { source: elevationSource2 });
  
          planarView.addLayer(layerDEM2)*/
-        let paramsScen2 = { filters: this.getScen2, columnFiltered: "scenario" };
-        itownApi.addLayerToView(planarView, "scenarios", paramsScen2);
+
 
         layerlist.then(data => {
             const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
@@ -436,6 +457,9 @@ export default {
 
         })
 
+        /* let paramsScen2 = { filters: this.getScen2, columnFiltered: "scenario" };
+         itownApi.addLayerToView(planarView, "scenarios", paramsScen2);*/
+
 
 
         /*let params2 = {
@@ -452,7 +476,14 @@ export default {
 
         $('.scen2').change((e) => {
             const value = e.target.value
-            console.log(value)
+            this.changeScene2(value)
+            try {
+                planarView.removeLayer('scenarios')
+            } catch (err) {
+                console.log(err)
+            }
+            const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario" };
+            itownApi.addLayerToView(planarView, "scenarios", paramsScentest);
         })
 
     }
