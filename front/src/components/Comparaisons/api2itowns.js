@@ -1,6 +1,6 @@
 const host = 'http://localhost:3000/'
 import { ColorLayer } from "itowns";
-import { FileSource, THREE, Style, FeatureGeometryLayer, proj4 } from "../../node_modules/itowns/dist/itowns";
+import { FileSource, THREE, Style, FeatureGeometryLayer, proj4 } from "../../../node_modules/itowns/dist/itowns";
 import { toWgs84 } from "reproject";
 let epsg = require('epsg');
 
@@ -9,6 +9,8 @@ let api2itowns = {
         let color;
         if (parameters.color == undefined) {
             color = new THREE.Color(Math.random() * 0xffffff)
+        } else {
+            color = parameters.color
         }
 
         fetch(host + 'data/' + table_name + '/selectData', {
@@ -55,7 +57,7 @@ let api2itowns = {
                         style: new Style({
                             fill: {
                                 color: color,
-                                base_altitude: setAltitude,
+                                base_altitude: 1,
                                 extrusion_height: setExtrusions,
                             }
                         })
@@ -88,8 +90,8 @@ function setExtrusions(properties) {
     return properties.hauteur;
 }
 
-function setAltitude(properties) {
+/*function setAltitude(properties) {
     return properties.z_min - properties.hauteur;
-}
+}*/
 
 export default api2itowns;

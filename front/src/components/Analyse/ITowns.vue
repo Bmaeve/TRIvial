@@ -156,21 +156,6 @@ export default {
       })
     });
     view.addLayer(basic);
-
-    let paramsScen = { filters: ["04Fai"], columnFiltered: "scenario" };
-    api2itowns.addLayerToView(view, "scenarios", paramsScen);
-
-    let params = {
-      patrim: {
-        filters: ["Chapelle", "Arc de triomphe", "Culte catholique ou orthodoxe"],
-        color: new THREE.Color(0xffffff)
-      },
-      san: {
-        filters: ["Maison de retraite", "Hôpital"]
-      }
-    }
-    api2itowns.addEnjeuxToView(view, params);
-
   }
 }
 </script>

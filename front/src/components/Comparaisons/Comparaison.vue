@@ -3,19 +3,19 @@
         <span>Scenario 1</span>
         <div class="form-check">
             <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked
-                value="faible">
+                value="04Fai">
             <label class="form-check-label " for="flexRadioDefault1">
                 Faible
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="moyen">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="02Moy">
             <label class="form-check-label" for="flexRadioDefault2">
                 Moyen
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="fort">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="01For">
             <label class="form-check-label" for="flexRadioDefault3">
                 Fort
             </label>
@@ -24,31 +24,30 @@
     <div id="com_scen2">
         <span>Scenario 2</span>
         <div class="form-check">
-            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4"
-                value="faible" checked>
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4" value="04Fai"
+                checked>
             <label class="form-check-label" for="flexRadioDefault4">
                 Faible
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault5"
-                value="moyen">
+                value="02Moy">
             <label class="form-check-label" for="flexRadioDefault5">
                 Moyen
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault6" value="fort">
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault6"
+                value="01For">
             <label class="form-check-label" for="flexRadioDefault6">
                 Fort
             </label>
         </div>
     </div>
     <div id="com_box">
-        <div id="com_Itowns1" class="com_itown">
-
-        </div>
-        <div id="com_Itowns2" class="com_itown"></div>
+        <Scene1 />
+        <Scene2 />
     </div>
     <div id="com_footer">
         <img src="../../assets/logo.png" width="60" height="60" />
@@ -56,12 +55,16 @@
 </template>
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
-import itownApi from './api2ITwithColor'
-
+import itownApi from './api2itowns'
+import Scene1 from '@/components/Comparaisons/Scene1.vue'
+import Scene2 from '@/components/Comparaisons/Scene2.vue'
 //iTowns Widgets 
 //import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
 import $ from 'jquery'
+
+//import the vuejs Dom reference function
+import { ref } from 'vue';
 
 
 
@@ -70,15 +73,36 @@ export default {
     props: {
 
     },
+    components: {
+        Scene1,
+        Scene2
+    },
     data() {
         return {
-            layerlist: []
+            layerlist: [],
+            scen1: ["04Fai"],
+            scen2: ["02Moy"],
+            componentKey: ref(0)
         }
     },
     computed: {
-
+        getScen1() {
+            return this.scen1
+        },
+        getScen2() {
+            return this.scen2
+        }
     },
     methods: {
+        changeScene1(value) {
+            this.scen1 = Object([value])
+        },
+        changeScene2(value) {
+            this.scen2 = [value]
+        },
+        forceRerender() {
+            this.componentKey += 1;
+        }
 
 
     },
@@ -86,7 +110,7 @@ export default {
 
 
         let layerlist = fetch('http://localhost:3000/dbInfo/getTables').then(res => res.json())
-
+        console.log(layerlist)
         // Define the view geographic extent
         itowns.proj4.defs(
             'EPSG:2154',
@@ -137,6 +161,8 @@ export default {
         var layer = new itowns.ColorLayer(orthoScene1.id, orthoScene1);
         view.addLayer(layer);
 
+
+
         // Define the source of the dem data
         /* var elevationSource = new itowns.WMTSSource({
              url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
@@ -150,7 +176,8 @@ export default {
          const layerDEM = new itowns.ElevationLayer('DEM', { source: elevationSource });
  
          view.addLayer(layerDEM)*/
-
+        let paramsScen = { filters: this.getScen1, columnFiltered: "scenario" };
+        itownApi.addLayerToView(view, "scenarios", paramsScen);
         layerlist.then(data => {
             const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
             const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
@@ -164,20 +191,114 @@ export default {
             batis.forEach((layer, index) => {
                 console.log(layer, index)
                 //const colors = ['#6465A5', '#6975A6', '#F3E96B', '#F28A30', '#F05837', '#9EF1EE', '#B1F4F1', '#C1F6F4', '#CDF8F6', '#D7F9F8', '#DFFAF9', '#E5FBFA', '#EAFCFB']
-                itownApi.addLayerToView(view, layer, {}, '#BBFFBB')
+                //itownApi.addLayerToView(view, layer, {}, '#BBFFBB')
+                fetch('http://localhost:3000/data/' + layer + '/selectData').then(res => res.json()).then(data => {
+                    function setExtrusions(properties) {
+                        return properties.hauteur;
+                    }
+                    let marne = new itowns.FeatureGeometryLayer(layer, {
+                        // Use a FileSource to load a single file once
+                        source: new itowns.FileSource({
+                            fetchedData: data,
+                            crs: 'EPSG:2154',
+                            format: 'application/json',
+                        }),
+                        transparent: true,
+                        opacity: 0.7,
+                        style: new itowns.Style({
+                            fill: {
+                                color: new itowns.THREE.Color("#ffffff"),
+                                base_altitude: 1,
+                                extrusion_height: setExtrusions,
+                            }
+                        })
+                    });
+                    view.addLayer(marne);
+                })
             })
 
             transport.forEach(layer => {
                 console.log(layer)
-                itownApi.addLayerToView(view, layer, {}, '#BBFFBB')
+                //itownApi.addLayerToView(view, layer, { filters: [], columnFiltered: "" })
+                fetch('http://localhost:3000/data/' + layer + '/selectData').then(res => res.json()).then(data => {
+                    function setExtrusions(properties) {
+                        return properties.hauteur;
+                    }
+                    let marne = new itowns.FeatureGeometryLayer(layer, {
+                        // Use a FileSource to load a single file once
+                        source: new itowns.FileSource({
+                            fetchedData: data,
+                            crs: 'EPSG:2154',
+                            format: 'application/json',
+                        }),
+                        transparent: true,
+                        opacity: 0.7,
+                        style: new itowns.Style({
+                            fill: {
+                                color: new itowns.THREE.Color("#D5CABC"),
+                                base_altitude: 1,
+                                extrusion_height: setExtrusions,
+                            }
+                        })
+                    });
+                    view.addLayer(marne);
+                })
             })
 
 
         })
 
+        /*let params = {
+            patrim: {
+                filters: ["Terrain de tennis", "Culte protestant", "Tribune", "Bâtiment industriel", "Tour, donjon, moulin", "Monument", "Autre", "Arc de triomphe", "Culte israélite", "Musée", "Culte divers", "Culte catholique ou o", "Chapelle", "Eglise"],
+                color: new itowns.THREE.Color(0xffffff)
+            },
+            san: {
+                filters: ["Centre de Jour pour Personnes Agées", "Foyer d'Accueil Médicalisé pour Adultes Handicapés (F.A.M.)", "Bureau d'Aide Psychologique Universitaire (B.A.P.U.)", "Institut Médico-Educatif (I.M.E.)", "Foyer Hébergement Adultes Handicapés", "Etablissement et Service d'Aide par le Travail (E.S.A.T.)", "Etablissement Expérimental pour Enfance Handicapée", "Service d'Aide aux Personnes Agées", "Centre de Pré orientation pour Handicapés", "Centre Médico-Psycho-Pédagogique (C.M.P.P.)", "Service d'Aide Ménagère à Domicile", "Etablissement pour Enfants ou Adolescents Polyhandicapés", "Service d'Éducation Spéciale et de Soins à Domicile", "Entreprise adaptée", "Maison de Retraite", "Etablissement d'Accueil Temporaire pour Personnes Agées", "Maison d'Accueil Spécialisée (M.A.S.)", "Institut pour Déficients Auditifs", "Centre Action Médico-Sociale Précoce (C.A.M.S.P.)", "Service d'Accompagnement à la Vie Sociale (S.A.V.S.)", "Foyer de Vie pour Adultes Handicapés", "Etablissement Expérimental pour Adultes Handicapés", "Institut Thérapeutique Éducatif et Pédagogique (I.T.E.P.)", "Logement Foyer"],
+                color: new itowns.THREE.Color(0xffffff)
+            },
+            admin: {
+                filters: ["Commerces", "Industrie", "Mairie", "Préfecture"],
+                color: new itowns.THREE.Color(0xffffff)
+            },
+            autre: {
+                filters: ["Autre enjeu sensible à la gestion de crise"],
+                color: new itowns.THREE.Color(0xffffff)
+            },
+            def: {
+                filters: ["Caserne de pompiers", "Gendarmerie/Commissariat", "Prison"],
+                color: new itowns.THREE.Color(0xffffff)
+            },
+            ens: {
+                filters: ["ECOLE GEN.ET TECHNOL.PRIVEE", "ECOLE PRIMAIRE PRIVEE", "LYCEE GEN. ET TECHNOL.PRIVE", "LYCEE TECHNOLOGIQUE", "SECTION ENSEIGT PROFES.PRIVEE", "ETAB.REGIONAL ENSEIGNT ADAPTE", "ECOLE MATERNELLE PRIVEE", "LYCEE GENERAL PRIVE", "LYCEE PRIVE POUR HANDICAPES", "LYCEE GENERAL", "ECOLE PRIMAIRE PUBLIQUE", "ECOLE PRIMAIRE", "LP LYCEE DES METIERS", "ECOLE PRIM.SPECIALISEE PRIVEE", "LYCEE GENERAL ET TECHNOLOGIQUE", "SECTION ENSEIGNT PROFESSIONNEL", "COLLEGE", "ECOLE 2D DEGRE PROF.PRIVEE", "ECOLE ELEMENTAIRE PUBLIQUE", "ECOLE ELEMENTAIRE APPLICATION PUBLIQUE", "ECOLE MATERNELLE PUBLIQUE", "LPO LYCEE DES METIERS", "ECOLE 2D DEGRE GENERAL PRIVEE", "COLLEGE PRIVE", "ECOLE ELEMENTAIRE PRIVEE", "ECOLE MATERNELLE D APPLICATION", "LYCEE PROFESSIONNEL"],
+                color: new itowns.THREE.Color(0xffffff)
+            },
+            indus: {
+                filters: ["Industrie", "Commerces", "Tourisme (camping)", "Autre enjeu sensible à la gestion de crise"],
+                color: new itowns.THREE.Color(0xffffff)
+            },
+            trans_s: {
+                filters: ["Gare", "Piste en dur", "Pont", "Bâtiment industriel"],
+                color: new itowns.THREE.Color(0xffffff)
+            }
+        }
+
+        itownApi.addEnjeuxToView(view, params);
+        */
+
+        let getProxy = (data) => {
+            return JSON.parse(JSON.stringify(data))
+        }
+
         $('.scen1').change((e) => {
             const value = e.target.value
-            console.log(value)
+            this.changeScene1(value)
+            view.removeLayer('scenarios')
+            const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
+            itownApi.addLayerToView(view, "scenarios", paramsScentest);
+
+            console.log(value, getProxy(this.getScen1))
+
         })
         /*function setExtrusion(properties) {
             return properties.HAUTEUR;
@@ -243,6 +364,8 @@ export default {
          const layerDEM2 = new itowns.ElevationLayer('DEM', { source: elevationSource2 });
  
          planarView.addLayer(layerDEM2)*/
+        let paramsScen2 = { filters: this.getScen2, columnFiltered: "scenario" };
+        itownApi.addLayerToView(planarView, "scenarios", paramsScen2);
 
         layerlist.then(data => {
             const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
@@ -257,18 +380,75 @@ export default {
             batis.forEach((layer, index) => {
                 console.log(layer, index)
                 //const colors = ['#6465A5', '#6975A6', '#F3E96B', '#F28A30', '#F05837', '#9EF1EE', '#B1F4F1', '#C1F6F4', '#CDF8F6', '#D7F9F8', '#DFFAF9', '#E5FBFA', '#EAFCFB']
-                itownApi.addLayerToView(planarView, layer, {}, '#BBFFBB')
+                //itownApi.addLayerToView(view, layer, {}, '#BBFFBB')
+                fetch('http://localhost:3000/data/' + layer + '/selectData').then(res => res.json()).then(data => {
+                    function setExtrusions(properties) {
+                        return properties.hauteur;
+                    }
+                    let marne = new itowns.FeatureGeometryLayer(layer, {
+                        // Use a FileSource to load a single file once
+                        source: new itowns.FileSource({
+                            fetchedData: data,
+                            crs: 'EPSG:2154',
+                            format: 'application/json',
+                        }),
+                        transparent: true,
+                        opacity: 0.7,
+                        style: new itowns.Style({
+                            fill: {
+                                color: new itowns.THREE.Color("#ffffff"),
+                                base_altitude: 1,
+                                extrusion_height: setExtrusions,
+                            }
+                        })
+                    });
+                    planarView.addLayer(marne);
+                })
             })
+
             transport.forEach(layer => {
                 console.log(layer)
-                itownApi.addLayerToView(planarView, layer, {}, '#BBFFBB')
+                //itownApi.addLayerToView(view, layer, { filters: [], columnFiltered: "" })
+                fetch('http://localhost:3000/data/' + layer + '/selectData').then(res => res.json()).then(data => {
+                    function setExtrusions(properties) {
+                        return properties.hauteur;
+                    }
+                    let marne = new itowns.FeatureGeometryLayer(layer, {
+                        // Use a FileSource to load a single file once
+                        source: new itowns.FileSource({
+                            fetchedData: data,
+                            crs: 'EPSG:2154',
+                            format: 'application/json',
+                        }),
+                        transparent: true,
+                        opacity: 0.7,
+                        style: new itowns.Style({
+                            fill: {
+                                color: new itowns.THREE.Color("#ffffff"),
+                                base_altitude: 1,
+                                extrusion_height: setExtrusions,
+                            }
+                        })
+                    });
+                    planarView.addLayer(marne);
+                })
             })
 
         })
 
 
 
-
+        /*let params2 = {
+            patrim: {
+                filters: ["Monument", "Culte catholique ou orthodoxe", null, "Tombeau", "Culte protestant", "Culte islamique", "Culte israélite", "Musée", "Culte divers"],
+                color: new itowns.THREE.Color(0xffffff)
+            },
+            san: {
+                filters: ["Autre enjeu sensible à la gestion de crise", "Maison de retraite", "Hôpital", "Industrie"],
+                color: new itowns.THREE.Color(0xffffff)
+            }
+        }
+        itownApi.addEnjeuxToView(planarView, params2);*/
 
         $('.scen2').change((e) => {
             const value = e.target.value
