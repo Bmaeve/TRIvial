@@ -139,24 +139,16 @@ paths:
       description: |-
         Returns the requested data, multi parameters are send to the body of the request. 
         
-        This body is a json (JSON.stringify(data)) of which keys are columns of the table with the following attributes :
+        This body is a json (JSON.stringify(data)) of which keys are the following :
           
-          - values : array of values which are selected
-          - min : only for numbers, minimum of the selected values for this column
-          - max : only for numbers, maximum of the selected values for this column
+          - filters : an array with the values to filter on the column
+          - columnFiltered : the column where the filter is applied
         
-        For example :
+        For example, the body for a query looking for column "nature" having for value Hopital or Maison de retraite
         ```
           data = {
-              "hauteur":
-                  { // looking for column "hauteur" between 50 and 100
-                      "min": 50,
-                      "max":100
-                  },
-              "origin_bat":
-                  { // looking for column "origin_bat" having for value Hopital or Autre
-                      "values": ["Hopital", "Autre"]
-                  }
+            filters : ["Maison de retraite", "Hôpital"],
+            columnFiltered: "nature"
           }
         ```
       operationId: postFetchData
@@ -194,6 +186,120 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Enjeu'
+  /enjeux/{enjeu}/{scenario}/computeConcernedRows: 
+    put:
+      tags:
+          - enjeux
+      summary: compute new columns
+      description: compute a new column for precising if a row is inside concerned by a scenarion returns the name of the new columns
+      operationId: enjeuComputeConcernedRows
+      parameters:
+        - name: enjeu
+          in: path
+          description: name of the table of the enjeu
+          required: true
+          schema:
+            type: string
+        - name: scenario
+          in: path
+          description: name of the table of the scenario
+          required: true
+          schema:
+            type: string
+        - name: distinctScenario
+          in: query
+          description: column of scenario table to produce distinct columns
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: string
+                  example: "01Fai"
+  /enjeux/{table}/selectData:
+    get:
+      tags:
+          - enjeux
+      summary: Return every row of the given "enjeu"
+      description: every row is returned with its geometry and features in geojson format
+      operationId: getFetchEnjeuxData
+      parameters:
+        - name: table
+          in: path
+          description: name of the table
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Data'
+        '400':
+          description: this enjeux does not exists
+    post:
+      tags:
+        - enjeux
+      summary: Finds data of the given "enjeu" according to parameters
+      description: |-
+        Returns the requested data, multi parameters are send to the body of the request. 
+        
+        This body is a json (JSON.stringify(data)) of which keys are the following :
+          
+          - filters : an array with the values to filter on the column, the column filtered is precised in the API
+        
+        For example, the body for a query looking for column "nature" having for value Hopital or Maison de retraite
+        ```
+          data = {
+            filters : ["Maison de retraite", "Hôpital"]
+          }
+        ```
+      operationId: postFetchEnjeuxData
+      parameters:
+        - name: table
+          in: path
+          description: name of the table
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Data'
+        '400':
+          description: this enjeux does not exists
+        '405':
+          description: Invalid input
+  /scenarios/getTypesScenarios: 
+    get:
+      tags:
+          - scenarios
+      summary: returns types of scenarios
+      description: return the different types of available "scenarios" with their table name and the different columns for filtering
+      operationId: scenariosGetTypes
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enjeu'
 components:
   schemas:
     Enjeu:
@@ -201,10 +307,19 @@ components:
         properties:
           key:
             type: string
+            example: scenarios
+          columnForFiltering:
+            type: string
+            example: "scenario"
+    Scenario:
+        type: object
+        properties:
+          key:
+            type: string
             example: TRANS
           fullName:
             type: string
-            example: "Transorts"
+            example: "Transports"
           columns:
             type: array
             items: 
