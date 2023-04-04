@@ -2,75 +2,53 @@ var express = require('express');
 var router = express.Router();
 
 let pool = require('./poolPg');
-
 let enjeux = require('../parameters/enjeux.json');
-let ignoredColumns = require('../parameters/ignoredColumns.json');
+let dataSelection = require('../js/dataSelection');
+let typesEnjeux = require('../js/typesEnjeux');
 
 /* GET  request */
 router.get('/getTypesEnjeux', function (req, res, next) {
-
-  let promises = [];
-  let result_array = [];
-
-  Object.keys(enjeux).forEach((enjeu) => {
-
-    //SQL request
-    var query = " \
-        SELECT COLUMN_NAME, DATA_TYPE \
-        FROM INFORMATION_SCHEMA.COLUMNS \
-        WHERE TABLE_NAME = '" + enjeu + "' \
-        ";
-
-    try {
-      for (let i = 0; i < enjeux[enjeu].columnsToKeep.length; i++) {
-        let columnToKeep = enjeux[enjeu].columnsToKeep[i];
-        if (i == 0) {
-          query += " AND ( COLUMN_NAME = '" + columnToKeep + "'";
-        }
-        if (i == enjeux[enjeu].columnsToKeep.length - 1) {
-          query += "OR COLUMN_NAME = '" + columnToKeep + "');"
-        } else {
-          query += "OR COLUMN_NAME = '" + columnToKeep + "'";
-        }
-      }
-    } catch (e) {
-      //pass 
-    }
-
-    // send and retrieve data
-    let enjeuPromise = pool.query(query)
-      .then((results) => {
-        var features = []
-        // build the features data lists
-        results.rows.forEach(element => {
-          features.push({
-            column_name: element.column_name,
-            data_type: element.data_type
-          })
-        })
-
-        if (features.length != 0) {
-          result_array.push({
-            key: enjeu,
-            fullName: enjeux[enjeu].full_name,
-            columns: features
-          })
-        }
-      })
-
-    promises.push(enjeuPromise);
-  })
-
+  let result_array = []
+  let promises = typesEnjeux(result_array);
   Promise.all(promises)
     .then(() => {
-      // api response
-      res.status(200).jsonp(result_array)
+      res.status(200).jsonp(result_array) // api response
     })
     .catch((error) => {
       console.log("error in promise : " + error);
       res.status(500).send('Internal error')
     })
+});
 
+router.get('/:enjeu/selectData', function (req, res, next) {
+  let table_name = req.params.enjeu;
+  let body = { GETrequest: true };
+  let response = dataSelection(table_name, body);
+  response.then((GeoJson) => { res.status(200).jsonp(GeoJson) })
+    .catch((err) => {
+      if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
+        res.status(400).send(err.message);
+      } else {
+        console.log("error in promise : " + err);
+        res.status(500).send("Internal error");
+      }
+    })
+});
+
+router.post('/:enjeu/selectData', function (req, res, next) {
+  let table_name = req.params.enjeu;
+  let body = req.body;
+  body.columnFiltered = enjeux[table_name].columnsToKeep;
+  let response = dataSelection(table_name, body);
+  response.then((GeoJson) => { res.status(200).jsonp(GeoJson) })
+    .catch((err) => {
+      if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
+        res.status(400).send(err.message);
+      } else {
+        console.log("error in promise : " + err);
+        res.status(500).send("Internal error");
+      }
+    })
 });
 
 module.exports = router;
