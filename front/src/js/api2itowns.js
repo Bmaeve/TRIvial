@@ -1,10 +1,13 @@
 const host = 'http://localhost:3000/'
-import { FileSource, THREE, Style, FeatureGeometryLayer } from "../../node_modules/itowns/dist/itowns";
+import { ColorLayer } from "itowns";
+import { FileSource, THREE, Style, FeatureGeometryLayer, proj4 } from "../../node_modules/itowns/dist/itowns";
+import { toWgs84 } from "reproject";
+let epsg = require('epsg');
 
 let api2itowns = {
-    addLayerToView(view, table_name, parameters = {}, color = undefined) {
-
-        if (color == undefined) {
+    addLayerToView(view, table_name, parameters = {}) {
+        let color;
+        if (parameters.color == undefined) {
             color = new THREE.Color(Math.random() * 0xffffff)
         }
 
@@ -16,28 +19,34 @@ let api2itowns = {
             .then(res => res.json())
             .then(data => {
                 let newLayer;
-                let source = new FileSource({
-                    fetchedData: data,
-                    crs: 'EPSG:2154',
-                    format: 'application/json',
-                });
+
+                proj4.defs(
+                    'EPSG:2154',
+                    '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+                );
+
                 if (table_name == "scenarios") {
-                    newLayer = new FeatureGeometryLayer(table_name, {
+                    let source2 = new FileSource({
+                        fetchedData: toWgs84(data, undefined, epsg), // reprojecting data for color layer
+                        crs: 'EPSG:4326',
+                        format: 'application/json',
+                    });
+                    newLayer = new ColorLayer(table_name, {
                         transparent: true,
-                        source: source,
+                        source: source2,
                         style: new Style({
                             fill: {
-                                color: 'orange',
-                                opacity: 0.5,
-                                base_altitude: setAltitude,
-                                extrusion_height: 50
-                            },
-                            stroke: {
-                                color: 'white',
-                            },
+                                color: color,
+                                opacity: 0.5
+                            }
                         }),
                     });
                 } else {
+                    let source = new FileSource({
+                        fetchedData: data,
+                        crs: 'EPSG:2154',
+                        format: 'application/json',
+                    });
                     newLayer = new FeatureGeometryLayer(table_name, {
                         // Use a FileSource to load a single file once
                         source: source,
@@ -69,7 +78,7 @@ let api2itowns = {
 
     addEnjeuxToView(view, parameters) {
         Object.keys(parameters).forEach((table) => {
-            this.addLayerToView(view, table, parameters[table].filters, parameters[table].color);
+            this.addLayerToView(view, table, parameters[table]);
         })
     }
 

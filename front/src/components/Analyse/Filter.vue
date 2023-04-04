@@ -42,7 +42,6 @@
                     </div>
                     <button class="btn btn-success" id="validate" v-on:click="btnValidate" type="submit">Valider</button>
                 </div>
-
             </li>
         </ul>
     </div>
@@ -92,7 +91,6 @@ export default {
 
     },
     created() {
-
         let new_enjeux = [];
 
         let types = [];
