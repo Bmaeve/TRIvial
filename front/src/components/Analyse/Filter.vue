@@ -4,9 +4,8 @@
 
             <li class="nav-item">
                 <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Scénario</span>
-                <input v-on:change="rangeChange" type="range" class="form-range" min="1" max="3" step="1"
-                    id="rangeScenario">
-                <span>{{ rangeValue }}</span>
+                <input v-model="rangeValue" type="range" class="form-range" min="1" max="3" step="1" id="rangeScenario">
+                <span>{{ rangeValueText }}</span>
             </li>
 
             <li class="MultiRangeSliderContainer">
@@ -22,19 +21,21 @@
                 <div>
                     <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
                         :data-bs-target="enjeu.target_collapse">
-                        <input class="form-check-input" type="checkbox" :value="enjeu.value" :id="enjeu.id"
-                            v-on:change="Collapse">
+                        <input class="form-check-input" type="checkbox" :id="enjeu.id" v-model="enjeu.value">
                         <label class="form-check-label" :for="enjeu.id">
                             {{ enjeu.text }}
                         </label>
-                        <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
-                            <div v-if="typeEnjeu.enjeu == enjeu.id">
-                                <div v-for="tab in typeEnjeu.types" :key="tab.id">
-                                    <div class="form-check collapse " :id="enjeu.id_collapse">
-                                        <input class="form-check-input" type="checkbox" :value="tab.value" :id="tab.id">
-                                        <label class="form-check-label" :for="tab.id">
-                                            {{ tab.text }}
-                                        </label>
+                        <div v-if="enjeu.value">
+                            <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
+                                <div v-if="typeEnjeu.enjeu == enjeu.id">
+                                    <div v-for="tab in typeEnjeu.types" :key="tab.id">
+
+                                        <div class="form-check" :id="enjeu.id_collapse">
+                                            <input class="form-check-input" type="checkbox" :value="tab.value" :id="tab.id">
+                                            <label class="form-check-label" :for="tab.id">
+                                                {{ tab.text }}
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -69,12 +70,12 @@ export default {
 
     data() {
         return {
-            rangeValue: "Fort",
+            rangeValue: 1,
             enjeux: [
-                { text: "Enjeu 1", value: 1, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1", id_parent: "parent1" },
-                { text: "Enjeu 2", value: 2, id: "check2", target_collapse: "#collapse2", id_collapse: "collapse2", id_parent: "parent2" },
-                { text: "Enjeu 3", value: 3, id: "check3", target_collapse: "#collapse3", id_collapse: "collapse3", id_parent: "parent3" },
-                { text: "Enjeu 4", value: 4, id: "check4", target_collapse: "#collapse4", id_collapse: "collapse4", id_parent: "parent4" },
+                { text: "Enjeu 1", value: false, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1", id_parent: "parent1" },
+                { text: "Enjeu 2", value: false, id: "check2", target_collapse: "#collapse2", id_collapse: "collapse2", id_parent: "parent2" },
+                { text: "Enjeu 3", value: false, id: "check3", target_collapse: "#collapse3", id_collapse: "collapse3", id_parent: "parent3" },
+                { text: "Enjeu 4", value: false, id: "check4", target_collapse: "#collapse4", id_collapse: "collapse4", id_parent: "parent4" },
             ],
             types_enjeux: [
                 { text: "Type 1", value: 1, id: "type1" },
@@ -102,7 +103,7 @@ export default {
                 data_fetched.forEach((enjeu) => {
                     new_enjeux.push({
                         text: enjeu.fullName,
-                        value: "check_" + enjeu.key,
+                        value: false,
                         id: enjeu.key,
                         target_collapse: "#collapse_" + enjeu.key,
                         id_collapse: "collapse_" + enjeu.key,
@@ -145,29 +146,21 @@ export default {
 
 
     },
+    computed: {
+        rangeValueText() {
+            if (this.rangeValue == 1) {
+                return "Faible";
+            }
+            else if (this.rangeValue == 2) {
+                return "Moyen";
+            }
+            else if (this.rangeValue == 3) {
+                return "Fort";
+            }
+            return "undefined"
+        }
+    },
     methods: {
-        rangeChange(e) {
-            let range = e.target;
-            if (range.value == 1) {
-                this.rangeValue = "Faible";
-            }
-            else if (range.value == 2) {
-                this.rangeValue = "Moyen";
-            }
-            else if (range.value == 3) {
-                this.rangeValue = "Fort";
-            }
-        },
-        Collapse(e) {
-            e.preventDefault();
-            console.log(e.target.value);
-            let children = document.querySelectorAll("#collapse_" + e.target.id);
-            console.log(children);
-            children.forEach(child => {
-                child.classList.toggle('show');
-            });
-
-        },
 
         btnValidate() {
             // let enjeux = document.querySelectorAll("div.form-check");
