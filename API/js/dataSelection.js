@@ -12,12 +12,14 @@ async function dataSelection(table_name, body) {
           ";
 
     // filtering
-    if ((body.filters.length > 0)) {
-        if ((body.columnFiltered) == undefined) {
-            // if the colummnFiltered parameters has'nt been defined 
-            body.columnFiltered = enjeux[table_name].columnsToKeep[0];
+    if ((body.columnFiltered) != undefined) {
+        if ((body.filters.length > 0)) {
+            if ((body.columnFiltered) == undefined) {
+                // if the colummnFiltered parameters has'nt been defined 
+                body.columnFiltered = enjeux[table_name].columnsToKeep[0];
+            }
+            query += " WHERE " + body.columnFiltered + " IN ('" + body.filters.join("', '") + "')";
         }
-        query += " WHERE " + body.columnFiltered + " IN ('" + body.filters.join("', '") + "')";
     }
 
     // send and retrieve data
