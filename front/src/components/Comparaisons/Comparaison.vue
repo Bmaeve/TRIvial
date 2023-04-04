@@ -157,13 +157,18 @@ export default {
             //const lineLayer = spatialLayer.filter(el => { return el == 'trans_l' })
             const scenario = polyLayer.filter(el => { return el == 'scenarios' })
             const admin = polyLayer.filter(el => { return el == 'arrond' || el == 'comm' })
-            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' })
-
-            console.log(scenario, batis, admin)
+            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' && el != 'trans_l_flat' && el != 'trans_l_round' })
+            const transport = polyLayer.filter(el => { return el == 'trans_l_flat' })
+            console.log(scenario, batis, admin, transport)
 
             batis.forEach((layer, index) => {
                 console.log(layer, index)
                 //const colors = ['#6465A5', '#6975A6', '#F3E96B', '#F28A30', '#F05837', '#9EF1EE', '#B1F4F1', '#C1F6F4', '#CDF8F6', '#D7F9F8', '#DFFAF9', '#E5FBFA', '#EAFCFB']
+                itownApi.addLayerToView(view, layer, {}, '#BBFFBB')
+            })
+
+            transport.forEach(layer => {
+                console.log(layer)
                 itownApi.addLayerToView(view, layer, {}, '#BBFFBB')
             })
 
@@ -245,16 +250,19 @@ export default {
             //const lineLayer = spatialLayer.filter(el => { return el == 'trans_l' })
             const scenario = polyLayer.filter(el => { return el == 'scenarios' })
             const admin = polyLayer.filter(el => { return el == 'arrond' || el == 'comm' })
-            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' })
-
-            console.log(scenario, batis, admin)
+            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' && el != 'trans_l_flat' && el != 'trans_l_round' })
+            const transport = polyLayer.filter(el => { return el == 'trans_l_flat' })
+            console.log(scenario, batis, admin, transport)
 
             batis.forEach((layer, index) => {
                 console.log(layer, index)
                 //const colors = ['#6465A5', '#6975A6', '#F3E96B', '#F28A30', '#F05837', '#9EF1EE', '#B1F4F1', '#C1F6F4', '#CDF8F6', '#D7F9F8', '#DFFAF9', '#E5FBFA', '#EAFCFB']
                 itownApi.addLayerToView(planarView, layer, {}, '#BBFFBB')
             })
-
+            transport.forEach(layer => {
+                console.log(layer)
+                itownApi.addLayerToView(planarView, layer, {}, '#BBFFBB')
+            })
 
         })
 
