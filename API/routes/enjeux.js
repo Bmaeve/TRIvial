@@ -57,18 +57,20 @@ router.put('/:enjeu/:scenario/computeConcernedRows', function (req, res, next) {
   let table_name_scenario = req.params.scenario;
   let distinctScenario = req.query.distinctScenario;
 
-  let promises = computeRowsConcernedByScenario(table_name_enjeu, table_name_scenario, distinctScenario);
-  Promise.all(promises)
-    .then(() => {
-      res.status(200).jsonp({ status: true })
-    })
-    .catch((err) => {
-      if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
-        res.status(400).send(err.message);
-      } else {
-        console.log("error in promise : " + err);
-        res.status(500).send("Internal error");
-      }
+  computeRowsConcernedByScenario(table_name_enjeu, table_name_scenario, distinctScenario)
+    .then((result) => {
+      Promise.all(result.promises)
+        .then(() => {
+          res.status(200).jsonp({ status: true, newColumns: result.newColumns })
+        })
+        .catch((err) => {
+          if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
+            res.status(400).send(err.message);
+          } else {
+            console.log("error in promise : " + err);
+            res.status(500).send("Internal error");
+          }
+        })
     })
 });
 
