@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 let pool = require('./poolPg');
+let enjeux = require('../parameters/enjeux.json')
 
 /* POST  request */
 router.post('/:table/selectData', function (req, res) {
@@ -14,7 +15,7 @@ router.post('/:table/selectData', function (req, res) {
 /* GET  request */
 router.get('/:table/selectData', function (req, res) {
   let table_name = req.params.table;
-  let body = {};
+  let body = { GETrequest: true };
 
   dataSelection(table_name, body, req, res);
 });
@@ -31,6 +32,7 @@ function dataSelection(table_name, body, req, res) {
         WHERE 1=1 \
         ";
 
+  /*
   // adding filters to query according to body
   Object.keys(body).forEach(column => {
     if (body[column].min !== undefined) {
@@ -41,6 +43,16 @@ function dataSelection(table_name, body, req, res) {
       query += " AND " + column + " IN ('" + body[column].values.join("', '") + "')";
     }
   })
+  */
+
+  // filtering
+  if (body.GETrequest != true) { // if the request is GET, there are no filters
+    if (body.columnFiltered == undefined) { // if the colummnFiltered parameters has'nt been defined
+      body.columnFiltered = enjeux[table_name].columnsToKeep[0]
+    }
+    // adding filters in SQL query
+    query += " AND " + body.columnFiltered + " IN ('" + body.filters.join("', '") + "')";
+  }
 
   // send and retrieve data
   let promise = pool.query(query);

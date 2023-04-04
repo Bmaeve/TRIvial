@@ -157,9 +157,19 @@ export default {
     });
     view.addLayer(basic);
 
-    //let body = { "libelle_re": { "values": ["Ile-de-France"] } }
-    let body = {};
-    api2itowns.addLayerToView(view, "patrim", body);
+    let paramsScen = { filters: ["04Fai"], columnFiltered: "scenario" };
+    api2itowns.addLayerToView(view, "scenarios", paramsScen);
+
+    let params = {
+      patrim: {
+        filters: ["Chapelle", "Arc de triomphe", "Culte catholique ou orthodoxe"],
+        color: new THREE.Color(0xffffff)
+      },
+      san: {
+        filters: ["Maison de retraite", "Hôpital"]
+      }
+    }
+    api2itowns.addEnjeuxToView(view, params);
 
   }
 }

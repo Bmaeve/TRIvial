@@ -81,7 +81,7 @@ describe('API', () => {
             chai.request(server)
                 .post('/data/' + test_table_name + '/selectData')
                 .set('content-type', 'application/json')
-                .send({ "hauteur": { "min": 0, "max": 100 }, "origin_bat": { "values": ["Autre"] } })
+                .send({ filters: ["Autre"], columnFiltered: "origin_bat" })
                 .end((err, res) => {
                     res.should.have.status(200);
                     Object.keys(res.body).should.include('type');

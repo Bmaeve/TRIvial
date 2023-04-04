@@ -21,16 +21,20 @@ router.get('/getTypesEnjeux', function (req, res, next) {
         WHERE TABLE_NAME = '" + enjeu + "' \
         ";
 
-    for (let i = 0; i < enjeux[enjeu].columnsToKeep.length; i++) {
-      let columnToKeep = enjeux[enjeu].columnsToKeep[i];
-      if (i == 0) {
-        query += " AND ( COLUMN_NAME = '" + columnToKeep + "'";
+    try {
+      for (let i = 0; i < enjeux[enjeu].columnsToKeep.length; i++) {
+        let columnToKeep = enjeux[enjeu].columnsToKeep[i];
+        if (i == 0) {
+          query += " AND ( COLUMN_NAME = '" + columnToKeep + "'";
+        }
+        if (i == enjeux[enjeu].columnsToKeep.length - 1) {
+          query += "OR COLUMN_NAME = '" + columnToKeep + "');"
+        } else {
+          query += "OR COLUMN_NAME = '" + columnToKeep + "'";
+        }
       }
-      if (i == enjeux[enjeu].columnsToKeep.length - 1) {
-        query += "OR COLUMN_NAME = '" + columnToKeep + "');"
-      } else {
-        query += "OR COLUMN_NAME = '" + columnToKeep + "'";
-      }
+    } catch (e) {
+      //pass 
     }
 
     // send and retrieve data
@@ -48,11 +52,10 @@ router.get('/getTypesEnjeux', function (req, res, next) {
         if (features.length != 0) {
           result_array.push({
             key: enjeu,
-            fullName: enjeux[enjeu],
+            fullName: enjeux[enjeu].full_name,
             columns: features
           })
         }
-
       })
 
     promises.push(enjeuPromise);
