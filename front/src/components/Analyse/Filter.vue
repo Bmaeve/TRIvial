@@ -28,11 +28,10 @@
                             {{ enjeu.text }}
                         </label>
                         <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
-                            <div v-if="typeEnjeu.enjeu == enjeu.value">
+                            <div v-if="typeEnjeu.enjeu == enjeu.id">
                                 <div v-for="tab in typeEnjeu.types" :key="tab.id">
                                     <div class="form-check collapse " :id="enjeu.id_collapse">
-                                        <input class="form-check-input" type="checkbox" :value="tab.value"
-                                            :id="enjeu.id_collapse">
+                                        <input class="form-check-input" type="checkbox" :value="tab.value" :id="tab.id">
                                         <label class="form-check-label" :for="tab.id">
                                             {{ tab.text }}
                                         </label>
@@ -41,9 +40,8 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-success" v-on:click="btnValidate" type="submit">Valider</button>
+                    <button class="btn btn-success" id="validate" v-on:click="btnValidate" type="submit">Valider</button>
                 </div>
-
             </li>
         </ul>
     </div>
@@ -56,13 +54,17 @@ import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
 
 import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
 
-console.log($)
+import { THREE } from '../../../node_modules/itowns/dist/itowns';
 
+
+console.log($)
+//import the store
+import { store } from '../Store.js';
 
 export default {
     name: "FilterSelection",
     components: {
-        MultiRangeSlider
+        MultiRangeSlider,
     },
 
     data() {
@@ -83,7 +85,8 @@ export default {
 
             },
             barMinValue: 0,
-            barMaxValue: 300
+            barMaxValue: 300,
+            store
         }
 
     },
@@ -99,14 +102,14 @@ export default {
                 data_fetched.forEach((enjeu) => {
                     new_enjeux.push({
                         text: enjeu.fullName,
-                        value: enjeu.key,
-                        id: "check_" + enjeu.key,
+                        value: "check_" + enjeu.key,
+                        id: enjeu.key,
                         target_collapse: "#collapse_" + enjeu.key,
                         id_collapse: "collapse_" + enjeu.key,
                         id_parent: "parent_" + enjeu.key
                     });
                 })
-
+                console.log(new_enjeux);
                 this.enjeux = new_enjeux;
 
                 //types enjeux
@@ -123,11 +126,11 @@ export default {
                                     return res.json();
                                 })
                                 .then((data) => {
-                                    let j = 0;
+                                    // let j = 0;
                                     data.forEach(el => {
-                                        j++;
+                                        // j++;
                                         if (el != null) {
-                                            list.push({ text: el, value: j, id: "type_" + enjeu.key + "_" + j })
+                                            list.push({ text: el, value: enjeu_name, id: "type" })
                                         }
                                     });
                                     // console.log(list);
@@ -136,7 +139,7 @@ export default {
                         }
                     }
                 })
-
+                console.log(types);
                 this.types_enjeux = types;
             })
 
@@ -158,7 +161,7 @@ export default {
         Collapse(e) {
             e.preventDefault();
             console.log(e.target.value);
-            let children = document.querySelectorAll("#collapse_" + e.target.value);
+            let children = document.querySelectorAll("#collapse_" + e.target.id);
             console.log(children);
             children.forEach(child => {
                 child.classList.toggle('show');
@@ -167,22 +170,39 @@ export default {
         },
 
         btnValidate() {
-            let enjeux = document.querySelectorAll("div.form-check");
+            // let enjeux = document.querySelectorAll("div.form-check");
+            let types = document.querySelectorAll("#type");
             let params = {};
-            for (var i = 0; i < enjeux.length; i++) {
-                let filters = [];
-                if (enjeux[i].getAttribute('id').indexOf("parent") == 0 && enjeux[i].firstElementChild.checked) {
-                    enjeux[i].childNodes.forEach(type => {
-                        if (type.className == "form-check collapse show" && type.firstChild.checked) {
-                            filters.push(type.innerText);
+            let filters = new Map();
+            for (var i = 0; i < types.length; i++) {
+                if (types[i].checked) {
+                    console.log(types[i]);
+                    let enjeu = types[i].value;
+                    let input_enjeu = document.querySelector("#" + enjeu);
+                    if (input_enjeu.checked) {
+                        console.log(filters.has(input_enjeu.id));
+                        if (filters.has(input_enjeu.id)) {
+                            // console.log('ici');
+                            // console.log(filters.get(input_enjeu.id));
+                            // console.log(types[i].nextSibling.innerText);
+                            filters[input_enjeu.id] = filters.get(input_enjeu.id).push(types[i].nextSibling.innerText);
+
+                        } else {
+                            filters.set(input_enjeu.id, [types[i].nextSibling.innerText]);
                         }
-                    });
-                    let enjeuName = enjeux[i].innerHTML.slice(115, 115 + enjeux[i].innerHTML.slice(115, 150).indexOf("/") - 1);
-                    params[enjeuName] = {};
-                    params[enjeuName].filters = filters;
+                    }
+                    if (document.querySelector("#autre").checked) {
+                        filters.set("autre", []);
+                    }
                 }
             }
+            console.log(filters);
+            filters.forEach((tab_types, enjeu) => {
+                params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
+            })
+
             console.log(params);
+            this.store.params = params;
             //api2itowns.addLayerToView(view, params, body);
         },
 
