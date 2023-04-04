@@ -16,7 +16,7 @@
                 <span style="float:left;font-size: 0.8em;">Min:{{ barMinValue }}</span> <span
                     style="float:right;font-size: 0.8em;">Max:{{ barMaxValue }}</span>
             </li>
-           <li class="nav-item">
+            <li class="nav-item">
 
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
                 <div>
@@ -41,7 +41,7 @@
                             </div>
                         </div>
                     </div>
-                     <button class="btn btn-success" v-on:click="btnValidate" type="submit">Valider</button>
+                    <button class="btn btn-success" v-on:click="btnValidate" type="submit">Valider</button>
                 </div>
 
             </li>
@@ -88,7 +88,6 @@ export default {
 
     },
     created() {
-
         let new_enjeux = [];
 
         let types = [];
