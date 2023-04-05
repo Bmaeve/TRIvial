@@ -49,6 +49,9 @@
         <Scene2 />
     </div>
     <div id="com_footer">
+        <div id="com_indic">
+            <p>Ctrl + mouse drag for use 3D</p>
+        </div>
         <img src="../../assets/logo.png" width="60" height="60" />
     </div>
 
@@ -342,23 +345,23 @@ export default {
         const Travel3D = [];
         Travel3D.push({ tilt: 15, time: time * 0.6 });
 
-        async function travel(views) {
+        function travel(views) {
             return itowns.CameraUtils
                 .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, pathTravel);
         }
-        console.log(travel)
 
-        async function travel2d(views) {
+
+        function travel2d(views) {
             return itowns.CameraUtils
                 .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, Travel2D);
         }
-        console.log(travel2d)
 
-        async function travel3d(views) {
+
+        function travel3d(views) {
             return itowns.CameraUtils
                 .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, Travel3D);
         }
-        console.log(travel3d)
+
         view
             .addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED,
                 function globeInitialized() {
@@ -624,5 +627,16 @@ export default {
     right: 48%;
     bottom: 12vh;
     border-radius: 100%;
+}
+
+#com_viewChange:hover {
+    cursor: pointer;
+}
+
+#com_indic {
+    position: relative;
+    left: 42%;
+    top: 2vh;
+    color: white;
 }
 </style>
