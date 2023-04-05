@@ -51,6 +51,8 @@
     <div id="com_footer">
         <img src="../../assets/logo.png" width="60" height="60" />
     </div>
+
+    <button id="com_viewChange" type="button">{{ getViewType }}</button>
 </template>
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
@@ -81,7 +83,8 @@ export default {
             layerlist: [],
             scen1: ["04Fai"],
             scen2: ["04Fai"],
-            componentKey: ref(0)
+            componentKey: ref(0),
+            viewType: "2D"
         }
     },
     computed: {
@@ -90,6 +93,9 @@ export default {
         },
         getScen2() {
             return this.scen2
+        },
+        getViewType() {
+            return this.viewType
         }
     },
     methods: {
@@ -101,6 +107,13 @@ export default {
         },
         forceRerender() {
             this.componentKey += 1;
+        },
+        changeViewType() {
+            if (this.viewType == "2D") {
+                this.viewType = "3D"
+            } else {
+                this.viewType = "2D"
+            }
         }
 
 
@@ -126,7 +139,9 @@ export default {
         // `viewerDiv` will contain iTowns' rendering area (`<canvas>`)
         var viewerDiv = document.getElementById('com_Itowns1');
         var planarDiv = document.getElementById('com_Itowns2');
-
+        $('#com_viewChange').click(() => {
+            this.changeViewType()
+        })
         // Instanciate iTowns GlobeView*
         var view = new itowns.GlobeView(viewerDiv, placement);
         var planarView = new itowns.GlobeView(planarDiv, placement);
@@ -225,7 +240,7 @@ export default {
                         return properties.hauteur;
                     }
                     let marne = new itowns.FeatureGeometryLayer(layer, {
-                        // Use a FileSource to load a single file once
+                        // Use a FileSourccom_viewChangee to load a single file once
                         source: new itowns.FileSource({
                             fetchedData: data,
                             crs: 'EPSG:2154',
@@ -288,11 +303,13 @@ export default {
         itownApi.addEnjeuxToView(view, params);
         */
 
+
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
         }
 
         $('.scen1').change((e) => {
+            //$('#com_Itowns1').click()
             const value = e.target.value
             this.changeScene1(value)
             try {
@@ -319,6 +336,11 @@ export default {
         //pathTravel.push({ range: 10000, time: time * 0.2, tilt: 0, heading: 110.9 });
         pathTravel.push({ tilt: 15, time: time * 0.6 });
 
+        const Travel2D = [];
+        Travel2D.push({ tilt: 90, time: time * 0.6 });
+
+        const Travel3D = [];
+        Travel3D.push({ tilt: 15, time: time * 0.6 });
 
         async function travel(views) {
             return itowns.CameraUtils
@@ -326,6 +348,17 @@ export default {
         }
         console.log(travel)
 
+        async function travel2d(views) {
+            return itowns.CameraUtils
+                .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, Travel2D);
+        }
+        console.log(travel2d)
+
+        async function travel3d(views) {
+            return itowns.CameraUtils
+                .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, Travel3D);
+        }
+        console.log(travel3d)
         view
             .addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED,
                 function globeInitialized() {
@@ -334,6 +367,18 @@ export default {
 
                     Promise.all(promises).then(function init() {
                         travel(view).then(travel).catch(console.error);
+
+                        $('#com_viewChange').click(function () {
+                            var clicks = $(this).data('clicks');
+                            if (clicks) {
+                                // odd clicks
+                                travel3d(view).then(travel3d).catch(console.error);
+                            } else {
+                                // even clicks
+                                travel2d(view).then(travel2d).catch(console.error);
+                            }
+                            $(this).data("clicks", !clicks);
+                        });
                         var planarCamera = planarView.camera.camera3D;
                         var globeCamera = view.camera.camera3D;
                         var params;
@@ -475,6 +520,7 @@ export default {
         itownApi.addEnjeuxToView(planarView, params2);*/
 
         $('.scen2').change((e) => {
+            // $('#com_Itowns2').click()
             const value = e.target.value
             this.changeScene2(value)
             try {
@@ -569,5 +615,14 @@ export default {
     z-index: 100;
     color: white;
     padding-left: 10px;
+}
+
+#com_viewChange {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    right: 48%;
+    bottom: 12vh;
+    border-radius: 100%;
 }
 </style>
