@@ -27,6 +27,7 @@ app.use('/dbInfo', require('./routes/dbInfo'));
 app.use('/data', require('./routes/data'));
 app.use('/enjeux', require('./routes/enjeux'));
 app.use('/getBatis', require('./routes/getDataPg'));
+app.use('/saveDownParams', require('./routes/saveDownloadParams'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
