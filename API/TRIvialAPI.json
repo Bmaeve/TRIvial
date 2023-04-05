@@ -209,7 +209,7 @@
           "data"
         ],
         "summary": "Finds data according to parameters",
-        "description": "Returns the requested data, multi parameters are send to the body of the request. \n\nThis body is a json (JSON.stringify(data)) of which keys are columns of the table with the following attributes :\n  \n  - values : array of values which are selected\n  - min : only for numbers, minimum of the selected values for this column\n  - max : only for numbers, maximum of the selected values for this column\n\nFor example :\n```\n  data = {\n      \"hauteur\":\n          { // looking for column \"hauteur\" between 50 and 100\n              \"min\": 50,\n              \"max\":100\n          },\n      \"origin_bat\":\n          { // looking for column \"origin_bat\" having for value Hopital or Autre\n              \"values\": [\"Hopital\", \"Autre\"]\n          }\n  }\n```",
+        "description": "Returns the requested data, multi parameters are send to the body of the request. \n\nThis body is a json (JSON.stringify(data)) of which keys are the following :\n  \n  - filters : an array with the values to filter on the column\n  - columnFiltered : the column where the filter is applied\n\nFor example, the body for a query looking for column \"nature\" having for value Hopital or Maison de retraite\n```\n  data = {\n    filters : [\"Maison de retraite\", \"Hôpital\"],\n    columnFiltered: \"nature\"\n  }\n```",
         "operationId": "postFetchData",
         "parameters": [
           {
@@ -242,14 +242,171 @@
         }
       }
     },
-    "/enjeux/getTypesEnjeux": {
+    "/enjeux/getTypesEnjeu": {
       "get": {
         "tags": [
           "enjeux"
         ],
         "summary": "returns types of enjeu",
-        "description": "return the different types of available \"enjeux\" with their key (table name), full name and interesting columns",
+        "description": "return the different types of available \"enjeux\" with their key and full name",
         "operationId": "enjeuTypes",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Enjeu"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enjeux/{enjeu}/{scenario}/computeConcernedRows": {
+      "put": {
+        "tags": [
+          "enjeux"
+        ],
+        "summary": "compute new columns",
+        "description": "compute a new column for precising if a row is inside concerned by a scenarion returns the name of the new columns",
+        "operationId": "enjeuComputeConcernedRows",
+        "parameters": [
+          {
+            "name": "enjeu",
+            "in": "path",
+            "description": "name of the table of the enjeu",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scenario",
+            "in": "path",
+            "description": "name of the table of the scenario",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "distinctScenario",
+            "in": "query",
+            "description": "column of scenario table to produce distinct columns",
+            "required": false,
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "01Fai"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enjeux/{table}/selectData": {
+      "get": {
+        "tags": [
+          "enjeux"
+        ],
+        "summary": "Return every row of the given \"enjeu\"",
+        "description": "every row is returned with its geometry and features in geojson format",
+        "operationId": "getFetchEnjeuxData",
+        "parameters": [
+          {
+            "name": "table",
+            "in": "path",
+            "description": "name of the table",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Data"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "this enjeux does not exists"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "enjeux"
+        ],
+        "summary": "Finds data of the given \"enjeu\" according to parameters",
+        "description": "Returns the requested data, multi parameters are send to the body of the request. \n\nThis body is a json (JSON.stringify(data)) of which keys are the following :\n  \n  - filters : an array with the values to filter on the column, the column filtered is precised in the API\n\nFor example, the body for a query looking for column \"nature\" having for value Hopital or Maison de retraite\n```\n  data = {\n    filters : [\"Maison de retraite\", \"Hôpital\"]\n  }\n```",
+        "operationId": "postFetchEnjeuxData",
+        "parameters": [
+          {
+            "name": "table",
+            "in": "path",
+            "description": "name of the table",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Data"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "this enjeux does not exists"
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/scenarios/getTypesScenarios": {
+      "get": {
+        "tags": [
+          "scenarios"
+        ],
+        "summary": "returns types of scenarios",
+        "description": "return the different types of available \"scenarios\" with their table name and the different columns for filtering",
+        "operationId": "scenariosGetTypes",
         "responses": {
           "200": {
             "description": "successful operation",
@@ -275,11 +432,24 @@
         "properties": {
           "key": {
             "type": "string",
+            "example": "scenarios"
+          },
+          "columnForFiltering": {
+            "type": "string",
+            "example": "scenario"
+          }
+        }
+      },
+      "Scenario": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
             "example": "TRANS"
           },
           "fullName": {
             "type": "string",
-            "example": "Transorts"
+            "example": "Transports"
           },
           "columns": {
             "type": "array",

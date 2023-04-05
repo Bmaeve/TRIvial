@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
+import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
@@ -127,37 +127,24 @@ export default {
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);
 
-    // Static Json solution
+    // EXAMPLE
+    let scenario = "04Fai"
+    let paramsScen = { filters: [scenario], columnFiltered: "scenario" };
+    api2itowns.addLayerToView(view, "scenarios", paramsScen);
 
-    function setExtrusion(properties) {
-      return properties.HAUTEUR;
+    let params = {
+      patrim: {
+        color: 'white',
+        concernedByScenario: scenario
+      },
+      san: {
+        filters: ["Maison de retraite", "Hôpital"],
+        color: 'orange',
+        concernedByScenario: scenario
+      }
     }
-    function setColor() {
-      return new THREE.Color(0xff0000);
-    }
-    const batsource = new FileSource({
-      url: "http://localhost:3000/",
-      crs: 'EPSG:2154',
-      format: 'application/json',
-    });
+    api2itowns.addEnjeuxToView(view, params)
 
-    let basic = new FeatureGeometryLayer('basic', {
-      // Use a FileSource to load a single file once
-      source: batsource,
-      transparent: true,
-      opacity: 0.7,
-      //zoom: { min: 10 },
-      style: new Style({
-        fill: {
-          color: setColor,
-          base_altitude: 28,
-          extrusion_height: setExtrusion,
-        }
-      })
-    });
-    view.addLayer(basic);
-
-    
     let bouton_valider = document.getElementById('validate');
     bouton_valider.addEventListener('click', () => {
       let params = JSON.parse(JSON.stringify(this.store.params));
