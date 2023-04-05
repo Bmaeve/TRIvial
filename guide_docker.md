@@ -86,20 +86,11 @@ Database: open_data
 * une visualisation plus élaborée est disponible dans la branche realisationMaquetteAnalayse
 * L'ajout des données est nécéssaire à la bonne visualisation de l'application (cf ci-dessous)
 
-## Ajouter les données
+## Importer les données
 
-Pour l'instant une seule donnée peut être récupérée à partir de PostGIS, 
-il faut donc l'importer dans la base de donnée avec QGis et avec pour nom "bati_indiferrencie"
+se rendre sur http://localhost:5433 et se connecter avec les informations données ci-dessus.
 
+dans l'onglet à gauche, cliquer sur 'importer', puis sur 'parcourir'
 
->* la couche géographique à importer est un fichier shp de la [BDTopo de Paris](https://wxs.ign.fr/859x8t863h6a09o9o6fy4v60/telechargement/inspire/BDTOPO-TOUSTHEMES-2008-09-14$BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14/file/BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14.7z). Il se trouve dans le chemin suivant :
->   * BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14
->   * BDTOPO
->   * 1_DONNEES_LIVRAISON_2019-05-00233
->   * BDT_2-0_SHP_LAMB93_D075-ED083
->   * E_BATI
->   * BATI_INDIFFERENCIE.SHP
-
->* [importer un fichier shp depuis QGis](https://naysan.ca/2020/07/26/upload-a-shapefile-into-a-postgis-table-using-qgis/) (à partir de l'étape 4)
-
+importer le fichier "database/open_data.sql" en décochant "Arrêter en cas d'erreur", puis cliquer sur 'exécuter'
 
