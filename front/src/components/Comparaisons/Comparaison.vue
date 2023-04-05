@@ -362,59 +362,6 @@ export default {
                 .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, Travel3D);
         }
 
-        view
-            .addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED,
-                function globeInitialized() {
-                    // eslint-disable-next-line no-console
-                    console.info('Globe initialized');
-
-                    Promise.all(promises).then(function init() {
-                        travel(view).then(travel).catch(console.error);
-
-                        $('#com_viewChange').click(function () {
-                            var clicks = $(this).data('clicks');
-                            if (clicks) {
-                                // odd clicks
-                                travel3d(view).then(travel3d).catch(console.error);
-                            } else {
-                                // even clicks
-                                travel2d(view).then(travel2d).catch(console.error);
-                            }
-                            $(this).data("clicks", !clicks);
-                        });
-                        var planarCamera = planarView.camera.camera3D;
-                        var globeCamera = view.camera.camera3D;
-                        var params;
-
-                        function sync() {
-
-                            if (overGlobe) {
-                                params = itowns.CameraUtils
-                                    .getTransformCameraLookingAtTarget(
-                                        view, globeCamera);
-                                itowns.CameraUtils
-                                    .transformCameraToLookAtTarget(
-                                        planarView, planarCamera, params);
-
-
-                            } else {
-                                params = itowns.CameraUtils
-                                    .getTransformCameraLookingAtTarget(
-                                        planarView, planarCamera);
-                                itowns.CameraUtils
-                                    .transformCameraToLookAtTarget(
-                                        view, globeCamera, params);
-                            }
-                        }
-                        sync();
-                        view
-                            .addFrameRequester(itowns
-                                .MAIN_LOOP_EVENTS.AFTER_CAMERA_UPDATE, sync);
-                        planarView
-                            .addFrameRequester(itowns
-                                .MAIN_LOOP_EVENTS.AFTER_CAMERA_UPDATE, sync);
-                    }).catch(console.error);
-                });
 
 
         var orthoScene2 = require('./Ortho.json')
@@ -534,6 +481,62 @@ export default {
             const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario" };
             itownApi.addLayerToView(planarView, "scenarios", paramsScentest);
         })
+
+        view
+            .addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED,
+                function globeInitialized() {
+                    // eslint-disable-next-line no-console
+                    console.info('Globe initialized');
+
+                    Promise.all(promises).then(function init() {
+
+
+
+                        var planarCamera = planarView.camera.camera3D;
+                        var globeCamera = view.camera.camera3D;
+                        var params;
+                        travel(view).then(travel).catch(console.error);
+                        function sync() {
+
+                            if (overGlobe) {
+                                params = itowns.CameraUtils
+                                    .getTransformCameraLookingAtTarget(
+                                        view, globeCamera);
+                                itowns.CameraUtils
+                                    .transformCameraToLookAtTarget(
+                                        planarView, planarCamera, params);
+
+
+                            } else {
+                                params = itowns.CameraUtils
+                                    .getTransformCameraLookingAtTarget(
+                                        planarView, planarCamera);
+                                itowns.CameraUtils
+                                    .transformCameraToLookAtTarget(
+                                        view, globeCamera, params);
+                            }
+                        }
+                        sync();
+                        $('#com_viewChange').click(function () {
+                            var clicks = $(this).data('clicks');
+                            if (clicks) {
+                                // odd clicks
+                                travel3d(view).then(travel3d).catch(console.error);
+                            } else {
+                                // even clicks
+                                travel2d(view).then(travel2d).catch(console.error);
+                            }
+                            $(this).data("clicks", !clicks);
+                        });
+                        view
+                            .addFrameRequester(itowns
+                                .MAIN_LOOP_EVENTS.AFTER_CAMERA_UPDATE, sync);
+                        planarView
+                            .addFrameRequester(itowns
+                                .MAIN_LOOP_EVENTS.AFTER_CAMERA_UPDATE, sync);
+                    }).catch(console.error);
+                });
+
 
     }
 }
