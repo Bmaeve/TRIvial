@@ -47,12 +47,13 @@ async function computeRowsConcernedByScenario(table_name_enjeu, table_name_scena
 function buildQuery(table_name_enjeu, table_name_scenario, newColumnName, filter = undefined) {
     let query = " \
         ALTER TABLE " + table_name_enjeu + " \
-        ADD COLUMN " + newColumnName + " BOOLEAN;\
+        ADD COLUMN " + newColumnName + " BOOLEAN DEFAULT(false);\
         \
         UPDATE " + table_name_enjeu + " AS ENJ \
-        SET " + newColumnName + " = st_intersects(ENJ.geom, SCE.geom) \
+        SET " + newColumnName + " = true \
         FROM " + table_name_scenario + " AS SCE \
-        WHERE ST_IsValid(ENJ.geom) \
+        WHERE st_intersects(ENJ.geom, SCE.geom) \
+        AND ST_IsValid(ENJ.geom) \
         AND ST_IsValid(SCE.geom) \
         ";
 
