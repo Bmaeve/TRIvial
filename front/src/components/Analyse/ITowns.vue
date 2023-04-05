@@ -156,7 +156,14 @@ export default {
       })
     });
     view.addLayer(basic);
-    console.log(api2itowns)
+
+    
+    let bouton_valider = document.getElementById('validate');
+    bouton_valider.addEventListener('click', () => {
+      let params = JSON.parse(JSON.stringify(this.store.params));
+      api2itowns.addEnjeuxToView(view, params);
+    })
+
   }
 }
 </script>
