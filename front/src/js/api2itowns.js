@@ -5,13 +5,18 @@ import { toWgs84 } from "reproject";
 let epsg = require('epsg');
 
 let api2itowns = {
-    addLayerToView(view, table_name, parameters = {}) {
+    async addLayerToView(view, table_name, parameters = {}) {
         let color;
         if (parameters.color == undefined) {
             color = new THREE.Color(Math.random() * 0xffffff)
+        } else if (parameters.color == 1) {
+            let scenario = 1;
+            color = await this.displayConcernedFeatures(view, table_name, scenario)
         }
 
-        fetch(host + 'data/' + table_name + '/selectData', {
+        console.log(color);
+
+        let promise = fetch(host + 'data/' + table_name + '/selectData', {
             body: JSON.stringify(parameters),
             headers: { 'Content-Type': 'application/json' },
             method: 'post'
@@ -74,12 +79,38 @@ let api2itowns = {
                 // add the layer to the view
                 view.addLayer(newLayer);
             })
+
+        return promise;
     },
 
     addEnjeuxToView(view, parameters) {
+        let promises = [];
         Object.keys(parameters).forEach((table) => {
-            this.addLayerToView(view, table, parameters[table]);
+            let promise = this.addLayerToView(view, table, parameters[table]);
+            promises.push(promise);
         })
+        return (Promise.all(promises))
+    },
+
+    displayConcernedFeatures(view, enjeu, scenario) {
+        console.log(scenario)
+        let promise = fetch(host + "enjeux/" + enjeu + '/scenarios/computeConcernedRows?distinctScenario=scenario', {
+            method: 'put'
+        })
+            .then(res => res.json())
+            .then(() => {
+                let color = (feature) => {
+                    if (feature.intersectwith_scenarios_04fai) {
+                        return 'orange';
+                    }
+                }
+
+                return color;
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        return promise
     }
 
 }

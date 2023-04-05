@@ -157,9 +157,18 @@ export default {
     });
     view.addLayer(basic);
 
-    let paramsScen = { filters: ["04Fai"], columnFiltered: "scenario" };
-    api2itowns.addLayerToView(view, "scenarios", paramsScen);
+    // let paramsScen = { filters: ["04Fai"], columnFiltered: "scenario" };
+    // api2itowns.addLayerToView(view, "scenarios", paramsScen);
 
+    let paramsColor = {
+      color: 1
+    };
+    api2itowns.addLayerToView(view, "san", paramsColor)
+      .then((res) => {
+        console.log(res);
+      })
+
+    /*
     let params = {
       patrim: {
         filters: ["Chapelle", "Arc de triomphe", "Culte catholique ou orthodoxe"],
@@ -169,7 +178,9 @@ export default {
         filters: ["Maison de retraite", "Hôpital"]
       }
     }
-    api2itowns.addEnjeuxToView(view, params);
+    */
+
+
 
   }
 }
