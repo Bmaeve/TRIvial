@@ -127,6 +127,7 @@ export default {
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);
 
+    // EXAMPLE
     let scenario = "04Fai"
     let paramsScen = { filters: [scenario], columnFiltered: "scenario" };
     api2itowns.addLayerToView(view, "scenarios", paramsScen);
@@ -144,8 +145,11 @@ export default {
     }
     api2itowns.addEnjeuxToView(view, params)
 
-
-
+    let bouton_valider = document.getElementById('validate');
+    bouton_valider.addEventListener('click', () => {
+      let params = JSON.parse(JSON.stringify(this.store.params));
+      api2itowns.addEnjeuxToView(view, params);
+    })
 
   }
 }

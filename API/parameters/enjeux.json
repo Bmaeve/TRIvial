@@ -6,7 +6,10 @@
         ]
     },
     "autre": {
-        "full_name": "autre"
+        "full_name": "autre",
+        "columnsToKeep": [
+            "hauteur"
+        ]
     },
     "san": {
         "full_name": "santé",
