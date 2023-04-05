@@ -164,9 +164,6 @@ export default {
       color: 1
     };
     api2itowns.addLayerToView(view, "san", paramsColor)
-      .then((res) => {
-        console.log(res);
-      })
 
     /*
     let params = {

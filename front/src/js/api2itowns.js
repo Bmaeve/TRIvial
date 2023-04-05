@@ -10,11 +10,9 @@ let api2itowns = {
         if (parameters.color == undefined) {
             color = new THREE.Color(Math.random() * 0xffffff)
         } else if (parameters.color == 1) {
-            let scenario = 1;
+            let scenario = '04fai';
             color = await this.displayConcernedFeatures(view, table_name, scenario)
         }
-
-        console.log(color);
 
         let promise = fetch(host + 'data/' + table_name + '/selectData', {
             body: JSON.stringify(parameters),
@@ -100,7 +98,7 @@ let api2itowns = {
             .then(res => res.json())
             .then(() => {
                 let color = (feature) => {
-                    if (feature.intersectwith_scenarios_04fai) {
+                    if (feature["intersectwith_scenarios_" + scenario]) {
                         return 'orange';
                     }
                 }
