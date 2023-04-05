@@ -9,9 +9,10 @@ let api2itowns = {
         let color;
         if (parameters.color == undefined) {
             color = new THREE.Color(Math.random() * 0xffffff)
-        } else if (parameters.color == 1) {
-            let scenario = '04fai';
-            color = await this.displayConcernedFeatures(view, table_name, scenario)
+        } else if (parameters.concernedByScenario != undefined) {
+            color = await this.displayConcernedFeatures(table_name, parameters.concernedByScenario, parameters.not_concerned_color, parameters.color)
+        } else {
+            color = parameters.color
         }
 
         let promise = fetch(host + 'data/' + table_name + '/selectData', {
@@ -90,16 +91,17 @@ let api2itowns = {
         return (Promise.all(promises))
     },
 
-    displayConcernedFeatures(view, enjeu, scenario) {
-        console.log(scenario)
+    displayConcernedFeatures(enjeu, scenario, concerned_color = "red", not_concerned_color = "green") {
         let promise = fetch(host + "enjeux/" + enjeu + '/scenarios/computeConcernedRows?distinctScenario=scenario', {
             method: 'put'
         })
             .then(res => res.json())
             .then(() => {
                 let color = (feature) => {
-                    if (feature["intersectwith_scenarios_" + scenario]) {
-                        return 'orange';
+                    if (feature["intersectwith_scenarios_" + scenario.toLowerCase()]) {
+                        return concerned_color;
+                    } else {
+                        return not_concerned_color;
                     }
                 }
 

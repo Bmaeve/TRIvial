@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { FileSource, THREE, Style, proj4, FeatureGeometryLayer, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
+import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
@@ -127,55 +127,23 @@ export default {
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);
 
-    // Static Json solution
+    let scenario = "04Fai"
+    let paramsScen = { filters: [scenario], columnFiltered: "scenario" };
+    api2itowns.addLayerToView(view, "scenarios", paramsScen);
 
-    function setExtrusion(properties) {
-      return properties.HAUTEUR;
-    }
-    function setColor() {
-      return new THREE.Color(0xff0000);
-    }
-    const batsource = new FileSource({
-      url: "http://localhost:3000/",
-      crs: 'EPSG:2154',
-      format: 'application/json',
-    });
-
-    let basic = new FeatureGeometryLayer('basic', {
-      // Use a FileSource to load a single file once
-      source: batsource,
-      transparent: true,
-      opacity: 0.7,
-      //zoom: { min: 10 },
-      style: new Style({
-        fill: {
-          color: setColor,
-          base_altitude: 28,
-          extrusion_height: setExtrusion,
-        }
-      })
-    });
-    view.addLayer(basic);
-
-    // let paramsScen = { filters: ["04Fai"], columnFiltered: "scenario" };
-    // api2itowns.addLayerToView(view, "scenarios", paramsScen);
-
-    let paramsColor = {
-      color: 1
-    };
-    api2itowns.addLayerToView(view, "san", paramsColor)
-
-    /*
     let params = {
       patrim: {
-        filters: ["Chapelle", "Arc de triomphe", "Culte catholique ou orthodoxe"],
-        color: new THREE.Color(0xffffff)
+        color: 'white',
+        concernedByScenario: scenario
       },
       san: {
-        filters: ["Maison de retraite", "Hôpital"]
+        filters: ["Maison de retraite", "Hôpital"],
+        color: 'orange',
+        concernedByScenario: scenario
       }
     }
-    */
+    api2itowns.addEnjeuxToView(view, params)
+
 
 
 
