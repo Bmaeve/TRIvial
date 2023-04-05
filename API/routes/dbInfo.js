@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 let pool = require('./poolPg');
+let selectDistinct = require('../js/selectDistinct');
 
 /* GET  request */
 router.get('/getTables', async function (req, res, next) {
@@ -122,24 +123,11 @@ router.get('/:table/:column/getMinMax', async function (req, res, next) {
 router.get('/:table/:column/getDistinctValues', async function (req, res, next) {
   let table_name = req.params.table;
   let column_name = req.params.column;
-  let features = [];
 
-  //SQL request
-  var query = " \
-        SELECT DISTINCT " + column_name + " AS value \
-        FROM " + table_name + " \
-        ";
-
-  // send and retrieve data
-  let promise = pool.query(query);
-
-  promise.then((results) => {
-    results.rows.forEach(element => {
-      features.push(element.value);
+  selectDistinct(table_name, column_name)
+    .then((result) => {
+      res.status(200).jsonp(result) // api response
     })
-    // api response
-    res.status(200).jsonp(features)
-  })
     .catch((err) => {
       if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
         res.status(400).send(err.message);

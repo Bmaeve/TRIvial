@@ -5,13 +5,17 @@ import { toWgs84 } from "reproject";
 let epsg = require('epsg');
 
 let api2itowns = {
-    addLayerToView(view, table_name, parameters = {}) {
+    async addLayerToView(view, table_name, parameters = {}) {
         let color;
         if (parameters.color == undefined) {
             color = new THREE.Color(Math.random() * 0xffffff)
+        } else if (parameters.concernedByScenario != undefined) {
+            color = await this.displayConcernedFeatures(table_name, parameters.concernedByScenario, parameters.not_concerned_color, parameters.color)
+        } else {
+            color = parameters.color
         }
 
-        fetch(host + 'data/' + table_name + '/selectData', {
+        let promise = fetch(host + 'data/' + table_name + '/selectData', {
             body: JSON.stringify(parameters),
             headers: { 'Content-Type': 'application/json' },
             method: 'post'
@@ -74,12 +78,39 @@ let api2itowns = {
                 // add the layer to the view
                 view.addLayer(newLayer);
             })
+
+        return promise;
     },
 
     addEnjeuxToView(view, parameters) {
+        let promises = [];
         Object.keys(parameters).forEach((table) => {
-            this.addLayerToView(view, table, parameters[table]);
+            let promise = this.addLayerToView(view, table, parameters[table]);
+            promises.push(promise);
         })
+        return (Promise.all(promises))
+    },
+
+    displayConcernedFeatures(enjeu, scenario, concerned_color = "red", not_concerned_color = "green") {
+        let promise = fetch(host + "enjeux/" + enjeu + '/scenarios/computeConcernedRows?distinctScenario=scenario', {
+            method: 'put'
+        })
+            .then(res => res.json())
+            .then(() => {
+                let color = (feature) => {
+                    if (feature["intersectwith_scenarios_" + scenario.toLowerCase()]) {
+                        return concerned_color;
+                    } else {
+                        return not_concerned_color;
+                    }
+                }
+
+                return color;
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        return promise
     }
 
 }
