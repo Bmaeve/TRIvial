@@ -59,7 +59,8 @@
 </template>
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
-import itownApi from './api2itowns'
+import itownApi from './api2itownsv1'
+//import api2itowns from './api2itownsv2'
 import Scene1 from '@/components/Comparaisons/Scene1.vue'
 import Scene2 from '@/components/Comparaisons/Scene2.vue'
 //iTowns Widgets 
@@ -84,7 +85,7 @@ export default {
     data() {
         return {
             layerlist: [],
-            scen1: ["04Fai"],
+            scen1: [],
             scen2: ["04Fai"],
             componentKey: ref(0),
             viewType: "2D"
@@ -304,8 +305,49 @@ export default {
         }
 
         itownApi.addEnjeuxToView(view, params);
-        */
+        
 
+
+       /* let scenario = this.getScen1[0]
+        let params = {
+            patrim: {
+                color: 'white',
+                concernedByScenario: scenario
+            },
+            san: {
+                color: 'white',
+                concernedByScenario: scenario
+            },
+            admin: {
+                color: 'white',
+                concernedByScenario: scenario
+            },
+            autre: {
+                color: 'white',
+                concernedByScenario: scenario
+            },
+            def: {
+                color: 'white',
+                concernedByScenario: scenario
+            },
+            ens: {
+                color: 'white',
+                concernedByScenario: scenario
+            },
+            indus: {
+                color: 'white',
+                concernedByScenario: scenario
+            },
+            trans_s: {
+                color: 'white',
+                concernedByScenario: scenario
+            },
+            trans_l_flat_p: {
+                color: 'white',
+                concernedByScenario: scenario
+            }
+        }
+        api2itowns.addEnjeuxToView(view, params)*/
 
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
@@ -313,16 +355,33 @@ export default {
 
         $('.scen1').change((e) => {
             //$('#com_Itowns1').click()
+
+
             const value = e.target.value
             this.changeScene1(value)
+
+
+
+            //const enjeuxList = ['admin', 'autre', 'def', 'ens', 'indus', 'patrim', 'san', 'trans_s']
+
             try {
+                // enjeuxList.forEach(el => {
+                //     view.removeLayer(el)
+                // })
                 view.removeLayer('scenarios')
+
+
+
             } catch (err) {
                 console.log(err)
             }
 
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
             itownApi.addLayerToView(view, "scenarios", paramsScentest);
+
+
+
+
 
         })
         /*function setExtrusion(properties) {
