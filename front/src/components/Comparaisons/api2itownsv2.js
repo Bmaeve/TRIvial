@@ -71,12 +71,12 @@ let api2itowns = {
 
 
 
-                /* view.getLayers().forEach((l) => {
-                     // if the table is updated, remove the previous layer 
-                     if (table_name == l.id) {
-                         view.removeLayer(table_name);
-                     }
-                 })*/
+                view.getLayers().forEach((l) => {
+                    // if the table is updated, remove the previous layer 
+                    if (table_name == l.id) {
+                        view.removeLayer(table_name);
+                    }
+                })
 
                 // add the layer to the view
                 view.addLayer(newLayer);

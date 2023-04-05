@@ -125,7 +125,7 @@ export default {
     mounted() {
 
 
-        let layerlist = fetch('http://localhost:3000/dbInfo/getTables').then(res => res.json())
+        //let layerlist = fetch('http://localhost:3000/dbInfo/getTables').then(res => res.json())
 
         // Define the view geographic extent
         itowns.proj4.defs(
@@ -185,7 +185,7 @@ export default {
  
          view.addLayer(layerDEM)*/
 
-        let createLayer = (views, layer, color) => {
+        /*let createLayer = (views, layer, color) => {
             fetch('http://localhost:3000/data/' + layer + '/selectData').then(res => res.json()).then(data => {
                 function setExtrusions(properties) {
                     return properties.hauteur;
@@ -209,6 +209,51 @@ export default {
                 });
                 views.addLayer(marne);
             })
+        }*/
+
+        let createScenarioIntersect = (Scenario, views) => {
+            let scenario = Scenario
+            let params = {
+                patrim: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                },
+                san: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                },
+                admin: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                },
+                autre: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                },
+                def: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                },
+                ens: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                },
+                indus: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                },
+                trans_s: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                },
+                trans_l_flat_p: {
+                    color: 'white',
+                    concernedByScenario: scenario
+                }
+            }
+
+            api2itowns.addEnjeuxToView(views, params)
+
         }
 
         /* layerlist.then(data => {
@@ -234,47 +279,8 @@ export default {
          })*/
 
 
-
-        let scenario = this.getScen1[0]
-        let params = {
-            patrim: {
-                color: 'white',
-                concernedByScenario: scenario
-            },
-            san: {
-                color: 'white',
-                concernedByScenario: scenario
-            },
-            admin: {
-                color: 'white',
-                concernedByScenario: scenario
-            },
-            autre: {
-                color: 'white',
-                concernedByScenario: scenario
-            },
-            def: {
-                color: 'white',
-                concernedByScenario: scenario
-            },
-            ens: {
-                color: 'white',
-                concernedByScenario: scenario
-            },
-            indus: {
-                color: 'white',
-                concernedByScenario: scenario
-            },
-            trans_s: {
-                color: 'white',
-                concernedByScenario: scenario
-            },
-            trans_l_flat_p: {
-                color: 'white',
-                concernedByScenario: scenario
-            }
-        }
-        api2itowns.addEnjeuxToView(view, params)
+        createScenarioIntersect(this.getScen1[0], view)
+        console.log(view.getLayerById('san'))
 
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
@@ -288,7 +294,7 @@ export default {
             this.changeScene1(value)
 
 
-            //const enjeuxList = ['admin', 'autre', 'def', 'ens', 'indus', 'patrim', 'san', 'trans_s', 'trans_l_flat', 'trans_l_flat_p']
+            //  const enjeuxList = ['admin', 'autre', 'def', 'ens', 'indus', 'patrim', 'san', 'trans_s', 'trans_l_flat_p']
 
             try {
                 /*enjeuxList.forEach(el => {
@@ -302,8 +308,12 @@ export default {
                 console.log(err)
             }
 
+            createScenarioIntersect(this.getScen1[0], view)
+
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
             itownApi.addLayerToView(view, "scenarios", paramsScentest);
+
+
 
         })
 
@@ -358,7 +368,7 @@ export default {
          planarView.addLayer(layerDEM2)*/
 
 
-        layerlist.then(data => {
+        /*layerlist.then(data => {
             const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
             const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
 
@@ -376,8 +386,8 @@ export default {
 
             })
 
-        })
-
+        })*/
+        createScenarioIntersect(this.getScen2[0], planarView)
 
         $('.scen2').change((e) => {
             // $('#com_Itowns2').click()
