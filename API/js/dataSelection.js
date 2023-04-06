@@ -2,7 +2,7 @@ let pool = require('../routes/poolPg');
 let enjeux = require('../parameters/enjeux.json')
 
 async function dataSelection(table_name, body) {
-
+    console.log(body);
     let features = [];
 
     //SQL query
@@ -12,7 +12,7 @@ async function dataSelection(table_name, body) {
           ";
 
     // filtering
-    if ((body.columnFiltered) != undefined) {
+    if ((body.filters) != undefined) {
         if ((body.filters.length > 0)) {
             if ((body.columnFiltered) == undefined) {
                 // if the colummnFiltered parameters has'nt been defined 
