@@ -48,7 +48,72 @@
         <Scene1 />
         <Scene2 />
     </div>
+    <div id="com_fiche1">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird</td>
+                    <td>@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="com_fiche2">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird</td>
+                    <td>@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <div id="com_footer">
+        <id id="com_fiche_btn">
+            <button type="button">Voir fiche</button>
+        </id>
         <div id="com_indic">
             <p>Ctrl + mouse drag for use 3D</p>
         </div>
@@ -124,6 +189,16 @@ export default {
     },
     mounted() {
 
+        const fiche1 = $('#com_fiche1')
+        const fiche2 = $('#com_fiche2')
+        const action = $('#com_fiche_btn')
+        fiche1.hide()
+        fiche2.hide()
+
+        action.click(() => {
+            fiche1.slideToggle('slow')
+            fiche2.slideToggle('slow')
+        })
 
         //let layerlist = fetch('http://localhost:3000/dbInfo/getTables').then(res => res.json())
 
@@ -254,6 +329,7 @@ export default {
 
             api2itowns.addEnjeuxToView(views, params)
 
+
         }
 
         /* layerlist.then(data => {
@@ -279,7 +355,7 @@ export default {
          })*/
 
 
-        createScenarioIntersect(this.getScen1[0], view)
+        //createScenarioIntersect(this.getScen1[0], view)
         console.log(view.getLayerById('san'))
 
         let getProxy = (data) => {
@@ -294,7 +370,7 @@ export default {
             this.changeScene1(value)
 
 
-            //  const enjeuxList = ['admin', 'autre', 'def', 'ens', 'indus', 'patrim', 'san', 'trans_s', 'trans_l_flat_p']
+            // const enjeuxList = ['admin', 'autre', 'def', 'ens', 'indus', 'patrim', 'san', 'trans_s', 'trans_l_flat_p']
 
             try {
                 /*enjeuxList.forEach(el => {
@@ -310,10 +386,9 @@ export default {
 
             createScenarioIntersect(this.getScen1[0], view)
 
+
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
             itownApi.addLayerToView(view, "scenarios", paramsScentest);
-
-
 
         })
 
@@ -387,7 +462,7 @@ export default {
             })
 
         })*/
-        createScenarioIntersect(this.getScen2[0], planarView)
+        //createScenarioIntersect(this.getScen2[0], planarView)
 
         $('.scen2').change((e) => {
             // $('#com_Itowns2').click()
@@ -398,6 +473,7 @@ export default {
             } catch (err) {
                 console.log(err)
             }
+            createScenarioIntersect(this.getScen2[0], planarView)
             const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario" };
             itownApi.addLayerToView(planarView, "scenarios", paramsScentest);
         })
@@ -416,6 +492,17 @@ export default {
                         var globeCamera = view.camera.camera3D;
                         var params;
                         travel(view).then(travel).catch(console.error);
+                        $('#com_viewChange').click(function () {
+                            var clicks = $(this).data('clicks');
+                            if (clicks) {
+                                // odd clicks
+                                travel3d(view).then(travel3d).catch(console.error);
+                            } else {
+                                // even clicks
+                                travel2d(view).then(travel2d).catch(console.error);
+                            }
+                            $(this).data("clicks", !clicks);
+                        });
                         function sync() {
 
                             if (overGlobe) {
@@ -437,17 +524,7 @@ export default {
                             }
                         }
                         sync();
-                        $('#com_viewChange').click(function () {
-                            var clicks = $(this).data('clicks');
-                            if (clicks) {
-                                // odd clicks
-                                travel3d(view).then(travel3d).catch(console.error);
-                            } else {
-                                // even clicks
-                                travel2d(view).then(travel2d).catch(console.error);
-                            }
-                            $(this).data("clicks", !clicks);
-                        });
+
                         view
                             .addFrameRequester(itowns
                                 .MAIN_LOOP_EVENTS.AFTER_CAMERA_UPDATE, sync);
@@ -552,14 +629,39 @@ export default {
     border-radius: 100%;
 }
 
-#com_viewChange:hover {
+/* #com_viewChange:hover {
     cursor: pointer;
-}
+} */
 
 #com_indic {
     position: relative;
     left: 42%;
     top: 2vh;
     color: white;
+}
+
+#com_fiche1 {
+    position: absolute;
+    left: 0;
+    bottom: 10vh;
+    height: 20vh;
+    width: 50%;
+    background-color: white;
+    /* border-right: 5px solid black; */
+}
+
+#com_fiche2 {
+    position: absolute;
+    right: 0;
+    bottom: 10vh;
+    height: 20vh;
+    width: 49.5%;
+    background-color: white;
+}
+
+#com_fiche_btn {
+    position: absolute;
+    left: 2%;
+    bottom: 4vh;
 }
 </style>
