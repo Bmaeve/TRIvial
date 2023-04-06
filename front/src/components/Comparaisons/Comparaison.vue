@@ -49,6 +49,7 @@
         <Scene2 />
     </div>
     <div id="com_fiche1">
+        <div class="com_count"><span>Count: 1000</span></div>
         <table class="table table-dark table-striped">
             <thead>
                 <tr>
@@ -80,7 +81,9 @@
         </table>
     </div>
     <div id="com_fiche2">
+        <div class="com_count"><span>Count: 1000</span></div>
         <table class="table table-dark table-striped">
+
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -665,5 +668,11 @@ export default {
     position: absolute;
     left: 2%;
     bottom: 4vh;
+}
+
+.com_count {
+    text-align: center;
+    background-color: black;
+    color: white;
 }
 </style>
