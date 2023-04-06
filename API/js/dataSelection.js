@@ -2,7 +2,6 @@ let pool = require('../routes/poolPg');
 let enjeux = require('../parameters/enjeux.json')
 
 async function dataSelection(table_name, body) {
-    console.log(body);
     let features = [];
 
     //SQL query
