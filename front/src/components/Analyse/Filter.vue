@@ -170,7 +170,6 @@ export default {
         },
 
         btnValidate() {
-            // let enjeux = document.querySelectorAll("div.form-check");
             let types = document.querySelectorAll("#type");
             let params = {};
             let filters = new Map();
@@ -182,9 +181,6 @@ export default {
                     if (input_enjeu.checked) {
                         console.log(filters.has(input_enjeu.id));
                         if (filters.has(input_enjeu.id)) {
-                            // console.log('ici');
-                            // console.log(filters.get(input_enjeu.id));
-                            // console.log(types[i].nextSibling.innerText);
                             filters[input_enjeu.id] = filters.get(input_enjeu.id).push(types[i].nextSibling.innerText);
 
                         } else {
@@ -200,10 +196,8 @@ export default {
             filters.forEach((tab_types, enjeu) => {
                 params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
             })
-
             console.log(params);
             this.store.params = params;
-            //api2itowns.addLayerToView(view, params, body);
         },
 
         UpdateValues(e) {
@@ -217,6 +211,7 @@ export default {
         })
     }
 }
+
 
 </script>
 <style>
