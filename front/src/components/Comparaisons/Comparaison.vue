@@ -497,9 +497,11 @@ export default {
                             if (clicks) {
                                 // odd clicks
                                 travel3d(view).then(travel3d).catch(console.error);
+                                travel3d(planarView).then(travel3d).catch(console.error);
                             } else {
                                 // even clicks
                                 travel2d(view).then(travel2d).catch(console.error);
+                                travel2d(planarView).then(travel2d).catch(console.error);
                             }
                             $(this).data("clicks", !clicks);
                         });
