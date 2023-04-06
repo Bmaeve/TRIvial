@@ -205,7 +205,7 @@ export default {
 }
 
 li {
-    size-adjust: inherit;
+    size-adjust: initial;
     resize: inherit;
 }
 </style>

@@ -46,12 +46,12 @@ export default {
 
 #an_panel {
   padding: 20px;
-  width: 20%;
+  width: 25%;
   min-width: 20%;
   max-width: 25%;
   height: 90vh;
   resize: horizontal;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 #an_map {
