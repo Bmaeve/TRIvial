@@ -179,7 +179,6 @@ export default {
             filters.forEach((tab_types, enjeu) => {
                 params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
             })
-
             console.log(params);
             this.store.params = params;
         },
@@ -195,6 +194,7 @@ export default {
         })
     }
 }
+
 
 </script>
 <style>
