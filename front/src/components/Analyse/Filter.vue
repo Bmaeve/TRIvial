@@ -184,10 +184,13 @@ export default {
                             filters.set(input_enjeu.id, [types[i].nextSibling.innerText]);
                         }
                     }
-                    if (document.querySelector("#autre").checked) {
-                        filters.set("autre", []);
-                    }
+                    // if (document.querySelector("#autre").checked) {
+                    //     filters.set("autre", []);
+                    // }
                 }
+            }
+            if (document.querySelector("#autre").checked) {
+                filters.set("autre", []);
             }
             console.log(filters);
             filters.forEach((tab_types, enjeu) => {
