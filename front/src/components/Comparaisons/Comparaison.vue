@@ -49,67 +49,68 @@
         <Scene2 />
     </div>
     <div id="com_fiche1">
-        <div class="com_count"><span>Count: 1000</span></div>
+        <div class="com_count"><span>bâtiments atteints ({{ getCount1 }})</span></div>
         <table class="table table-dark table-striped">
+            <!-- Feature properties table header -->
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">ID TRI</th>
+                    <th scope="col">ID DBTOPO</th>
+                    <th scope="col">ENJEU</th>
+                    <th scope="col">DETAIL</th>
+                    <th scope="col">HAUTEUR</th>
+                    <th scope="col">NATURE</th>
+
+
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
+                <!-- Loop for show the properties informations -->
+                <template v-for="(properties, key) in getFeatureIntersect" :key='key'>
+                    <tr>
+                        <th>{{ properties.id_tri }}</th>
+                        <td>{{ properties.id_bdtopo }}</td>
+                        <td>{{ properties.enjeu }}</td>
+                        <td>{{ properties.detail_enj }}</td>
+                        <td>{{ properties.hauteur }}</td>
+                        <td>{{ properties.nature }}</td>
+
+
+                    </tr>
+
+                </template>
             </tbody>
         </table>
     </div>
     <div id="com_fiche2">
-        <div class="com_count"><span>Count: 1000</span></div>
+        <div class="com_count"><span>bâtiments atteints ({{ getCount2 }})</span></div>
         <table class="table table-dark table-striped">
 
+            <!-- Feature properties table header -->
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">ID TRI</th>
+                    <th scope="col">ID DBTOPO</th>
+                    <th scope="col">ENJEU</th>
+                    <th scope="col">DETAIL</th>
+                    <th scope="col">HAUTEUR</th>
+                    <th scope="col">NATURE</th>
+
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
+                <!-- Loop for show the properties informations -->
+                <template v-for="(properties, key) in getFeatureIntersect2" :key='key'>
+                    <tr>
+                        <th>{{ properties.id_tri }}</th>
+                        <td>{{ properties.id_bdtopo }}</td>
+                        <td>{{ properties.enjeu }}</td>
+                        <td>{{ properties.detail_enj }}</td>
+                        <td>{{ properties.hauteur }}</td>
+                        <td>{{ properties.nature }}</td>
+                    </tr>
+
+                </template>
             </tbody>
         </table>
     </div>
@@ -123,7 +124,7 @@
         <img src="../../assets/logo.png" width="60" height="60" />
     </div>
 
-    <button id="com_viewChange" type="button">{{ getViewType }}</button>
+    <button id="com_viewChange" type="button" class="btn btn-dark">{{ getViewType }}</button>
 </template>
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
@@ -153,11 +154,14 @@ export default {
     data() {
         return {
             layerlist: [],
-            scen1: [],
-            scen2: ["04Fai"],
+            scen1: ["04Fai"],
+            scen2: [],
             componentKey: ref(0),
             viewType: "2D",
-            fiche: "Voir fiche"
+            fiche: "Voir fiche",
+            featuresIntersect: [],
+            featuresIntersect2: [],
+
         }
     },
     computed: {
@@ -172,7 +176,19 @@ export default {
         },
         getFicheTitle() {
             return this.fiche
-        }
+        },
+        getFeatureIntersect() {
+            return this.featuresIntersect
+        },
+        getFeatureIntersect2() {
+            return this.featuresIntersect2
+        },
+        getCount1() {
+            return this.featuresIntersect.length
+        },
+        getCount2() {
+            return this.featuresIntersect2.length
+        },
     },
     methods: {
         changeScene1(value) {
@@ -197,7 +213,13 @@ export default {
             } else {
                 this.fiche = 'Voir fiche'
             }
-        }
+        },
+        changeFtIntersect(data) {
+            this.featuresIntersect = data
+        },
+        changeFtIntersect2(data) {
+            this.featuresIntersect2 = data
+        },
 
 
     },
@@ -342,7 +364,7 @@ export default {
                 }
             }
 
-            api2itowns.addEnjeuxToView(views, params)
+            return api2itowns.addEnjeuxToView(views, params)
 
 
         }
@@ -368,10 +390,6 @@ export default {
  
  
          })*/
-
-
-        //createScenarioIntersect(this.getScen1[0], view)
-        console.log(view.getLayerById('san'))
 
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
@@ -399,7 +417,25 @@ export default {
                 console.log(err)
             }
 
-            createScenarioIntersect(this.getScen1[0], view)
+            createScenarioIntersect(this.getScen1[0], view).then(res => {
+                const layers = view.getLayers()
+                console.log(res)
+                const featuresIntersectList = []
+                layers.forEach((el, index) => {
+                    console.log(el.id, index)
+                    if (index > 2 && el.id != 'trans_l_flat_p') {
+                        const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen1[0].toLowerCase()] === true })
+                        featuresInt.forEach(ft => {
+                            featuresIntersectList.push(ft.properties)
+                        })
+                    }
+
+                })
+                this.changeFtIntersect(featuresIntersectList)
+
+                console.log(this.getFeatureIntersect)
+
+            })
 
 
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
@@ -488,7 +524,22 @@ export default {
             } catch (err) {
                 console.log(err)
             }
-            createScenarioIntersect(this.getScen2[0], planarView)
+            createScenarioIntersect(this.getScen2[0], planarView).then(res => {
+                const layers = planarView.getLayers()
+                console.log(res)
+                const featuresIntersectList2 = []
+                layers.forEach((el, index) => {
+                    if (index > 2 && el.id != 'trans_l_flat_p') {
+                        const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen2[0].toLowerCase()] === true })
+                        featuresInt.forEach(ft => {
+                            featuresIntersectList2.push(ft.properties)
+                        })
+                    }
+
+                })
+                this.changeFtIntersect2(featuresIntersectList2)
+
+            })
             const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario" };
             itownApi.addLayerToView(planarView, "scenarios", paramsScentest);
         })
@@ -645,6 +696,7 @@ export default {
     right: 48%;
     bottom: 12vh;
     border-radius: 100%;
+
 }
 
 /* #com_viewChange:hover {
@@ -672,6 +724,7 @@ export default {
 }
 
 
+
 #com_fiche2 {
     position: absolute;
     right: 0;
@@ -686,7 +739,7 @@ export default {
 #com_fiche_btn {
     position: absolute;
     left: 2%;
-    bottom: 4vh;
+    bottom: 2vh;
 }
 
 .com_count {
