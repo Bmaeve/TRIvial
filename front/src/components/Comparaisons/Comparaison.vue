@@ -716,7 +716,7 @@ export default {
     bottom: 10vh;
     max-height: 20vh;
     width: 50%;
-    background-color: white;
+    background-color: black;
     /* border-right: 5px solid black; */
     overflow: auto;
     z-index: 100;
@@ -731,7 +731,7 @@ export default {
     bottom: 10vh;
     max-height: 20vh;
     width: 49.5%;
-    background-color: white;
+    background-color: black;
     overflow: auto;
     z-index: 100;
 }
@@ -746,5 +746,6 @@ export default {
     text-align: center;
     background-color: black;
     color: white;
+    width: 100%;
 }
 </style>
