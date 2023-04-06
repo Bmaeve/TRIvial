@@ -110,37 +110,30 @@ export default {
                         id_parent: "parent_" + enjeu.key
                     });
                 })
-                console.log(new_enjeux);
                 this.enjeux = new_enjeux;
 
                 //types enjeux
                 data_fetched.forEach((enjeu) => {
                     let enjeu_name = enjeu.key;
-                    // let types_fetched = [];
                     for (let i = 0; i < enjeu.columns.length; i++) {
                         let column_name = enjeu.columns[i].column_name;
                         if (column_name != "hauteur") {
                             let list = [];
-                            //    types_fetched.push({ text: column.column_name, value: i, id: "type_" + enjeu.key + "_" + i })
                             fetch("http://localhost:3000/dbInfo/" + enjeu_name + "/" + column_name + "/getDistinctValues")
                                 .then((res) => {
                                     return res.json();
                                 })
                                 .then((data) => {
-                                    // let j = 0;
                                     data.forEach(el => {
-                                        // j++;
                                         if (el != null) {
                                             list.push({ text: el, value: enjeu_name, id: "type" })
                                         }
                                     });
-                                    // console.log(list);
                                     types.push({ enjeu: enjeu_name, types: list });
                                 })
                         }
                     }
                 })
-                console.log(types);
                 this.types_enjeux = types;
             })
 
@@ -163,43 +156,32 @@ export default {
     methods: {
 
         btnValidate() {
-            // let enjeux = document.querySelectorAll("div.form-check");
             let types = document.querySelectorAll("#type");
             let params = {};
             let filters = new Map();
             for (var i = 0; i < types.length; i++) {
                 if (types[i].checked) {
-                    console.log(types[i]);
                     let enjeu = types[i].value;
                     let input_enjeu = document.querySelector("#" + enjeu);
                     if (input_enjeu.checked) {
-                        console.log(filters.has(input_enjeu.id));
                         if (filters.has(input_enjeu.id)) {
-                            // console.log('ici');
-                            // console.log(filters.get(input_enjeu.id));
-                            // console.log(types[i].nextSibling.innerText);
                             filters[input_enjeu.id] = filters.get(input_enjeu.id).push(types[i].nextSibling.innerText);
 
                         } else {
                             filters.set(input_enjeu.id, [types[i].nextSibling.innerText]);
                         }
                     }
-                    // if (document.querySelector("#autre").checked) {
-                    //     filters.set("autre", []);
-                    // }
                 }
             }
             if (document.querySelector("#autre").checked) {
                 filters.set("autre", []);
             }
-            console.log(filters);
             filters.forEach((tab_types, enjeu) => {
                 params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
             })
 
             console.log(params);
             this.store.params = params;
-            //api2itowns.addLayerToView(view, params, body);
         },
 
         UpdateValues(e) {
