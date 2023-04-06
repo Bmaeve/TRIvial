@@ -203,4 +203,9 @@ export default {
     width: 100%;
     padding-right: 10px;
 }
+
+li {
+    size-adjust: inherit;
+    resize: inherit;
+}
 </style>

@@ -31,8 +31,6 @@ export default {
 #Analyse {
   display: flex;
   flex-direction: column;
-  /* grid-template-rows: 1fr 20%;
-  gap: 0px 0px;*/
   width: 100vw;
   height: 100vh;
 }
@@ -40,23 +38,25 @@ export default {
 #first_row {
   width: 100%;
   display: flex;
-  /* grid-row: 1/2;
-  display: grid;
-  grid-template-columns: 25% 1fr;
-  overflow-y: hidden; */
 }
 
 #second_row {
   width: 100%;
-  /* grid-row: 2/3; */
 }
 
 #an_panel {
+  padding: 20px;
   width: 20%;
-  height: 100vh;
+  min-width: 20%;
+  max-width: 25%;
+  height: 90vh;
+  resize: horizontal;
+  overflow: scroll;
 }
 
 #an_map {
   width: 80%;
+  height: 90vh;
+  resize: horizontal;
 }
 </style>
