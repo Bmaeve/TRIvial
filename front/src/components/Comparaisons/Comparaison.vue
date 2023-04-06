@@ -115,7 +115,7 @@
     </div>
     <div id="com_footer">
         <id id="com_fiche_btn">
-            <button type="button">Voir fiche</button>
+            <button type="button" class="btn btn-light">{{ getFicheTitle }}</button>
         </id>
         <div id="com_indic">
             <p>Ctrl + mouse drag for use 3D</p>
@@ -156,7 +156,8 @@ export default {
             scen1: [],
             scen2: ["04Fai"],
             componentKey: ref(0),
-            viewType: "2D"
+            viewType: "2D",
+            fiche: "Voir fiche"
         }
     },
     computed: {
@@ -168,6 +169,9 @@ export default {
         },
         getViewType() {
             return this.viewType
+        },
+        getFicheTitle() {
+            return this.fiche
         }
     },
     methods: {
@@ -186,6 +190,13 @@ export default {
             } else {
                 this.viewType = "2D"
             }
+        },
+        changeFicheTitle() {
+            if (this.fiche == 'Voir fiche') {
+                this.fiche = 'Masquer fiche'
+            } else {
+                this.fiche = 'Voir fiche'
+            }
         }
 
 
@@ -201,6 +212,7 @@ export default {
         action.click(() => {
             fiche1.slideToggle('slow')
             fiche2.slideToggle('slow')
+            this.changeFicheTitle()
         })
 
         //let layerlist = fetch('http://localhost:3000/dbInfo/getTables').then(res => res.json())
@@ -591,6 +603,7 @@ export default {
     width: 100%;
     height: 10vh;
     background-color: black;
+    z-index: 100;
 }
 
 #com_footer img {
@@ -649,19 +662,25 @@ export default {
     position: absolute;
     left: 0;
     bottom: 10vh;
-    height: 20vh;
+    max-height: 20vh;
     width: 50%;
     background-color: white;
     /* border-right: 5px solid black; */
+    overflow: auto;
+    z-index: 100;
+
 }
+
 
 #com_fiche2 {
     position: absolute;
     right: 0;
     bottom: 10vh;
-    height: 20vh;
+    max-height: 20vh;
     width: 49.5%;
     background-color: white;
+    overflow: auto;
+    z-index: 100;
 }
 
 #com_fiche_btn {
