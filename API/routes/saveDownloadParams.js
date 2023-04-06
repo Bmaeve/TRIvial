@@ -12,7 +12,7 @@ router.post('/', function (req, res) {
             i++;
         } else {
             bool = false;
-            fs.writeFileSync(name, JSON.stringify(req.params));
+            fs.writeFileSync(name, JSON.stringify(req.body.params));
         }
     }
 

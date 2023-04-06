@@ -54,7 +54,7 @@ export default {
                 params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
             })
             fetch('http://localhost:3000/saveDownParams', {
-                body: JSON.stringify(params),
+                body: JSON.stringify({ params: params }),
                 headers: { 'Content-Type': 'application/json' },
                 method: 'post'
             }).then(res => res.json())
