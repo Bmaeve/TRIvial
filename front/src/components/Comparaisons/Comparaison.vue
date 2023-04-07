@@ -270,13 +270,17 @@ export default {
         var promises = [];
         var overGlobe = true;
 
-        viewerDiv.addEventListener('mousemove', function _() {
-            overGlobe = true;
-        }, false);
+        setTimeout(() => {
 
-        planarDiv.addEventListener('mousemove', function _() {
-            overGlobe = false;
-        }, false);
+            viewerDiv.addEventListener('mousemove', function _() {
+                overGlobe = true;
+            }, false);
+
+            planarDiv.addEventListener('mousemove', function _() {
+                overGlobe = false;
+            }, false);
+        }, 5000)
+
         // Ortho wmts config
         var orthoScene1 = require('./Ortho.json')
 
