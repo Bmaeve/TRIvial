@@ -7,7 +7,7 @@
           <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-5 d-none d-sm-inline">TRIvial - Analyse</span>
           </a>
-          <Filter />
+          <Filter @scenarioChanged="onScenarioChanged" />
 
         </div>
 
@@ -45,7 +45,8 @@ export default {
   data() {
     return {
       store,
-      componentKey: ref(0)
+      componentKey: ref(0),
+      scenarioId: 0
     }
   },
   methods: {
@@ -54,11 +55,17 @@ export default {
     },
     forceRerender() {
       this.componentKey += 1;
+    },
+    onScenarioChanged(value) {
+      this.scenarioId = value;
     }
   },
   computed: {
     featureInfo() {
       return this.store.featureInfo
+    },
+    getScenarioId() {
+      return this.scenarioId;
     }
   },
   mounted() {
@@ -93,7 +100,8 @@ export default {
       range: 20000
     };
     // Create the globe  view
-    const view = new GlobeView(viewerDiv, placement);
+    let view = new GlobeView(viewerDiv, placement);
+
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
@@ -127,10 +135,10 @@ export default {
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);
 
-    // EXAMPLE
+    // INIT
     let scenario = "04Fai"
-    let paramsScen = { filters: [scenario], columnFiltered: "scenario" };
-    api2itowns.addLayerToView(view, "scenarios", paramsScen);
+    let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario" };
+    api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
     let params = {
       patrim: {
@@ -149,6 +157,21 @@ export default {
     bouton_valider.addEventListener('click', () => {
       let params = JSON.parse(JSON.stringify(this.store.params));
       api2itowns.addEnjeuxToView(view, params);
+    })
+
+    document.getElementById("rangeScenario").addEventListener('change', () => {
+      console.log(Filter.data().rangeValue)
+    })
+
+    document.getElementById("rangeScenario").addEventListener('change', () => {
+      try {
+        view.removeLayer("scenarios");
+      } catch (e) {
+        //pass
+      }
+
+      let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario" };
+      api2itowns.addLayerToView(view, "scenarios", scenarioParams);
     })
 
   }
