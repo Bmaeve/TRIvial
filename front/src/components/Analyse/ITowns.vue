@@ -136,11 +136,11 @@ export default {
     // view.addLayer(layerDEM);
 
     // INIT
-    let scenario = "04Fai"
-    let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario" };
-    api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+    //let scenario = "04Fai"
+    //let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario" };
 
-    let params = {
+
+    /*let params = {
       patrim: {
         color: 'white',
         concernedByScenario: scenario
@@ -151,12 +151,13 @@ export default {
         concernedByScenario: scenario
       }
     }
-    api2itowns.addEnjeuxToView(view, params)
+    api2itowns.addEnjeuxToView(view, params)*/
 
     let bouton_valider = document.getElementById('validate');
     bouton_valider.addEventListener('click', () => {
       let params = JSON.parse(JSON.stringify(this.store.params));
       api2itowns.addEnjeuxToView(view, params);
+      //api2itowns.addLayerToView(view, "scenarios", scenarioParams);
     })
 
     document.getElementById("rangeScenario").addEventListener('change', () => {

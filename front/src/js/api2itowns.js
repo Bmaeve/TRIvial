@@ -3,7 +3,11 @@ import { ColorLayer } from "itowns";
 import { FileSource, THREE, Style, FeatureGeometryLayer, proj4 } from "../../node_modules/itowns/dist/itowns";
 import { toWgs84 } from "reproject";
 let epsg = require('epsg');
+//let counter = 0
 
+let index = {
+
+}
 let api2itowns = {
     async addLayerToView(view, table_name, parameters = {}) {
         let color;
@@ -13,6 +17,12 @@ let api2itowns = {
             color = await this.displayConcernedFeatures(table_name, parameters.concernedByScenario, parameters.not_concerned_color, parameters.color)
         } else {
             color = parameters.color
+        }
+
+        if (index[table_name] == undefined) {
+            index[table_name] = 0
+        } else {
+            index[table_name]++
         }
 
         let promise = fetch(host + 'data/' + table_name + '/selectData', {
@@ -50,7 +60,8 @@ let api2itowns = {
                         crs: 'EPSG:2154',
                         format: 'application/json',
                     });
-                    newLayer = new FeatureGeometryLayer(table_name, {
+
+                    newLayer = new FeatureGeometryLayer(table_name + '_' + index[table_name], {
                         // Use a FileSource to load a single file once
                         source: source,
                         transparent: true,
@@ -58,7 +69,7 @@ let api2itowns = {
                         style: new Style({
                             fill: {
                                 color: color,
-                                base_altitude: setAltitude,
+                                base_altitude: 5,
                                 extrusion_height: setExtrusions,
                             }
                         })
@@ -69,8 +80,10 @@ let api2itowns = {
 
                 view.getLayers().forEach((l) => {
                     // if the table is updated, remove the previous layer 
-                    if (table_name == l.id) {
-                        view.removeLayer(table_name);
+
+                    if (table_name + '_' + (index[table_name] - 1).toString() == l.id) {
+
+                        view.removeLayer(table_name + '_' + (index[table_name] - 1).toString(), true);
                     }
                 })
 
@@ -118,8 +131,8 @@ function setExtrusions(properties) {
     return properties.hauteur;
 }
 
-function setAltitude(properties) {
+/*function setAltitude(properties) {
     return properties.z_min - properties.hauteur;
-}
+}*/
 
 export default api2itowns;

@@ -3,7 +3,7 @@ import { ColorLayer } from "itowns";
 import { FileSource, THREE, Style, FeatureGeometryLayer, proj4 } from "../../../node_modules/itowns/dist/itowns";
 import { toWgs84 } from "reproject";
 let epsg = require('epsg');
-
+let counter = 0
 let api2itowns = {
     async addLayerToView(view, table_name, parameters = {}) {
         let color;
@@ -51,7 +51,7 @@ let api2itowns = {
                         crs: 'EPSG:2154',
                         format: 'application/json',
                     });
-                    newLayer = new FeatureGeometryLayer(table_name, {
+                    newLayer = new FeatureGeometryLayer(table_name + '_' + counter, {
                         // Use a FileSource to load a single file once
                         source: source,
                         transparent: true,
@@ -68,18 +68,21 @@ let api2itowns = {
 
 
                 }
-
-
-
                 view.getLayers().forEach((l) => {
                     // if the table is updated, remove the previous layer 
-                    if (table_name == l.id) {
-                        view.removeLayer(table_name);
+                    if (table_name + '_' + counter - 1 == l.id) {
+                        console.log(l.id)
+                        view.removeLayer(table_name + '_' + counter - 1, true)
                     }
                 })
 
                 // add the layer to the view
                 view.addLayer(newLayer);
+
+                counter++
+
+
+
             })
 
         return promise;
