@@ -20,11 +20,15 @@
         </div>
         <button id="an_bouton" type="button" class="btn btn-outline-success  " v-on:click="btnEnregistrer">Enregister la
             vue</button>
+        <a href="/TRIVial/Comparaisons"><button id="an_bouton2" type="button" class="btn btn-outline-success  ">Comparer
+                Scenarios</button></a>
     </div>
 </template>
 
 <script>
 import { THREE } from '../../../node_modules/itowns/dist/itowns';
+
+
 
 export default {
     name: "AnStats",
@@ -78,8 +82,19 @@ export default {
 }
 
 #an_bouton {
-    grid-column: 4/5;
+    position: absolute;
+    right: 5%;
+    bottom: 5vh;
     margin: auto;
+    width: 15%;
+}
+
+#an_bouton2 {
+    position: absolute;
+    right: 5%;
+    bottom: 0vh;
+    margin: auto;
+    width: 15%;
 }
 
 .card {
