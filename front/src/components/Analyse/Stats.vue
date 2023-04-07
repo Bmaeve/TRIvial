@@ -20,8 +20,9 @@
         </div>
         <button id="an_bouton" type="button" class="btn btn-outline-success  " v-on:click="btnEnregistrer">Enregister la
             vue</button>
-        <a href="/TRIVial/Comparaisons"><button id="an_bouton2" type="button" class="btn btn-outline-success  ">Comparer
-                Scenarios</button></a>
+        <div id="an_bouton2"><a href="/TRIVial/Comparaisons"><button type="button"
+                    class="btn btn-outline-success  ">Comparer
+                    Scenarios</button></a></div>
     </div>
 </template>
 
@@ -95,6 +96,10 @@ export default {
     bottom: 0vh;
     margin: auto;
     width: 15%;
+}
+
+#an_bouton2 button {
+    width: 100%;
 }
 
 .card {
