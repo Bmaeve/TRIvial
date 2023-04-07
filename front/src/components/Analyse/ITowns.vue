@@ -135,41 +135,26 @@ export default {
     // const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     // view.addLayer(layerDEM);
 
-    // INIT
-    //let scenario = "04Fai"
-    //let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario" };
+    let current_scenario = "01For"
+    let scenarioParams = { filters: [current_scenario], columnFiltered: "scenario" };
+    api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
-
-    /*let params = {
-      patrim: {
-        color: 'white',
-        concernedByScenario: scenario
-      },
-      san: {
-        filters: ["Maison de retraite", "Hôpital"],
-        color: 'orange',
-        concernedByScenario: scenario
-      }
-    }
-    api2itowns.addEnjeuxToView(view, params)*/
-
-    let bouton_valider = document.getElementById('validate');
-    bouton_valider.addEventListener('click', () => {
+    document.getElementById('validate').addEventListener('click', () => {
       let params = JSON.parse(JSON.stringify(this.store.params));
       api2itowns.addEnjeuxToView(view, params);
-      //api2itowns.addLayerToView(view, "scenarios", scenarioParams);
-    })
 
-    document.getElementById("rangeScenario").addEventListener('change', () => {
-      try {
-        view.removeLayer("scenarios");
-      } catch (e) {
-        //pass
+      if (current_scenario != this.getScenarioId) {
+        try {
+          view.removeLayer("scenarios");
+        } catch (e) {
+          //pass
+        }
+        let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario" };
+        api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+        current_scenario = this.getScenarioId;
       }
-
-      let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario" };
-      api2itowns.addLayerToView(view, "scenarios", scenarioParams);
     })
+
 
   }
 }

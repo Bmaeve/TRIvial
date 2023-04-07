@@ -60,6 +60,12 @@ import { THREE } from '../../../node_modules/itowns/dist/itowns';
 //import the store
 import { store } from '../Store.js';
 
+let idx2Scenario = {
+    1: "01For",
+    2: "02Moy",
+    3: "04Fai"
+}
+
 export default {
     name: "FilterSelection",
     components: {
@@ -139,19 +145,8 @@ export default {
     },
     computed: {
         rangeValueText() {
-            if (this.rangeValue == 3) {
-                this.$emit('scenarioChanged', "01For");
-                return "Proba Faible";
-            }
-            else if (this.rangeValue == 2) {
-                this.$emit('scenarioChanged', "02Moy");
-                return "Proba Moyenne";
-            }
-            else if (this.rangeValue == 1) {
-                this.$emit('scenarioChanged', "04Fai");
-                return "Proba Forte";
-            }
-            return "undefined"
+            this.$emit('scenarioChanged', idx2Scenario[this.rangeValue]);
+            return "Probabilité" + idx2Scenario[this.rangeValue];
         }
     },
     methods: {
@@ -178,7 +173,11 @@ export default {
                 filters.set("autre", []);
             }
             filters.forEach((tab_types, enjeu) => {
-                params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
+                params[enjeu] = {
+                    filters: tab_types,
+                    color: new THREE.Color(0xffffff),
+                    concernedByScenario: idx2Scenario[this.rangeValue]
+                };
             })
             this.store.params = params;
         },
