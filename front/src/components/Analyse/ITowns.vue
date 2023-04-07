@@ -160,10 +160,6 @@ export default {
     })
 
     document.getElementById("rangeScenario").addEventListener('change', () => {
-      console.log(Filter.data().rangeValue)
-    })
-
-    document.getElementById("rangeScenario").addEventListener('change', () => {
       try {
         view.removeLayer("scenarios");
       } catch (e) {

@@ -49,7 +49,6 @@
 </template>
 <script>
 
-import $ from 'jquery'
 import MultiRangeSlider from 'multi-range-slider-vue'
 import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
 
@@ -58,7 +57,6 @@ import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css
 import { THREE } from '../../../node_modules/itowns/dist/itowns';
 
 
-console.log($)
 //import the store
 import { store } from '../Store.js';
 
@@ -182,7 +180,6 @@ export default {
             filters.forEach((tab_types, enjeu) => {
                 params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
             })
-            console.log(params);
             this.store.params = params;
         },
 
@@ -191,11 +188,6 @@ export default {
             this.barMaxValue = e.maxValue;
         }
     },
-    mounted() {
-        $('#viewerDiv').click(() => {
-            console.log(this.barMinValue, this.barMaxValue)
-        })
-    }
 }
 
 
