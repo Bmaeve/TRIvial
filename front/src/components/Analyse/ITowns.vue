@@ -23,7 +23,8 @@
 </template>
 
 <script>
-import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
+import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer } from "../../../node_modules/itowns/dist/itowns";
+
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
@@ -36,6 +37,8 @@ import $ from 'jquery'
 import { store } from '../Store.js'
 //import the vuejs Dom reference function
 import { ref } from 'vue';
+import { THREE } from '../../../node_modules/itowns/dist/itowns';
+
 export default {
   name: 'MyItowns',
   components: {
@@ -112,7 +115,7 @@ export default {
     });
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
-    view.addLayer(layerOrtho)
+    view.addLayer(layerOrtho);
 
     // Define the source of the dem data
     var elevationSource = new WMTSSource({
@@ -149,8 +152,73 @@ export default {
     bouton_valider.addEventListener('click', () => {
       let params = JSON.parse(JSON.stringify(this.store.params));
       api2itowns.addEnjeuxToView(view, params);
-    })
+    });
 
+    //console.log(view.tileLayer.attachedLayers.getElementById("scenarios"));
+    mouseOver(view, view.getLayers()[1]);
+  }
+}
+
+function mouseOver(view, layer) {
+  // add an event for picking the 3D Tiles layer and displaying information about the picked feature in an html div
+  var pickingArgs = {};
+  pickingArgs.htmlDiv = document.getElementById('displayInfo');
+  pickingArgs.view = view;
+  pickingArgs.layer = layer;
+  window.addEventListener('mousemove', (event) => {
+    console.log(" - MouseMove - ");
+    view.tileLayer.attachedLayers.forEach(layer => {
+      if (layer.transparent) {
+        pickingArgs.layer = layer;
+      }
+    })
+    fillHTMLWithPickingInfo(event, pickingArgs);
+  }, false);
+}
+
+// Function allowing picking on a given 3D tiles layer and filling an html div with information on the picked feature
+// Expected arguments:
+// pickingArg.htmlDiv (div element which contains the picked information)
+// pickingArg.view : iTowns view where the picking must be done
+// pickingArg.layer : the layer on which the picking must be done
+// eslint-disable-next-line
+function fillHTMLWithPickingInfo(event, pickingArg) {
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+
+  console.log("Affichage - pickingArg :");
+  console.log(pickingArg.layer);
+  if (pickingArg.layer.object3d != undefined && !pickingArg.layer.object3d.isObject3D) {
+    console.warn('Function fillHTMLWithPickingInfo only works' + ' for C3DTilesLayer layers.');
+    return;
+  }
+  console.log(pickingArg.htmlDiv);
+  console.log(pickingArg.htmlDiv.firstChild);
+
+  // Remove content already in html div
+  while (pickingArg.htmlDiv.firstChild) {
+    pickingArg.htmlDiv.removeChild(pickingArg.htmlDiv.firstChild);
+  }
+
+  // Get intersected objects 
+  //var intersects = pickingArg.view.pickObjectsAt(event, 5, pickingArg.layer);
+  const intersects = raycaster.intersectObjects(scene.children);
+  console.log("intersects");
+  console.log(pickingArg.layer);
+  console.log(intersects);
+  if (intersects.length === 1) {
+    console.log("OUAIIII");
+    console.log(intersects);
+  }
+  if (intersects.length === 0) { return; }
+
+  // Get information from intersected objects (from the batch table and eventually the 3D Tiles extensions
+  var featureDisplayableInfo = pickingArg.layer.getInfoFromIntersectObject(intersects);
+  console.log("454554");
+  console.log(featureDisplayableInfo);
+  if (featureDisplayableInfo) {
+    // eslint-disable-next-line
+    pickingArg.htmlDiv.appendChild(createHTMLListFromObject(featureDisplayableInfo));
   }
 }
 </script>
