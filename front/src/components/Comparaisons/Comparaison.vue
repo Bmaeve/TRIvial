@@ -120,8 +120,12 @@
         </id>
         <div id="com_indic">
             <p>Ctrl + mouse drag for use 3D</p>
+
         </div>
         <img src="../../assets/logo.png" width="60" height="60" />
+        <div id="com_boutonAn"> <a href="/TRIVial/Analyse"><button type="button" class="btn btn-outline-success  ">Interface
+                    Analyse</button></a></div>
+
     </div>
 
     <button id="com_viewChange" type="button" class="btn btn-dark">{{ getViewType }}</button>
@@ -747,5 +751,11 @@ export default {
     background-color: black;
     color: white;
     width: 100%;
+}
+
+#com_boutonAn {
+    position: absolute;
+    bottom: 3vh;
+    right: 8%;
 }
 </style>
