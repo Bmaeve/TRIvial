@@ -89,7 +89,7 @@ export default {
     );
     //Center the view on Paris
     const placement = {
-      coord: new Coordinates("EPSG:4326", 2.340, 48.858),
+      coord: new Coordinates("EPSG:4326", 2.352462566790728, 48.857905124448),
       range: 20000
     };
     // Create the globe  view
@@ -157,20 +157,10 @@ export default {
 
 
 <style >
-#an_itowns_container {
-  width: 75%;
-  height: 90vh;
-  overflow: auto;
-}
-
 #viewerDiv {
-  margin: auto;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   padding: 0;
-}
-
-#an_panel {
-  padding: 15px;
+  overflow-x: hidden;
 }
 </style>
