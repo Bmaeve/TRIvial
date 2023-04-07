@@ -398,7 +398,7 @@ export default {
  
  
          })*/
-
+        let counter = 0
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
         }
@@ -431,7 +431,7 @@ export default {
                 const featuresIntersectList = []
                 layers.forEach((el, index) => {
                     console.log(el.id, index)
-                    if (index > 2 && el.id != 'trans_l_flat_p') {
+                    if (index > 2 && el.id != 'trans_l_flat_p' + '_' + counter) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen1[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList.push(ft.properties)
@@ -441,7 +441,8 @@ export default {
                 })
                 this.changeFtIntersect(featuresIntersectList)
 
-                console.log(this.getFeatureIntersect)
+                counter++
+
 
             })
 
