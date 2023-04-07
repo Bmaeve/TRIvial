@@ -139,17 +139,17 @@ export default {
     },
     computed: {
         rangeValueText() {
-            if (this.rangeValue == 1) {
+            if (this.rangeValue == 3) {
                 this.$emit('scenarioChanged', "01For");
-                return "Faible";
+                return "Proba Faible";
             }
             else if (this.rangeValue == 2) {
                 this.$emit('scenarioChanged', "02Moy");
-                return "Moyen";
+                return "Proba Moyenne";
             }
-            else if (this.rangeValue == 3) {
+            else if (this.rangeValue == 1) {
                 this.$emit('scenarioChanged', "04Fai");
-                return "Fort";
+                return "Proba Forte";
             }
             return "undefined"
         }
