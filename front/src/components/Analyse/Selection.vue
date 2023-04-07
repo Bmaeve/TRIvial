@@ -31,9 +31,6 @@
 
 <script>
 
-import $ from '../../../node_modules/jquery';
-
-console.log($);
 //function for return object properties
 const getKeys = (object) => {
     return Object.keys(object)

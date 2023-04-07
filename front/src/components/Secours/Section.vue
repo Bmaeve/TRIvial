@@ -58,10 +58,6 @@
 </template>
 
 <script>
-//import jquery module
-import $ from 'jquery'
-
-console.log($)
 
 //function for return object properties
 const getKeys = (object) => {

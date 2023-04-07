@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer, } from "../../../node_modules/itowns/dist/itowns";
+import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer } from "../../../node_modules/itowns/dist/itowns";
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
@@ -122,18 +122,18 @@ export default {
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
     view.addLayer(layerOrtho)
 
-    // Define the source of the dem data
-    var elevationSource = new WMTSSource({
-      url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-      crs: 'EPSG:4326',
-      name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
-      tileMatrixSet: 'WGS84G',
-      format: 'image/x-bil;bits=32',
-      zoom: { min: 3, max: 10 }
-    });
-    // Create the dem ElevationLayer and add it to the view
-    const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
-    view.addLayer(layerDEM);
+    // // Define the source of the dem data
+    // var elevationSource = new WMTSSource({
+    //   url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
+    //   crs: 'EPSG:4326',
+    //   name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
+    //   tileMatrixSet: 'WGS84G',
+    //   format: 'image/x-bil;bits=32',
+    //   zoom: { min: 3, max: 10 }
+    // });
+    // // Create the dem ElevationLayer and add it to the view
+    // const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
+    // view.addLayer(layerDEM);
 
     // INIT
     let scenario = "04Fai"
@@ -157,10 +157,6 @@ export default {
     bouton_valider.addEventListener('click', () => {
       let params = JSON.parse(JSON.stringify(this.store.params));
       api2itowns.addEnjeuxToView(view, params);
-    })
-
-    document.getElementById("rangeScenario").addEventListener('change', () => {
-      console.log(Filter.data().rangeValue)
     })
 
     document.getElementById("rangeScenario").addEventListener('change', () => {
