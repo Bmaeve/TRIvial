@@ -399,6 +399,7 @@ export default {
  
          })*/
         let counter = 0
+        let counter2 = 0
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
         }
@@ -430,8 +431,8 @@ export default {
                 console.log(res)
                 const featuresIntersectList = []
                 layers.forEach((el, index) => {
-                    console.log(el.id, index)
-                    if (index > 2 && el.id != 'trans_l_flat_p' + '_' + counter) {
+                    const lastindex = el.id.split('_').length - 1
+                    if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat_p' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen1[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList.push(ft.properties)
@@ -538,7 +539,8 @@ export default {
                 console.log(res)
                 const featuresIntersectList2 = []
                 layers.forEach((el, index) => {
-                    if (index > 2 && el.id != 'trans_l_flat_p') {
+                    const lastindex = el.id.split('_').length - 1
+                    if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat_p' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen2[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList2.push(ft.properties)
@@ -547,6 +549,7 @@ export default {
 
                 })
                 this.changeFtIntersect2(featuresIntersectList2)
+                counter2++
 
             })
             const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario" };
