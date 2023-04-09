@@ -136,8 +136,8 @@ export default {
     // view.addLayer(layerDEM);
 
     let current_scenario = "01For"
-    let scenarioParams = { filters: [current_scenario], columnFiltered: "scenario" };
-    api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+    //let scenarioParams = { filters: [current_scenario], columnFiltered: "scenario" };
+    //api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
     document.getElementById('validate').addEventListener('click', () => {
       let params = JSON.parse(JSON.stringify(this.store.params));
