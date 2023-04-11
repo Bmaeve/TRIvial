@@ -175,6 +175,8 @@ export default {
             filters.forEach((tab_types, enjeu) => {
                 params[enjeu] = {
                     filters: tab_types,
+                    minHeigh: this.barMinValue,
+                    maxHeigh: this.barMaxValue,
                     color: new THREE.Color(0xffffff),
                     concernedByScenario: idx2Scenario[this.rangeValue]
                 };

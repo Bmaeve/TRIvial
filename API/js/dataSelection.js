@@ -5,10 +5,11 @@ async function dataSelection(table_name, body) {
     let features = [];
 
     //SQL query
+    // WHERE 1=1 permit to add "AND" filters next
     var query = " \
           SELECT *,ST_AsGeoJSON(geom)::json as geometry \
           FROM " + table_name + " \
-          ";
+          WHERE 1=1 \ ";
 
 
 
@@ -21,8 +22,18 @@ async function dataSelection(table_name, body) {
                 // if the colummnFiltered parameters has'nt been defined 
                 body.columnFiltered = enjeux[table_name].columnsToKeep[0];
             }
-            query += " WHERE " + body.columnFiltered + " IN ('" + newFilters.join("', '") + "')";
+            query += " AND " + body.columnFiltered + " IN ('" + newFilters.join("', '") + "')";
         }
+    }
+
+    // adding a filter with min heigh
+    if ((body.minHeigh != undefined) && enjeux[table_name].hasColumnNamedHauteur) {
+        query += " AND hauteur > " + body.minHeigh;
+    }
+
+    // adding a filter with max heigh
+    if ((body.maxHeigh != undefined) && enjeux[table_name].hasColumnNamedHauteur) {
+        query += " AND hauteur < " + body.maxHeigh;
     }
 
     // send and retrieve data
