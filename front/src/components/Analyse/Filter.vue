@@ -25,6 +25,7 @@
                         <label class="form-check-label" :for="enjeu.id">
                             {{ enjeu.text }}
                         </label>
+                        <input type="color" :id="enjeu.id_color" value="#a7bed3">
                         <div v-if="enjeu.value">
                             <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
                                 <div v-if="typeEnjeu.enjeu == enjeu.id">
@@ -77,10 +78,10 @@ export default {
         return {
             rangeValue: 1,
             enjeux: [
-                { text: "Enjeu 1", value: false, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1", id_parent: "parent1" },
-                { text: "Enjeu 2", value: false, id: "check2", target_collapse: "#collapse2", id_collapse: "collapse2", id_parent: "parent2" },
-                { text: "Enjeu 3", value: false, id: "check3", target_collapse: "#collapse3", id_collapse: "collapse3", id_parent: "parent3" },
-                { text: "Enjeu 4", value: false, id: "check4", target_collapse: "#collapse4", id_collapse: "collapse4", id_parent: "parent4" },
+                { text: "Enjeu 1", value: false, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1", id_parent: "parent1", id_color: "color1" },
+                { text: "Enjeu 2", value: false, id: "check2", target_collapse: "#collapse2", id_collapse: "collapse2", id_parent: "parent2", id_color: "color1" },
+                { text: "Enjeu 3", value: false, id: "check3", target_collapse: "#collapse3", id_collapse: "collapse3", id_parent: "parent3", id_color: "color1" },
+                { text: "Enjeu 4", value: false, id: "check4", target_collapse: "#collapse4", id_collapse: "collapse4", id_parent: "parent4", id_color: "color1" },
             ],
             types_enjeux: [
                 { text: "Type 1", value: 1, id: "type1" },
@@ -112,7 +113,8 @@ export default {
                         id: enjeu.key,
                         target_collapse: "#collapse_" + enjeu.key,
                         id_collapse: "collapse_" + enjeu.key,
-                        id_parent: "parent_" + enjeu.key
+                        id_parent: "parent_" + enjeu.key,
+                        id_color: "color_" + enjeu.key
                     });
                 })
                 this.enjeux = new_enjeux;
@@ -174,11 +176,12 @@ export default {
                 filters.set("autre", []);
             }
             filters.forEach((tab_types, enjeu) => {
+                let color = document.getElementById("color_" + enjeu).value
                 params[enjeu] = {
                     filters: tab_types,
                     minHeigh: this.barMinValue,
                     maxHeigh: this.barMaxValue,
-                    color: new THREE.Color(0xffffff),
+                    color: new THREE.Color(color),
                     concernedByScenario: idx2Scenario[this.rangeValue]
                 };
             })
