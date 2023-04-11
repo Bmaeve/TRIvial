@@ -8,8 +8,9 @@
         </div>
         <div class="card" id="card2">
             <div class="card-body">
-                <p class="card-text">{{ infosPop.totalEleves }}
+                <p class="card-text">{{ infosPop.elevesImpact }} / {{ infosPop.totalEleves }}
                 </p>
+                <p>{{ infosPop.pourcentage }}%</p>
             </div>
         </div>
         <div class="card" id="card3">
@@ -42,7 +43,9 @@ export default {
                 type: ""
             },
             infosPop: {
-                totalEleves: 0
+                totalEleves: 0,
+                elevesImpact: 0,
+                pourcentage: 0
             }
         }
     },
@@ -55,8 +58,10 @@ export default {
             })
             let params = JSON.parse(JSON.stringify(this.store.params));
             if (Object.keys(params).includes('ens')) {
-                api2stats.getNbEleves(params['ens']).then((infos) => {
-                    this.infosPop.totalEleves = infos
+                api2stats.getNbEleves(params['ens'], this.infosScenario.proba).then((infos) => {
+                    this.infosPop.totalEleves = infos[0]
+                    this.infosPop.elevesImpact = infos[1]
+                    this.infosPop.pourcentage = infos[2]
                 })
             }
 

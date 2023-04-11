@@ -14,7 +14,7 @@ let api2stats = {
 
     },
 
-    async getNbEleves(params) {
+    async getNbEleves(params, scenario) {
         let promise = await fetch(host + 'data/ens/selectData', {
             body: JSON.stringify(params),
             headers: { 'Content-Type': 'application/json' },
@@ -25,12 +25,23 @@ let api2stats = {
             })
             .then((data) => {
                 let nbEleves = 0;
+                let nbElevesImpact = 0;
                 data.features.forEach(ecole => {
-                    if (ecole.properties.nombre_d_e != null) {
-                        nbEleves += parseInt(ecole.properties.nombre_d_e);
+                    let props = ecole.properties;
+                    if (props.nombre_d_e != null) {
+                        nbEleves += parseInt(props.nombre_d_e);
                     }
+                    let prop = "intersectwith_scenarios_" + scenario.toLowerCase();
+                    if (props[prop] && props.nombre_d_e != null) {
+                        nbElevesImpact += parseInt(props.nombre_d_e);
+                    }
+
                 })
-                return nbEleves
+                let pourcentage = 0;
+                if (nbEleves != 0) {
+                    pourcentage = ((nbElevesImpact / nbEleves) * 100).toPrecision(4)
+                }
+                return [nbEleves, nbElevesImpact, pourcentage]
             })
         return promise
     }
