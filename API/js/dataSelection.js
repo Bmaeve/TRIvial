@@ -10,6 +10,9 @@ async function dataSelection(table_name, body) {
           FROM " + table_name + " \
           ";
 
+    // updating filters to prevent single quotes issues in sql
+    let newFilters = body.filters.map(filter => filter.replace("'", "\\''"))
+
     // filtering
     if ((body.filters) != undefined) {
         if ((body.filters.length > 0)) {
@@ -17,7 +20,7 @@ async function dataSelection(table_name, body) {
                 // if the colummnFiltered parameters has'nt been defined 
                 body.columnFiltered = enjeux[table_name].columnsToKeep[0];
             }
-            query += " WHERE " + body.columnFiltered + " IN ('" + body.filters.join("', '") + "')";
+            query += " WHERE " + body.columnFiltered + " IN ('" + newFilters.join("', '") + "')";
         }
     }
 
