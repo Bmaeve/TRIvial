@@ -5,9 +5,9 @@ import { toWgs84 } from "reproject";
 let epsg = require('epsg');
 //let counter = 0
 
-let index = {
+let index = {}
+let last_parameters = {}
 
-}
 let api2itowns = {
     async addLayerToView(view, table_name, parameters = {}) {
         let color;
@@ -96,10 +96,30 @@ let api2itowns = {
 
     addEnjeuxToView(view, parameters) {
         let promises = [];
-        Object.keys(parameters).forEach((table) => {
-            let promise = this.addLayerToView(view, table, parameters[table]);
-            promises.push(promise);
+
+        // removing useless layers
+        Object.keys(last_parameters).forEach((last_table) => {
+            if (!Object.keys(parameters).includes(last_table)) {
+                // the layer is not selected in the new request
+                try {
+                    view.removeLayer(last_table + '_' + (index[last_table]).toString(), true);
+                } catch (e) {
+                    console.log(e)
+                }
+            }
         })
+
+        // adding layers
+        Object.keys(parameters).forEach((new_table) => {
+            // check parameters are different with the last request, else nothing to do
+            if (!(JSON.stringify(parameters[new_table]) == JSON.stringify(last_parameters[new_table]))) {
+                // adding layers
+                let promise = this.addLayerToView(view, new_table, parameters[new_table]);
+                promises.push(promise);
+            }
+        })
+
+        last_parameters = parameters
         return (Promise.all(promises))
     },
 
