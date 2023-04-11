@@ -132,8 +132,7 @@
 </template>
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
-import itownApi from './api2itownsv1'
-import api2itowns from './api2itownsv2'
+import api2itowns from '../../js/api2itowns'
 import Scene1 from '@/components/Comparaisons/Scene1.vue'
 import Scene2 from '@/components/Comparaisons/Scene2.vue'
 //iTowns Widgets 
@@ -449,7 +448,7 @@ export default {
 
 
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
-            itownApi.addLayerToView(view, "scenarios", paramsScentest);
+            api2itowns.addLayerToView(view, "scenarios", paramsScentest);
 
         })
 
@@ -553,7 +552,7 @@ export default {
 
             })
             const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario" };
-            itownApi.addLayerToView(planarView, "scenarios", paramsScentest);
+            api2itowns.addLayerToView(planarView, "scenarios", paramsScentest);
         })
 
         view
