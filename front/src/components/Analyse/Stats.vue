@@ -2,13 +2,13 @@
     <div id="an_stats" class=" bg-dark">
         <div class="card" id="card1">
             <div class="card-body">
-                <p class="card-text">1ère statistique
+                <p class="card-text">{{ infosScenario.proba }} {{ infosScenario.type }}
                 </p>
             </div>
         </div>
         <div class="card" id="card2">
             <div class="card-body">
-                <p class="card-text">2ème statistique
+                <p class="card-text">{{ infosPop.totalEleves }}
                 </p>
             </div>
         </div>
@@ -28,11 +28,41 @@
 
 <script>
 import { THREE } from '../../../node_modules/itowns/dist/itowns';
-
-
+import api2stats from '../../js/api2stats'
+//import the store
+import { store } from '../Store.js';
 
 export default {
     name: "AnStats",
+    data() {
+        return {
+            store,
+            infosScenario: {
+                proba: "",
+                type: ""
+            },
+            infosPop: {
+                totalEleves: 0
+            }
+        }
+    },
+    mounted() {
+        let bouton_valider = document.getElementById("validate");
+        bouton_valider.addEventListener("click", () => {
+            this.infosScenario.proba = this.store.scenario;
+            api2stats.scenarioInfoStat().then((infos) => {
+                this.infosScenario.type = infos[0];
+            })
+            let params = JSON.parse(JSON.stringify(this.store.params));
+            if (Object.keys(params).includes('ens')) {
+                api2stats.getNbEleves(params['ens']).then((infos) => {
+                    this.infosPop.totalEleves = infos
+                })
+            }
+
+        })
+
+    },
     methods: {
         btnEnregistrer() {
             if (confirm("Voulez-vous enregistrer cette vue (sélection de paramètres) ?")) {
