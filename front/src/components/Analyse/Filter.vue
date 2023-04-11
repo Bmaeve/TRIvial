@@ -147,7 +147,7 @@ export default {
     computed: {
         rangeValueText() {
             this.$emit('scenarioChanged', idx2Scenario[this.rangeValue]);
-            return "Probabilité" + idx2Scenario[this.rangeValue];
+            return "Probabilité " + idx2Scenario[this.rangeValue];
         }
     },
     methods: {
@@ -183,6 +183,8 @@ export default {
                 };
             })
             this.store.params = params;
+            this.store.prob_scenario = idx2Scenario[this.rangeValue]
+            this.store.num_scenario = this.rangeValue;
         },
 
         UpdateValues(e) {
