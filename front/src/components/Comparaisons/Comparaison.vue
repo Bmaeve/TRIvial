@@ -2,47 +2,52 @@
     <div id="com_scen1">
         <span>Scenario 1</span>
         <div class="form-check">
-            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="04Fai">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="04Fai"
+                :disabled="getDisabled1">
             <label class="form-check-label " for="flexRadioDefault1">
                 Faible
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="02Moy">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="02Moy"
+                :disabled="getDisabled1">
             <label class="form-check-label" for="flexRadioDefault2">
                 Moyen
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="01For">
+            <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="01For"
+                :disabled="getDisabled1">
             <label class="form-check-label" for="flexRadioDefault3">
                 Fort
             </label>
         </div>
+        <span style="font-size: .7em;">Click map for active</span>
     </div>
     <div id="com_scen2">
         <span>Scenario 2</span>
         <div class="form-check">
-            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4"
-                value="04Fai">
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4" value="04Fai"
+                :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault4">
                 Faible
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault5"
-                value="02Moy">
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault5" value="02Moy"
+                :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault5">
                 Moyen
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault6"
-                value="01For">
+            <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault6" value="01For"
+                :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault6">
                 Fort
             </label>
         </div>
+        <span style="font-size: .7em;">Click map for active</span>
     </div>
     <div id="com_box">
         <Scene1 />
@@ -164,7 +169,8 @@ export default {
             fiche: "Voir fiche",
             featuresIntersect: [],
             featuresIntersect2: [],
-
+            disabledScn1: true,
+            disabledScn2: true
         }
     },
     computed: {
@@ -192,6 +198,12 @@ export default {
         getCount2() {
             return this.featuresIntersect2.length
         },
+        getDisabled1() {
+            return this.disabledScn1
+        },
+        getDisabled2() {
+            return this.disabledScn2
+        }
     },
     methods: {
         changeScene1(value) {
@@ -223,7 +235,12 @@ export default {
         changeFtIntersect2(data) {
             this.featuresIntersect2 = data
         },
-
+        changeDisabled1() {
+            this.disabledScn1 = !this.disabledScn1
+        },
+        changeDisabled2() {
+            this.disabledScn2 = !this.disabledScn2
+        }
 
     },
     mounted() {
@@ -404,7 +421,7 @@ export default {
         }
 
         $('.scen1').change((e) => {
-            //$('#com_Itowns1').click()
+            $('#com_Itowns1').click()
 
 
             const value = e.target.value
@@ -525,7 +542,7 @@ export default {
         //createScenarioIntersect(this.getScen2[0], planarView)
 
         $('.scen2').change((e) => {
-            // $('#com_Itowns2').click()
+            $('#com_Itowns2').click()
             const value = e.target.value
             this.changeScene2(value)
             try {
@@ -612,6 +629,27 @@ export default {
                                 .MAIN_LOOP_EVENTS.AFTER_CAMERA_UPDATE, sync);
                     }).catch(console.error);
                 });
+
+        $('#com_Itowns1').click(() => {
+            if (this.getDisabled1) {
+                this.changeDisabled1()
+            }
+
+            if (!this.getDisabled2) {
+                this.changeDisabled2()
+            }
+
+
+        })
+        $('#com_Itowns2').click(() => {
+            if (this.getDisabled2) {
+                this.changeDisabled2()
+            }
+            if (!this.getDisabled1) {
+                this.changeDisabled1()
+            }
+
+        })
 
 
     }
