@@ -81,7 +81,7 @@ Database: open_data
 >* http://localhost:3000/
 
 ### Accès à l'application
->* http://localhost:8080/TRIVial
+>* http://localhost:8080/
 
 * une visualisation plus élaborée est disponible dans la branche realisationMaquetteAnalayse
 * L'ajout des données est nécéssaire à la bonne visualisation de l'application (cf ci-dessous)
