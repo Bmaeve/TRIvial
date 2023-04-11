@@ -128,7 +128,7 @@ export default {
 /* Feature information table block*/
 .sec_info_enjeux_table {
     overflow-y: auto;
-    height: 32vh;
+    height: 25vh;
 }
 
 /* Itineraire calcul block */
