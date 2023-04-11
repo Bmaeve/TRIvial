@@ -5,21 +5,21 @@
             <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="04Fai"
                 :disabled="getDisabled1">
             <label class="form-check-label " for="flexRadioDefault1">
-                Faible
+                04Fai
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="02Moy"
                 :disabled="getDisabled1">
             <label class="form-check-label" for="flexRadioDefault2">
-                Moyen
+                02Moy
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="01For"
                 :disabled="getDisabled1">
             <label class="form-check-label" for="flexRadioDefault3">
-                Fort
+                01For
             </label>
         </div>
         <span style="font-size: .7em;">Click map for active</span>
@@ -30,21 +30,21 @@
             <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4" value="04Fai"
                 :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault4">
-                Faible
+                04Fai
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault5" value="02Moy"
                 :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault5">
-                Moyen
+                02Moy
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault6" value="01For"
                 :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault6">
-                Fort
+                01For
             </label>
         </div>
         <span style="font-size: .7em;">Click map for active</span>
