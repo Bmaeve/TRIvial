@@ -3,8 +3,8 @@
 <template>
     <div class="sec_log">
         <h3 class="sec_log_title">Login</h3>
-        <div class="login_box">
-            <div class="mb-3 row">
+    <div class="login_box">
+        <!-- <div class="mb-3 row">
                 <label for="sec_staticEmail" class="col-sm-2 col-form-label">Login</label>
                 <div class="col-sm-12">
                     <input type="text" class="form-control" id="sec_staticEmail" value="email@example.com">
@@ -17,8 +17,8 @@
                 </div>
             </div>
             <div class="d-grid gap-2 col-12 mx-auto">
-                <button class="btn btn-secondary" type="button">Se sonnecter</button>
-            </div>
+                    <button class="btn btn-secondary" type="button">Se sonnecter</button>
+                </div> -->
         </div>
         <img src="../../assets/logo.png" width="150" height="150" class="sec_login_logo" />
 
