@@ -136,7 +136,7 @@ export default {
     // view.addLayer(layerDEM);
 
     let current_scenario = "01For"
-    let scenarioParams = { filters: [current_scenario], columnFiltered: "scenario" };
+    let scenarioParams = { filters: [current_scenario], columnFiltered: "scenario", color: 'red' };
     api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
     document.getElementById('validate').addEventListener('click', () => {
@@ -149,7 +149,7 @@ export default {
         } catch (e) {
           //pass
         }
-        let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario" };
+        let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario", color: 'red' };
         api2itowns.addLayerToView(view, "scenarios", scenarioParams);
         current_scenario = this.getScenarioId;
       }
