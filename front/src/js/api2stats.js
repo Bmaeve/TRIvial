@@ -2,15 +2,26 @@ const host = 'http://localhost:3000/'
 
 
 let api2stats = {
-    async scenarioInfoStat() {
-        let promise = await fetch(host + "dbInfo/scenarios/code_type_/getDistinctValues")
+    async scenarioType() {
+        let type = await fetch(host + "dbInfo/scenarios/code_type_/getDistinctValues")
             .then((res) => {
                 return res.json()
             })
             .then((data) => {
                 return data
             })
-        return promise
+        return type
+
+    },
+    async scenarioProba(scenario) {
+        let prob = await fetch(host + "dbInfo/scenarios/code_scena/getDistinctValues")
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                return data[scenario - 1]
+            })
+        return prob
 
     },
 
@@ -42,6 +53,38 @@ let api2stats = {
                     pourcentage = ((nbElevesImpact / nbEleves) * 100).toPrecision(4)
                 }
                 return [nbEleves, nbElevesImpact, pourcentage]
+            })
+        return promise
+    },
+
+    async getNbPopSante(params, scenario) {
+        let promise = await fetch(host + 'data/san/selectData', {
+            body: JSON.stringify(params),
+            headers: { 'Content-Type': 'application/json' },
+            method: 'post'
+        })
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                let nbPop = 0;
+                let nbPopImpact = 0;
+                data.features.forEach(bat => {
+                    let props = bat.properties;
+                    if (props.cap_autori != null) {
+                        nbPop += parseInt(props.cap_autori);
+                    }
+                    let prop = "intersectwith_scenarios_" + scenario.toLowerCase();
+                    if (props[prop] && props.cap_autori != null) {
+                        nbPopImpact += parseInt(props.cap_autori);
+                    }
+
+                })
+                let pourcentage = 0;
+                if (nbPop != 0) {
+                    pourcentage = ((nbPopImpact / nbPop) * 100).toPrecision(4)
+                }
+                return [nbPop, nbPopImpact, pourcentage]
             })
         return promise
     }

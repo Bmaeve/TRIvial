@@ -180,7 +180,8 @@ export default {
                 };
             })
             this.store.params = params;
-            this.store.scenario = idx2Scenario[this.rangeValue];
+            this.store.prob_scenario = idx2Scenario[this.rangeValue]
+            this.store.num_scenario = this.rangeValue;
         },
 
         UpdateValues(e) {
