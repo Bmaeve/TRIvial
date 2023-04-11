@@ -11,6 +11,8 @@ export default {
     name: 'ComparaisonView',
     components: {
         Comparaison
+    }, mounted() {
+        document.title = "TRIvial"
     }
 }
 </script>
