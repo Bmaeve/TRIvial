@@ -55,6 +55,13 @@
         <!-- App logo image -->
         <img src="../../assets/logo.png" width="50" height="50" />
     </div>
+    <div id="sec_bouton2">
+        <a href="/TRIvial"> <button class="btn btn-outline-success">
+                <!-- <img src="../../assets/menu(1).png" width="50"
+                    height="50" /> -->
+                MENU
+            </button></a>
+    </div>
 </template>
 
 <script>
@@ -141,5 +148,11 @@ export default {
 .sec_secour_logo {
     text-align: center;
     color: white;
+}
+
+#sec_bouton2 {
+    position: relative;
+    left: 35%;
+    margin-top: 5px;
 }
 </style>

@@ -123,8 +123,8 @@
 
         </div>
         <img src="../../assets/logo.png" width="60" height="60" />
-        <div id="com_boutonAn"> <a href="/TRIVial/Analyse"><button type="button" class="btn btn-outline-success  ">Interface
-                    Analyse</button></a></div>
+        <div id="com_boutonAn"> <a href="/TRIVial"><button type="button" class="btn btn-outline-success  ">
+                    MENU</button></a></div>
 
     </div>
 
@@ -763,7 +763,7 @@ export default {
 
 #com_boutonAn {
     position: absolute;
-    bottom: 3vh;
+    bottom: 2vh;
     right: 8%;
 }
 </style>
