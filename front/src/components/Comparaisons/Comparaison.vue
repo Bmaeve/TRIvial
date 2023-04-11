@@ -719,7 +719,6 @@ export default {
     left: 2%;
     top: 5vh;
     width: 10%;
-    height: 15vh;
     z-index: 100;
     color: white;
     padding-left: 10px;
@@ -732,7 +731,6 @@ export default {
     right: 2%;
     top: 5vh;
     width: 10%;
-    height: 15vh;
     z-index: 100;
     color: white;
     padding-left: 10px;
