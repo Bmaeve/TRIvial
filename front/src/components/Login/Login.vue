@@ -17,21 +17,21 @@
                 </div>
             </div>
             <div class="d-grid gap-2 col-12 mx-auto">
-                <button class="btn btn-secondary" type="button">Se sonnecter</button>
-         </div> -->
+                                    <button class="btn btn-secondary" type="button">Se sonnecter</button>
+                             </div> -->
         <button class="btn btn-outline-secondary" type="button"><a href="/TRIVial/Analyse">
                     <!-- <img src="../../assets/analytique.png"
-                                                                                                                                                        width="150" height="150" /> -->
+                                                                                                                                                                            width="150" height="150" /> -->
                     <h3>Analyse</h3>
                 </a></button>
         <button class="btn btn-outline-secondary" type="button"><a href="/TRIVial/Comparaisons">
                     <!-- <img src="../../assets/un-camion.png"
-                                                                                                                                                        width="150" height="150" /> -->
+                                                                                                                                                                            width="150" height="150" /> -->
                     <h3>Comparaisons</h3>
                 </a></button>
         <button class="btn btn-outline-secondary" type="button"><a href="/TRIVial/Secours">
                     <!-- <img src="../../assets/comparaison.png"
-                                                                                                                                                        width="150" height="150" /> -->
+                                                                                                                                                                            width="150" height="150" /> -->
                     <h3>Secours</h3>
                 </a></button>
         </div>
@@ -98,7 +98,7 @@ export default {
 
 .sec_login_logo {
     position: absolute;
-    left: 10%;
-    top: 10vh;
+    left: 47%;
+    bottom: 10vh;
 }
 </style>
