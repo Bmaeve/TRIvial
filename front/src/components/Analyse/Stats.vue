@@ -15,27 +15,30 @@
             </div>
         </div>
         <div class="card" id="card2">
-            <div class="card-body" v-if="infosPop.totalEleves != 0">
-                <p class="card-text">{{ infosPop.elevesImpact }} élève(s) impacté(s) sur {{ infosPop.totalEleves }}
+            <div class="card-body" v-if="infosPop.totalEleves != null">
+                <p class="card-text" v-if="infosPop.totalEleves == 0">Aucune donnée de capacité d'accueil disponible</p>
+                <p class="card-text" v-else>{{ infosPop.elevesImpact }} élève(s) impacté(s) sur {{ infosPop.totalEleves }}
                     sélectionnés
                     <br> soit {{ infosPop.pourcentageEleves }}%
                 </p>
             </div>
             <div class="card-body" v-else>
-                <p class="card-text">Affichez des enjeux d'enseignement
+                <p class="card-text">Sélectionnez des enjeux d'enseignement
                 </p>
             </div>
         </div>
         <div class="card" id="card3">
-            <div class="card-body" v-if="infosPop.totalPopSante != 0">
-                <p class="card-text">{{ infosPop.popSanteImpact }} patient(s) impacté(s) sur {{ infosPop.totalPopSante }}
+            <div class="card-body" v-if="infosPop.totalPopSante != null">
+                <p class="card-text" v-if="infosPop.totalPopSante == 0">Aucune donnée de capacité d'accueil disponible</p>
+                <p class="card-text" v-else>{{ infosPop.popSanteImpact }} patient(s) impacté(s) sur {{
+                    infosPop.totalPopSante }}
                     sélectionnés
                     <br> soit {{ infosPop.pourcentageSante }}%
                 </p>
 
             </div>
             <div class="card-body" v-else>
-                <p class="card-text">Affichez des enjeux de santé
+                <p class="card-text">Sélectionnez des enjeux de santé
                 </p>
             </div>
         </div>
@@ -63,10 +66,10 @@ export default {
                 type: ""
             },
             infosPop: {
-                totalEleves: 0,
+                totalEleves: null,
                 elevesImpact: 0,
                 pourcentageEleves: 0,
-                totalPopSante: 0,
+                totalPopSante: null,
                 popSanteImpact: 0,
                 pourcentageSante: 0,
             }
