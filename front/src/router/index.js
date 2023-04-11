@@ -11,7 +11,7 @@ const routes = [
     component: AnalyseView
   },
   {
-    path: '/',
+    path: '/TRIvial',
     name: 'Login',
     component: LoginView
   },

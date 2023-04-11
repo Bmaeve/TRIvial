@@ -20,9 +20,12 @@
         </div>
         <button id="an_bouton" type="button" class="btn btn-outline-success  " v-on:click="btnEnregistrer">Enregister la
             vue</button>
-        <div id="an_bouton2"><a href="/TRIVial/Comparaisons"><button type="button"
-                    class="btn btn-outline-success  ">Comparer
-                    Scenarios</button></a></div>
+        <a id="an_bouton2" href="/TRIvial"> <button class="btn btn-outline-success">
+                <!-- <img src="../../assets/menu(1).png" width="50"
+                    height="50" /> -->
+                MENU
+            </button></a>
+
     </div>
 </template>
 
@@ -84,18 +87,23 @@ export default {
 
 #an_bouton {
     position: absolute;
-    right: 5%;
-    bottom: 5vh;
+    right: 8%;
+    bottom: 2vh;
     margin: auto;
     width: 15%;
+    height: 50px;
 }
 
 #an_bouton2 {
     position: absolute;
-    right: 5%;
-    bottom: 0vh;
+    right: 0.5%;
+    bottom: 2vh;
     margin: auto;
-    width: 15%;
+    /* width: 15%; */
+}
+
+#an_bouton2 button {
+    height: 50px;
 }
 
 #an_bouton2 button {
