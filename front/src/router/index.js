@@ -25,6 +25,7 @@ const routes = [
     name: 'Comparaisons',
     component: ComparaisonView
   },
+  { path: '/', redirect: '/TRIvial' },
 ]
 
 const router = createRouter({
