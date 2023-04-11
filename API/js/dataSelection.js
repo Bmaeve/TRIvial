@@ -10,11 +10,12 @@ async function dataSelection(table_name, body) {
           FROM " + table_name + " \
           ";
 
-    // updating filters to prevent single quotes issues in sql
-    let newFilters = body.filters.map(filter => filter.replace("'", "\\''"))
+
 
     // filtering
     if ((body.filters) != undefined) {
+        // updating filters to prevent single quotes issues in sql
+        let newFilters = body.filters.map(filter => filter.replace("'", "\\''"))
         if ((body.filters.length > 0)) {
             if ((body.columnFiltered) == undefined) {
                 // if the colummnFiltered parameters has'nt been defined 
