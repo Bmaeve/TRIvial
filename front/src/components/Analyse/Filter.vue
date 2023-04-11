@@ -31,7 +31,8 @@
                                     <div v-for="tab in typeEnjeu.types" :key="tab.id">
 
                                         <div class="form-check" :id="enjeu.id_collapse">
-                                            <input class="form-check-input" type="checkbox" :value="tab.value" :id="tab.id" checked>
+                                            <input class="form-check-input" type="checkbox" :value="tab.value" :id="tab.id"
+                                                checked>
                                             <label class="form-check-label" :for="tab.id">
                                                 {{ tab.text }}
                                             </label>
