@@ -158,7 +158,7 @@ export default {
 
     // // Define the source of the dem data
     var elevationSource = new WMTSSource({
-      url: 'https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer',
+      url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
       crs: 'EPSG:4326',
       name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
       tileMatrixSet: 'WGS84G',
