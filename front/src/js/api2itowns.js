@@ -152,7 +152,7 @@ function setExtrusions(properties) {
 }
 
 /*function setAltitude(properties) {
-    return properties.z_min - properties.hauteur;
+    return properties.z_median;
 }*/
 
 export default api2itowns;

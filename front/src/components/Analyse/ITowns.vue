@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer } from "../../../node_modules/itowns/dist/itowns";
+import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer } from "../../../node_modules/itowns/dist/itowns";
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
@@ -157,7 +157,7 @@ export default {
     view.addLayer(layerOrtho)
 
     // // Define the source of the dem data
-    /* var elevationSource = new WMTSSource({
+    var elevationSource = new WMTSSource({
       url: 'https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer',
       crs: 'EPSG:4326',
       name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
@@ -167,7 +167,7 @@ export default {
     });
     // // Create the dem ElevationLayer and add it to the view
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
-    view.addLayer(layerDEM);*/
+    view.addLayer(layerDEM);
 
     let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: 'red' };
     api2itowns.addLayerToView(view, "scenarios", scenarioParams);
