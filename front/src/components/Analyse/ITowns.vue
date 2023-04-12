@@ -13,7 +13,14 @@
 
       </div>
     </div>
-    <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
+    <!-- Feature information block -->
+    <div class="an_info_enjeux" id="displayInfo">
+      <span>Informations</span>
+      <!-- Feature information table block -->
+      <div class="an_info_enjeux_table" id="info">
+        <!-- Feature information table -->
+      </div>
+    </div>
   </div>
   <div id="an_map">
 
@@ -24,67 +31,28 @@
 
 <script>
 import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer } from "../../../node_modules/itowns/dist/itowns";
-
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
 import api2itowns from '../../js/api2itowns'
-import SectionInfo from '@/components/Analyse/Selection.vue'
 import Filter from '@/components/Analyse/Filter.vue'
-//import jquery module
-import $ from 'jquery'
 //import the store
 import { store } from '../Store.js'
-//import the vuejs Dom reference function
-import { ref } from 'vue';
-import { THREE } from '../../../node_modules/itowns/dist/itowns';
 
 export default {
   name: 'MyItowns',
   components: {
-    SectionInfo,
     Filter
   },
   data() {
     return {
-      store,
-      componentKey: ref(0)
-    }
-  },
-  methods: {
-    changefeatureInfo(data) {
-      this.store.featureInfo = data
-    },
-    forceRerender() {
-      this.componentKey += 1;
-    }
-  },
-  computed: {
-    featureInfo() {
-      return this.store.featureInfo
+      store
     }
   },
   mounted() {
     // Retrieve the view container
     const viewerDiv = document.getElementById('viewerDiv');
 
-    $('#viewerDiv').click(() => {
-      const newfeature = [{
-        "id": this.store.featureInfo[0].id ? this.store.featureInfo[0].id += 1 : 1,
-        "titre": "Avenue",
-        "taille": 20,
-        "RN": "A231",
-        "Nombre": 4543,
-        "enabled": true,
-        "Superficie": "A231",
-        "Capatite": 4543,
-        "vul": true
-      }]
-
-      this.changefeatureInfo(newfeature)
-      this.forceRerender()
-
-    })
     // Define the view geographic extent
     proj4.defs(
       'EPSG:2154',
@@ -95,6 +63,7 @@ export default {
       coord: new Coordinates("EPSG:4326", 2.340, 48.858),
       range: 20000
     };
+
     // Create the globe  view
     const view = new GlobeView(viewerDiv, placement);
     //Adding navigation controls
@@ -102,8 +71,6 @@ export default {
       position: 'bottom-right',
       translate: { y: 0 },
     });
-
-
 
     // Define the source of the ortho-images
     var orthoSource = new WMTSSource({
@@ -113,6 +80,7 @@ export default {
       tileMatrixSet: 'PM',
       format: 'image/jpeg',
     });
+
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
     view.addLayer(layerOrtho);
@@ -153,76 +121,9 @@ export default {
       let params = JSON.parse(JSON.stringify(this.store.params));
       api2itowns.addEnjeuxToView(view, params);
     });
-
-    //console.log(view.tileLayer.attachedLayers.getElementById("scenarios"));
-    mouseOver(view, view.getLayers()[1]);
-  }
-}
-
-function mouseOver(view, layer) {
-  // add an event for picking the 3D Tiles layer and displaying information about the picked feature in an html div
-  var pickingArgs = {};
-  pickingArgs.htmlDiv = document.getElementById('displayInfo');
-  pickingArgs.view = view;
-  pickingArgs.layer = layer;
-  window.addEventListener('mousemove', (event) => {
-    console.log(" - MouseMove - ");
-    view.tileLayer.attachedLayers.forEach(layer => {
-      if (layer.transparent) {
-        pickingArgs.layer = layer;
-      }
-    })
-    fillHTMLWithPickingInfo(event, pickingArgs);
-  }, false);
-}
-
-// Function allowing picking on a given 3D tiles layer and filling an html div with information on the picked feature
-// Expected arguments:
-// pickingArg.htmlDiv (div element which contains the picked information)
-// pickingArg.view : iTowns view where the picking must be done
-// pickingArg.layer : the layer on which the picking must be done
-// eslint-disable-next-line
-function fillHTMLWithPickingInfo(event, pickingArg) {
-  const raycaster = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
-
-  console.log("Affichage - pickingArg :");
-  console.log(pickingArg.layer);
-  if (pickingArg.layer.object3d != undefined && !pickingArg.layer.object3d.isObject3D) {
-    console.warn('Function fillHTMLWithPickingInfo only works' + ' for C3DTilesLayer layers.');
-    return;
-  }
-  console.log(pickingArg.htmlDiv);
-  console.log(pickingArg.htmlDiv.firstChild);
-
-  // Remove content already in html div
-  while (pickingArg.htmlDiv.firstChild) {
-    pickingArg.htmlDiv.removeChild(pickingArg.htmlDiv.firstChild);
-  }
-
-  // Get intersected objects 
-  //var intersects = pickingArg.view.pickObjectsAt(event, 5, pickingArg.layer);
-  const intersects = raycaster.intersectObjects(scene.children);
-  console.log("intersects");
-  console.log(pickingArg.layer);
-  console.log(intersects);
-  if (intersects.length === 1) {
-    console.log("OUAIIII");
-    console.log(intersects);
-  }
-  if (intersects.length === 0) { return; }
-
-  // Get information from intersected objects (from the batch table and eventually the 3D Tiles extensions
-  var featureDisplayableInfo = pickingArg.layer.getInfoFromIntersectObject(intersects);
-  console.log("454554");
-  console.log(featureDisplayableInfo);
-  if (featureDisplayableInfo) {
-    // eslint-disable-next-line
-    pickingArg.htmlDiv.appendChild(createHTMLListFromObject(featureDisplayableInfo));
   }
 }
 </script>
-
 
 <style >
 #an_itowns_container {
@@ -240,5 +141,29 @@ function fillHTMLWithPickingInfo(event, pickingArg) {
 
 #an_panel {
   padding: 15px;
+}
+
+/* Feature information block */
+.an_info_enjeux {
+  color: white !important;
+  width: 100%;
+
+}
+
+/* Feature information table */
+.an_table_info {
+  background-color: white;
+
+}
+
+/* Feature information table block*/
+.an_info_enjeux_table {
+  overflow-y: auto;
+  height: 40vh;
+}
+
+.an_select_form {
+  height: 40vh;
+  overflow-y: auto;
 }
 </style>

@@ -2,6 +2,7 @@ const host = 'http://localhost:3000/'
 import { ColorLayer } from "itowns";
 import { FileSource, THREE, Style, FeatureGeometryLayer, proj4 } from "../../node_modules/itowns/dist/itowns";
 import { toWgs84 } from "reproject";
+
 let epsg = require('epsg');
 
 let api2itowns = {
@@ -54,6 +55,7 @@ let api2itowns = {
                     newLayer = new FeatureGeometryLayer(table_name, {
                         // Use a FileSource to load a single file once
                         source: source,
+                        batchId: setId,
                         transparent: true,
                         opacity: 0.7,
                         style: new Style({
@@ -67,7 +69,6 @@ let api2itowns = {
                 }
 
 
-
                 view.getLayers().forEach((l) => {
                     // if the table is updated, remove the previous layer 
                     if (table_name == l.id) {
@@ -77,8 +78,56 @@ let api2itowns = {
 
                 // add the layer to the view
                 view.addLayer(newLayer);
-            })
+                console.log(view.getLayers());
+                view.getLayers().forEach(layer => {
+                    if (!["scenarios", "atmosphere", "DEM", "Ortho", "globe"].includes(layer.id)) {
+                        window.addEventListener('click', (e) => { picking(e, layer.id) }, false);
+                        console.log(layer.id);
+                    }
+                })
 
+                function picking(event, layer) {
+                    if (view.controls.isPaused) {
+                        var intersects = view.pickFeaturesAt(event, 5, layer);
+                        let properties;
+                        let batchId;
+                        let info;
+                        let htmlInfo = document.getElementById('info');
+                        if (intersects[layer].length != 0) {
+                            htmlInfo.innerHTML = '';
+                            batchId = intersects[layer][0].object.geometry.attributes.batchId.array[intersects[layer][0].face.a];
+                            intersects[layer][0].object.feature.geometries.forEach(geom => {
+                                if (geom.properties.id == batchId) {
+                                    properties = geom.properties;
+                                }
+                            })
+                            if (properties == undefined) {
+                                properties = intersects[layer][0].object.feature.geometries[batchId].properties;
+                            }
+                            let text = `<table class="table table-striped an_table_info">
+                        <thead><tr><th scope="col">Propriété</th><th scope="col">Valeur</th></tr></thead>
+                        <tbody>`;
+                            console.log(properties);
+                            Object.keys(properties).map(function (objectKey) {
+                                var value = properties[objectKey];
+                                if (value) {
+                                    var key = objectKey.toString();
+                                    if (key[0] !== '_' && key !== 'geometry_name' && ["enjeu", "nature", "categorie", "detail_enjeu", "hauteur"].includes(key)) {
+                                        info = value.toString();
+                                        htmlInfo.getElementsByTagName("tbody");
+                                        text += `<tr>
+                                          <th>`+ key.replace(key[0], key[0].toUpperCase()) + `</th>
+                                          <td>`+ info + `</td>
+                                      </tr>`;
+                                    }
+                                }
+                            });
+                            text += '</tbody></table>';
+                            htmlInfo.innerHTML = text;
+                        }
+                    }
+                }
+            })
         return promise;
     },
 
@@ -121,6 +170,10 @@ function setExtrusions(properties) {
 
 function setAltitude(properties) {
     return properties.z_min - properties.hauteur;
+}
+
+function setId(properties) {
+    return properties.id;
 }
 
 export default api2itowns;
