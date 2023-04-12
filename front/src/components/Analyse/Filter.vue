@@ -21,7 +21,7 @@
                 <div>
                     <div :id="enjeu.id_parent" class="form-check enjeuxContainer" v-for="enjeu in enjeux" :key="enjeu.id"
                         :data-bs-target="enjeu.target_collapse">
-                        <input class="form-check-input" type="checkbox" :id="enjeu.id" v-model="enjeu.value">
+                        <input class="form-check-input form-enjeu" type="checkbox" :id="enjeu.id" v-model="enjeu.value">
                         <label class="form-check-label" :for="enjeu.id">
                             {{ enjeu.text }}
                         </label>
@@ -139,6 +139,8 @@ export default {
                                     data.forEach(el => {
                                         if (el != null) {
                                             list.push({ text: el, value: enjeu_name, id: "type" })
+                                        } else {
+                                            list.push({ text: "null", value: enjeu_name, id: "type" })
                                         }
                                     });
                                     types.push({ enjeu: enjeu_name, types: list });
@@ -162,39 +164,43 @@ export default {
     },
     methods: {
         btnValidate() {
-            let types = document.querySelectorAll("#type");
+            // defining parameters
             let params = {};
-            let filters = new Map();
-            for (var i = 0; i < types.length; i++) {
-                if (types[i].checked) {
-                    let enjeu = types[i].value;
+
+            // for each enjeu, defining the corresponding value in json
+            let enjeux = document.getElementsByClassName("form-enjeu");
+            for (let enjeu of enjeux) {
+                if (enjeu.checked) {
+                    let color = document.getElementById("color_" + enjeu.id).value
+                    params[enjeu.id] = {
+                        filters: [],
+                        minHeigh: this.barMinValue,
+                        maxHeigh: this.barMaxValue,
+                        color: new THREE.Color(color),
+                        concernedByScenario: idx2Scenario[this.rangeValue]
+                    };
+                }
+            }
+
+            // browsing each type and adding the filter in the corresponding array
+            let types = document.querySelectorAll("#type");
+            types.forEach(type => {
+                if (type.checked) {
+                    let enjeu = type.value;
                     let input_enjeu = document.querySelector("#" + enjeu);
                     if (input_enjeu.checked) {
-                        if (filters.has(input_enjeu.id)) {
-                            filters[input_enjeu.id] = filters.get(input_enjeu.id).push(types[i].nextSibling.innerText);
-
+                        let filterName = type.nextSibling.innerText;
+                        if (filterName == "null") {
+                            // when filter accepts null values
+                            params[enjeu].displayNullValues = true;
                         } else {
-                            filters.set(input_enjeu.id, [types[i].nextSibling.innerText]);
+                            params[enjeu].filters.push(filterName);
                         }
                     }
                 }
-            }
-            if (document.querySelector("#autre").checked) {
-                filters.set("autre", []);
-            }
-            filters.forEach((tab_types, enjeu) => {
-                let color = document.getElementById("color_" + enjeu).value
-                params[enjeu] = {
-                    filters: tab_types,
-                    minHeigh: this.barMinValue,
-                    maxHeigh: this.barMaxValue,
-                    color: new THREE.Color(color),
-                    concernedByScenario: idx2Scenario[this.rangeValue]
-                };
             })
-            this.store.params = params;
-            this.store.prob_scenario = idx2Scenario[this.rangeValue]
-            this.store.num_scenario = this.rangeValue;
+
+            // return parameters to parent
             this.$emit("validate", params);
         },
 
