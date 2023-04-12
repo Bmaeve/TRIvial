@@ -28,7 +28,7 @@ import $ from 'jquery'
 //import the store
 import { store } from '../Store.js'
 //import the vuejs Dom reference function
-import { ref, toRaw } from 'vue';
+import { ref, isProxy, toRaw } from 'vue';
 //import api2itowns
 import api2itowns from '../../js/api2itowns'
 
@@ -61,7 +61,11 @@ export default {
         headers: { 'Content-Type': 'application/json' },
         method: 'post'
       }).then(res => res.json()).then(r => {
-        api2itowns.addEnjeuxToView(toRaw(this.view), r.data[0]);
+        let view = this.view;
+        if (isProxy(view)) {
+          view = toRaw(view);
+        }
+        api2itowns.addEnjeuxToView(view, r.data[0]);
       })
     }
   },
@@ -104,13 +108,13 @@ export default {
 
     // Create the globe  view
     const view = new GlobeView(viewerDiv, placement);
+    this.view = view;
 
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
       translate: { y: 0 },
     });
-
 
     // Define the source of the ortho-images
     var orthoSource = new WMTSSource({
@@ -124,8 +128,6 @@ export default {
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
     view.addLayer(layerOrtho);
-
-    this.view = view;
 
     // // Define the source of the dem data
     // var elevationSource = new WMTSSource({

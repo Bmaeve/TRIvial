@@ -7,7 +7,7 @@
           <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-5 d-none d-sm-inline">TRIvial - Analyse</span>
           </a>
-          <Filter @scenarioChanged="onScenarioChanged" />
+          <Filter @scenarioChanged="onScenarioChanged" @validate="onValidate" />
 
         </div>
 
@@ -35,7 +35,7 @@ import $ from 'jquery'
 //import the store
 import { store } from '../Store.js'
 //import the vuejs Dom reference function
-import { ref } from 'vue';
+import { ref, isProxy, toRaw } from 'vue';
 export default {
   name: 'MyItowns',
   components: {
@@ -45,6 +45,8 @@ export default {
   data() {
     return {
       store,
+      view: null,
+      current_scenario: "01For",
       componentKey: ref(0),
       scenarioId: 0
     }
@@ -58,6 +60,24 @@ export default {
     },
     onScenarioChanged(value) {
       this.scenarioId = value;
+    },
+    onValidate(params) {
+      let view = this.view;
+      if (isProxy(view)) {
+        view = toRaw(view);
+      }
+      api2itowns.addEnjeuxToView(view, params);
+
+      if (this.current_scenario != this.getScenarioId) {
+        try {
+          view.removeLayer("scenarios");
+        } catch (e) {
+          //pass
+        }
+        let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario", color: 'red' };
+        api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+        this.current_scenario = this.getScenarioId;
+      }
     }
   },
   computed: {
@@ -89,6 +109,7 @@ export default {
       this.forceRerender()
 
     })
+
     // Define the view geographic extent
     proj4.defs(
       'EPSG:2154',
@@ -99,16 +120,16 @@ export default {
       coord: new Coordinates("EPSG:4326", 2.352462566790728, 48.857905124448),
       range: 20000
     };
+
     // Create the globe  view
-    let view = new GlobeView(viewerDiv, placement);
+    const view = new GlobeView(viewerDiv, placement);
+    this.view = view;
 
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
       translate: { y: 0 },
     });
-
-
 
     // Define the source of the ortho-images
     var orthoSource = new WMTSSource({
@@ -118,6 +139,7 @@ export default {
       tileMatrixSet: 'PM',
       format: 'image/jpeg',
     });
+
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
     view.addLayer(layerOrtho)
@@ -135,26 +157,8 @@ export default {
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);*/
 
-    let current_scenario = "01For"
-    let scenarioParams = { filters: [current_scenario], columnFiltered: "scenario", color: 'red' };
+    let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: 'red' };
     api2itowns.addLayerToView(view, "scenarios", scenarioParams);
-
-    document.getElementById('validate').addEventListener('click', () => {
-      let params = JSON.parse(JSON.stringify(this.store.params));
-      api2itowns.addEnjeuxToView(view, params);
-
-      if (current_scenario != this.getScenarioId) {
-        try {
-          view.removeLayer("scenarios");
-        } catch (e) {
-          //pass
-        }
-        let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario", color: 'red' };
-        api2itowns.addLayerToView(view, "scenarios", scenarioParams);
-        current_scenario = this.getScenarioId;
-      }
-    })
-
 
   }
 }

@@ -59,7 +59,6 @@ export default {
                 }
                 i++;
             }
-            this.store.name = name;
             this.$emit("import", name);
         }
     }

@@ -188,6 +188,7 @@ export default {
             this.store.params = params;
             this.store.prob_scenario = idx2Scenario[this.rangeValue]
             this.store.num_scenario = this.rangeValue;
+            this.$emit("validate", params);
         },
 
         UpdateValues(e) {
