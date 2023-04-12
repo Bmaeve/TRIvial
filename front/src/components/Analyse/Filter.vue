@@ -19,13 +19,13 @@
 
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
                 <div>
-                    <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
+                    <div :id="enjeu.id_parent" class="form-check enjeuxContainer" v-for="enjeu in enjeux" :key="enjeu.id"
                         :data-bs-target="enjeu.target_collapse">
                         <input class="form-check-input" type="checkbox" :id="enjeu.id" v-model="enjeu.value">
                         <label class="form-check-label" :for="enjeu.id">
                             {{ enjeu.text }}
                         </label>
-                        <input type="color" :id="enjeu.id_color" value="#a7bed3">
+                        <input type="color" class="color" :id="enjeu.id_color" value="#a7bed3">
                         <div v-if="enjeu.value">
                             <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
                                 <div v-if="typeEnjeu.enjeu == enjeu.id">
@@ -249,5 +249,18 @@ li {
 
 .invisible {
     visibility: hidden;
+}
+
+.color {
+    height: 15px;
+    width: 25px;
+    padding: 0;
+    margin: 0;
+    border: 0.2vw;
+}
+
+.form-check-label {
+    padding-left: 1vw;
+    padding-right: 1vw;
 }
 </style>
