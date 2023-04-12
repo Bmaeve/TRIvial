@@ -17,12 +17,27 @@ async function dataSelection(table_name, body) {
     if ((body.filters) != undefined) {
         // updating filters to prevent single quotes issues in sql
         let newFilters = body.filters.map(filter => filter.replace("'", "\\''"))
+
+        // defining colummnFiltered if needed
+        if ((body.columnFiltered) == undefined) {
+            body.columnFiltered = enjeux[table_name].columnsToKeep[0];
+        }
+
         if ((body.filters.length > 0)) {
-            if ((body.columnFiltered) == undefined) {
-                // if the colummnFiltered parameters has'nt been defined 
-                body.columnFiltered = enjeux[table_name].columnsToKeep[0];
+            query += " AND (" + body.columnFiltered + " IN ('" + newFilters.join("', '") + "')";
+
+            // adding a filter with null values if needed
+            if (body.displayNullValues == true) {
+                query += " OR " + body.columnFiltered + " IS NULL "
             }
-            query += " AND " + body.columnFiltered + " IN ('" + newFilters.join("', '") + "')";
+
+            query += " ) ";
+
+        } else {
+            // adding a filter with null values if needed
+            if (body.displayNullValues == true) {
+                query += " AND " + body.columnFiltered + " IS NULL "
+            }
         }
     }
 
