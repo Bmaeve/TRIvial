@@ -9,13 +9,16 @@
         <br>
         <!-- Decision view import button -->
         <div class="d-grid gap-2 col-12 mx-auto">
-            <button class="btn btn-info" type="button" v-on:click="btnImporter">Importer</button>
+            <button class="btn btn-info" type="button" id="importButton" v-on:click="btnImporter">Importer</button>
         </div>
 
     </div>
 </template>
 <script>
-//component exporte
+//import the store
+import { store } from '../Store.js';
+
+//component export
 export default {
     name: 'sec_viewImporte',
     props: {
@@ -25,34 +28,10 @@ export default {
         return {
             //decision view list
             plans: [{
-                "id": 1,
-                "title": "Plan 1",
-                "Script": {
-                    "sql": "select * from A"
-                }
-            },
-            {
-                "id": 2,
-                "title": "Plan 2",
-                "Script": {
-                    "sql": "select * from A"
-                }
-            },
-            {
-                "id": 3,
-                "title": "Plan 3",
-                "Script": {
-                    "sql": "select * from A"
-                }
-            },
-            {
-                "id": 4,
-                "title": "Plan 4",
-                "Script": {
-                    "sql": "select * from A"
-                }
-            }
-            ]
+                "id": 0,
+                "title": "Pas de plans"
+            }],
+            store
         }
     }, mounted() {
         fetch('http://localhost:3000/importParams/name', {
@@ -80,15 +59,8 @@ export default {
                 }
                 i++;
             }
-            fetch('http://localhost:3000/importParams/data', {
-                body: JSON.stringify({ texte: "parameters/" + name }),
-                headers: { 'Content-Type': 'application/json' },
-                method: 'post'
-            }).then(res => res.json()).then(r => {
-                console.log(r.data[0]);
-                //Appel à la fonction d'affichage :
-                //api2itowns.addEnjeuxToView(view, r.data);
-            })
+            this.store.name = name;
+            this.$emit("import", name);
         }
     }
 }
