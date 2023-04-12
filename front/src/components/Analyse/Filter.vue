@@ -43,7 +43,12 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-success" id="validate" v-on:click="btnValidate" type="submit">Valider</button>
+                    <div class="validateContainer">
+                        <button class="btn btn-success" id="validate" v-on:click="btnValidate" type="submit"
+                            :disabled="btnIsDisabled">Valider</button>
+                        <div :class="{ invisible: !btnIsDisabled }" id="loader"></div>
+                    </div>
+
                 </div>
             </li>
         </ul>
@@ -73,7 +78,7 @@ export default {
     components: {
         MultiRangeSlider,
     },
-
+    props: ['buttonDisable'],
     data() {
         return {
             rangeValue: 1,
@@ -150,10 +155,12 @@ export default {
         rangeValueText() {
             this.$emit('scenarioChanged', idx2Scenario[this.rangeValue]);
             return "Probabilité " + idx2Scenario[this.rangeValue];
+        },
+        btnIsDisabled: function () {
+            return this.buttonDisable;
         }
     },
     methods: {
-
         btnValidate() {
             let types = document.querySelectorAll("#type");
             let params = {};
@@ -210,5 +217,37 @@ export default {
 li {
     size-adjust: initial;
     resize: inherit;
+}
+
+.validateContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#loader {
+    border: 6px solid #f3f3f3;
+    /* Light grey */
+    border-top: 6px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 3vw;
+    height: 3vw;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.invisible {
+    visibility: hidden;
 }
 </style>
