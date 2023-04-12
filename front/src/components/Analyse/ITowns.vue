@@ -7,7 +7,7 @@
           <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-5 d-none d-sm-inline">TRIvial - Analyse</span>
           </a>
-          <Filter @scenarioChanged="onScenarioChanged" @validate="onValidate" />
+          <Filter @scenarioChanged="onScenarioChanged" @validate="onValidate" v-bind:buttonDisable="buttonDisable" />
 
         </div>
 
@@ -46,6 +46,7 @@ export default {
     return {
       store,
       view: null,
+      buttonDisable: false,
       current_scenario: "01For",
       componentKey: ref(0),
       scenarioId: 0
@@ -62,11 +63,15 @@ export default {
       this.scenarioId = value;
     },
     onValidate(params) {
+      let promises = []
+
       let view = this.view;
       if (isProxy(view)) {
         view = toRaw(view);
       }
-      api2itowns.addEnjeuxToView(view, params);
+
+      let enjeuxPromise = api2itowns.addEnjeuxToView(view, params);
+      promises.push(enjeuxPromise);
 
       if (this.current_scenario != this.getScenarioId) {
         try {
@@ -75,9 +80,16 @@ export default {
           //pass
         }
         let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario", color: 'red' };
-        api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+        let scenarioPromise = api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+        promises.push(scenarioPromise);
         this.current_scenario = this.getScenarioId;
       }
+
+      this.buttonDisable = true
+      Promise.all(promises)
+        .then(() => {
+          this.buttonDisable = false
+        })
     }
   },
   computed: {
