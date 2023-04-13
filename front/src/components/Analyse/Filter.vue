@@ -25,7 +25,7 @@
                         <label class="form-check-label" :for="enjeu.id">
                             {{ enjeu.text }}
                         </label>
-                        <input type="color" class="color" :id="enjeu.id_color" value="#a7bed3">
+                        <input type="color" class="color" :id="enjeu.id_color" value="#6ACE3C">
                         <div v-if="enjeu.value">
                             <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
                                 <div v-if="typeEnjeu.enjeu == enjeu.id">
