@@ -22,11 +22,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 app.use('/', require('./routes/index'));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/dbInfo', require('./routes/dbInfo'));
 app.use('/data', require('./routes/data'));
 app.use('/enjeux', require('./routes/enjeux'));
-app.use('/getBatis', require('./routes/getDataPg'));
 app.use('/saveDownParams', require('./routes/saveDownloadParams'));
 app.use('/importParams', require('./routes/importParams'));
 

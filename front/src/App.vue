@@ -33,5 +33,7 @@ body {
 
 canvas {
   display: block;
+  overflow-x: hidden;
 }
 </style>
+

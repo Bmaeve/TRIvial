@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const data = require("../datatest/batiremarquable.json");
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
 
-  res.json(data);
-  //console.log(data);
+  res.json({
+    message: "bienvenue sur l'API TRIvial",
+    documentation: "localhost:3000/doc"
+  });
 });
 
 module.exports = router;

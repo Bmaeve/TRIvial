@@ -11,7 +11,7 @@ const routes = [
     component: AnalyseView
   },
   {
-    path: '/',
+    path: '/TRIvial',
     name: 'Login',
     component: LoginView
   },
@@ -25,6 +25,7 @@ const routes = [
     name: 'Comparaisons',
     component: ComparaisonView
   },
+  { path: '/', redirect: '/TRIvial' },
 ]
 
 const router = createRouter({

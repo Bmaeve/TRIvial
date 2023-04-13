@@ -13,6 +13,8 @@ export default {
   name: 'SecoursView',
   components: {
     ITowns
+  }, mounted() {
+    document.title = "TRIvial"
   }
 }
 

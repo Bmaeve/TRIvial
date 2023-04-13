@@ -55,13 +55,16 @@
         <!-- App logo image -->
         <img src="../../assets/logo.png" width="50" height="50" />
     </div>
+    <div id="sec_bouton2">
+        <a href="/TRIvial"> <button class="btn btn-outline-success">
+                <!-- <img src="../../assets/menu(1).png" width="50"
+                    height="50" /> -->
+                MENU
+            </button></a>
+    </div>
 </template>
 
 <script>
-//import jquery module
-import $ from 'jquery'
-
-console.log($)
 
 //function for return object properties
 const getKeys = (object) => {
@@ -125,7 +128,7 @@ export default {
 /* Feature information table block*/
 .sec_info_enjeux_table {
     overflow-y: auto;
-    height: 32vh;
+    height: 25vh;
 }
 
 /* Itineraire calcul block */
@@ -145,5 +148,11 @@ export default {
 .sec_secour_logo {
     text-align: center;
     color: white;
+}
+
+#sec_bouton2 {
+    position: relative;
+    left: 35%;
+    margin-top: 5px;
 }
 </style>

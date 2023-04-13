@@ -7,7 +7,7 @@
           <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-5 d-none d-sm-inline">TRIvial - Analyse</span>
           </a>
-          <Filter />
+          <Filter @scenarioChanged="onScenarioChanged" @validate="onValidate" v-bind:buttonDisable="buttonDisable" />
 
         </div>
 
@@ -30,7 +30,9 @@
 </template>
 
 <script>
-import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer } from "../../../node_modules/itowns/dist/itowns";
+
+import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer } from "../../../node_modules/itowns/dist/itowns";
+
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
@@ -39,6 +41,9 @@ import Filter from '@/components/Analyse/Filter.vue'
 //import the store
 import { store } from '../Store.js'
 
+//import the vuejs Dom reference function
+import { isProxy, toRaw } from 'vue';
+
 export default {
   name: 'MyItowns',
   components: {
@@ -46,7 +51,50 @@ export default {
   },
   data() {
     return {
-      store
+      store,
+      view: null,
+      buttonDisable: false,
+      current_scenario: "01For",
+      scenarioId: 0
+    }
+  },
+  methods: {
+    onScenarioChanged(value) {
+      this.scenarioId = value;
+    },
+    onValidate(params) {
+      let promises = []
+
+      let view = this.view;
+      if (isProxy(view)) {
+        view = toRaw(view);
+      }
+
+      let enjeuxPromise = api2itowns.addEnjeuxToView(view, params);
+      promises.push(enjeuxPromise);
+
+      if (this.current_scenario != this.getScenarioId) {
+        try {
+          view.removeLayer("scenarios");
+        } catch (e) {
+          //pass
+        }
+        let scenarioParams = { filters: [this.getScenarioId], columnFiltered: "scenario", color: 'red' };
+        let scenarioPromise = api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+        promises.push(scenarioPromise);
+        this.current_scenario = this.getScenarioId;
+      }
+
+      this.buttonDisable = true
+      Promise.all(promises)
+        .then(() => {
+          this.buttonDisable = false
+        })
+    }
+  },
+  computed: {
+    getScenarioId() {
+      return this.scenarioId;
     }
   },
   mounted() {
@@ -60,12 +108,14 @@ export default {
     );
     //Center the view on Paris
     const placement = {
-      coord: new Coordinates("EPSG:4326", 2.340, 48.858),
+      coord: new Coordinates("EPSG:4326", 2.352462566790728, 48.857905124448),
       range: 20000
     };
 
     // Create the globe  view
     const view = new GlobeView(viewerDiv, placement);
+    this.view = view;
+
     //Adding navigation controls
     new Navigation(view, {
       position: 'bottom-right',
@@ -85,75 +135,46 @@ export default {
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
     view.addLayer(layerOrtho);
 
-    // Define the source of the dem data
-    var elevationSource = new WMTSSource({
-      url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
+    // // Define the source of the dem data
+    /* var elevationSource = new WMTSSource({
+      url: 'https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer',
       crs: 'EPSG:4326',
       name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
       tileMatrixSet: 'WGS84G',
       format: 'image/x-bil;bits=32',
       zoom: { min: 3, max: 10 }
     });
-    // Create the dem ElevationLayer and add it to the view
+    // // Create the dem ElevationLayer and add it to the view
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
-    view.addLayer(layerDEM);
+    view.addLayer(layerDEM);*/
 
-    // EXAMPLE
-    let scenario = "04Fai"
-    let paramsScen = { filters: [scenario], columnFiltered: "scenario" };
-    api2itowns.addLayerToView(view, "scenarios", paramsScen);
 
-    let params = {
-      patrim: {
-        color: 'white',
-        concernedByScenario: scenario
-      },
-      san: {
-        filters: ["Maison de retraite", "Hôpital"],
-        color: 'orange',
-        concernedByScenario: scenario
-      }
-    }
-    api2itowns.addEnjeuxToView(view, params)
+    let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: 'red' };
+    api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
-    let bouton_valider = document.getElementById('validate');
-    bouton_valider.addEventListener('click', () => {
-      let params = JSON.parse(JSON.stringify(this.store.params));
-      api2itowns.addEnjeuxToView(view, params);
-    });
+
   }
 }
 </script>
 
 <style >
-#an_itowns_container {
-  width: 75%;
-  height: 90vh;
-  overflow: auto;
-}
-
 #viewerDiv {
-  margin: auto;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   padding: 0;
-}
-
-#an_panel {
-  padding: 15px;
+  overflow-x: hidden;
 }
 
 /* Feature information block */
 .an_info_enjeux {
   color: white !important;
   width: 100%;
-
+  margin-top: 15%;
 }
 
 /* Feature information table */
 .an_table_info {
   background-color: white;
-
 }
 
 /* Feature information table block*/
@@ -163,7 +184,7 @@ export default {
 }
 
 .an_select_form {
-  height: 40vh;
+  height: 50vh;
   overflow-y: auto;
 }
 </style>

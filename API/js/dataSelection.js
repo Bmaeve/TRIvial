@@ -5,20 +5,50 @@ async function dataSelection(table_name, body) {
     let features = [];
 
     //SQL query
+    // WHERE 1=1 permit to add "AND" filters next
     var query = " \
           SELECT *,ST_AsGeoJSON(geom)::json as geometry \
           FROM " + table_name + " \
-          ";
+          WHERE 1=1 \ ";
+
+
 
     // filtering
     if ((body.filters) != undefined) {
-        if ((body.filters.length > 0)) {
-            if ((body.columnFiltered) == undefined) {
-                // if the colummnFiltered parameters has'nt been defined 
-                body.columnFiltered = enjeux[table_name].columnsToKeep[0];
-            }
-            query += " WHERE " + body.columnFiltered + " IN ('" + body.filters.join("', '") + "')";
+        // updating filters to prevent single quotes issues in sql
+        let newFilters = body.filters.map(filter => filter.replace("'", "\\''"))
+
+        // defining colummnFiltered if needed
+        if ((body.columnFiltered) == undefined) {
+            body.columnFiltered = enjeux[table_name].columnsToKeep[0];
         }
+
+        if ((body.filters.length > 0)) {
+            query += " AND (" + body.columnFiltered + " IN ('" + newFilters.join("', '") + "')";
+
+            // adding a filter with null values if needed
+            if (body.displayNullValues == true) {
+                query += " OR " + body.columnFiltered + " IS NULL "
+            }
+
+            query += " ) ";
+
+        } else {
+            // adding a filter with null values if needed
+            if (body.displayNullValues == true) {
+                query += " AND " + body.columnFiltered + " IS NULL "
+            }
+        }
+    }
+
+    // adding a filter with min heigh
+    if ((body.minHeigh != undefined) && enjeux[table_name].hasColumnNamedHauteur) {
+        query += " AND hauteur >= " + body.minHeigh;
+    }
+
+    // adding a filter with max heigh
+    if ((body.maxHeigh != undefined) && enjeux[table_name].hasColumnNamedHauteur) {
+        query += " AND hauteur < " + body.maxHeigh;
     }
 
     // send and retrieve data

@@ -19,19 +19,21 @@
 
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
                 <div>
-                    <div :id="enjeu.id_parent" class="form-check" v-for="enjeu in enjeux" :key="enjeu.id"
+                    <div :id="enjeu.id_parent" class="form-check enjeuxContainer" v-for="enjeu in enjeux" :key="enjeu.id"
                         :data-bs-target="enjeu.target_collapse">
-                        <input class="form-check-input" type="checkbox" :id="enjeu.id" v-model="enjeu.value">
+                        <input class="form-check-input form-enjeu" type="checkbox" :id="enjeu.id" v-model="enjeu.value">
                         <label class="form-check-label" :for="enjeu.id">
                             {{ enjeu.text }}
                         </label>
+                        <input type="color" class="color" :id="enjeu.id_color" value="#a7bed3">
                         <div v-if="enjeu.value">
                             <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
                                 <div v-if="typeEnjeu.enjeu == enjeu.id">
                                     <div v-for="tab in typeEnjeu.types" :key="tab.id">
 
                                         <div class="form-check" :id="enjeu.id_collapse">
-                                            <input class="form-check-input" type="checkbox" :value="tab.value" :id="tab.id">
+                                            <input class="form-check-input" type="checkbox" :value="tab.value" :id="tab.id"
+                                                checked>
                                             <label class="form-check-label" :for="tab.id">
                                                 {{ tab.text }}
                                             </label>
@@ -41,7 +43,12 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-success" id="validate" v-on:click="btnValidate" type="submit">Valider</button>
+                    <div class="validateContainer">
+                        <button class="btn btn-success" id="validate" v-on:click="btnValidate" type="submit"
+                            :disabled="btnIsDisabled">Valider</button>
+                        <div :class="{ invisible: !btnIsDisabled }" id="loader"></div>
+                    </div>
+
                 </div>
             </li>
         </ul>
@@ -49,7 +56,6 @@
 </template>
 <script>
 
-import $ from 'jquery'
 import MultiRangeSlider from 'multi-range-slider-vue'
 import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
 
@@ -58,24 +64,29 @@ import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css
 import { THREE } from '../../../node_modules/itowns/dist/itowns';
 
 
-console.log($)
 //import the store
 import { store } from '../Store.js';
+
+let idx2Scenario = {
+    1: "01For",
+    2: "02Moy",
+    3: "04Fai"
+}
 
 export default {
     name: "FilterSelection",
     components: {
         MultiRangeSlider,
     },
-
+    props: ['buttonDisable'],
     data() {
         return {
             rangeValue: 1,
             enjeux: [
-                { text: "Enjeu 1", value: false, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1", id_parent: "parent1" },
-                { text: "Enjeu 2", value: false, id: "check2", target_collapse: "#collapse2", id_collapse: "collapse2", id_parent: "parent2" },
-                { text: "Enjeu 3", value: false, id: "check3", target_collapse: "#collapse3", id_collapse: "collapse3", id_parent: "parent3" },
-                { text: "Enjeu 4", value: false, id: "check4", target_collapse: "#collapse4", id_collapse: "collapse4", id_parent: "parent4" },
+                { text: "Enjeu 1", value: false, id: "check1", target_collapse: "#collapse1", id_collapse: "collapse1", id_parent: "parent1", id_color: "color1" },
+                { text: "Enjeu 2", value: false, id: "check2", target_collapse: "#collapse2", id_collapse: "collapse2", id_parent: "parent2", id_color: "color1" },
+                { text: "Enjeu 3", value: false, id: "check3", target_collapse: "#collapse3", id_collapse: "collapse3", id_parent: "parent3", id_color: "color1" },
+                { text: "Enjeu 4", value: false, id: "check4", target_collapse: "#collapse4", id_collapse: "collapse4", id_parent: "parent4", id_color: "color1" },
             ],
             types_enjeux: [
                 { text: "Type 1", value: 1, id: "type1" },
@@ -107,7 +118,8 @@ export default {
                         id: enjeu.key,
                         target_collapse: "#collapse_" + enjeu.key,
                         id_collapse: "collapse_" + enjeu.key,
-                        id_parent: "parent_" + enjeu.key
+                        id_parent: "parent_" + enjeu.key,
+                        id_color: "color_" + enjeu.key
                     });
                 })
                 this.enjeux = new_enjeux;
@@ -127,6 +139,8 @@ export default {
                                     data.forEach(el => {
                                         if (el != null) {
                                             list.push({ text: el, value: enjeu_name, id: "type" })
+                                        } else {
+                                            list.push({ text: "null", value: enjeu_name, id: "type" })
                                         }
                                     });
                                     types.push({ enjeu: enjeu_name, types: list });
@@ -141,46 +155,56 @@ export default {
     },
     computed: {
         rangeValueText() {
-            if (this.rangeValue == 1) {
-                return "Faible";
-            }
-            else if (this.rangeValue == 2) {
-                return "Moyen";
-            }
-            else if (this.rangeValue == 3) {
-                return "Fort";
-            }
-            return "undefined"
+            this.$emit('scenarioChanged', idx2Scenario[this.rangeValue]);
+            return "Probabilité " + idx2Scenario[this.rangeValue];
+        },
+        btnIsDisabled: function () {
+            return this.buttonDisable;
         }
     },
     methods: {
-
         btnValidate() {
-            let types = document.querySelectorAll("#type");
+            // defining parameters
             let params = {};
-            let filters = new Map();
-            for (var i = 0; i < types.length; i++) {
-                if (types[i].checked) {
-                    let enjeu = types[i].value;
+
+            // for each enjeu, defining the corresponding value in json
+            let enjeux = document.getElementsByClassName("form-enjeu");
+            for (let enjeu of enjeux) {
+                if (enjeu.checked) {
+                    let color = document.getElementById("color_" + enjeu.id).value
+                    params[enjeu.id] = {
+                        filters: [],
+                        minHeigh: this.barMinValue,
+                        maxHeigh: this.barMaxValue,
+                        color: new THREE.Color(color),
+                        concernedByScenario: idx2Scenario[this.rangeValue]
+                    };
+                }
+            }
+
+            // browsing each type and adding the filter in the corresponding array
+            let types = document.querySelectorAll("#type");
+            types.forEach(type => {
+                if (type.checked) {
+                    let enjeu = type.value;
                     let input_enjeu = document.querySelector("#" + enjeu);
                     if (input_enjeu.checked) {
-                        if (filters.has(input_enjeu.id)) {
-                            filters[input_enjeu.id] = filters.get(input_enjeu.id).push(types[i].nextSibling.innerText);
-
+                        let filterName = type.nextSibling.innerText;
+                        if (filterName == "null") {
+                            // when filter accepts null values
+                            params[enjeu].displayNullValues = true;
                         } else {
-                            filters.set(input_enjeu.id, [types[i].nextSibling.innerText]);
+                            params[enjeu].filters.push(filterName);
                         }
                     }
                 }
-            }
-            if (document.querySelector("#autre").checked) {
-                filters.set("autre", []);
-            }
-            filters.forEach((tab_types, enjeu) => {
-                params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
             })
-            console.log(params);
+            //storing necessary values for statistics
             this.store.params = params;
+            this.store.prob_scenario = idx2Scenario[this.rangeValue]
+            this.store.num_scenario = this.rangeValue;
+            // return parameters to parent
+            this.$emit("validate", params);
         },
 
         UpdateValues(e) {
@@ -188,11 +212,6 @@ export default {
             this.barMaxValue = e.maxValue;
         }
     },
-    mounted() {
-        $('#viewerDiv').click(() => {
-            console.log(this.barMinValue, this.barMaxValue)
-        })
-    }
 }
 
 
@@ -202,5 +221,55 @@ export default {
     margin: auto;
     width: 100%;
     padding-right: 10px;
+}
+
+li {
+    size-adjust: initial;
+    resize: inherit;
+}
+
+.validateContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#loader {
+    border: 6px solid #f3f3f3;
+    /* Light grey */
+    border-top: 6px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 3vw;
+    height: 3vw;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.color {
+    height: 15px;
+    width: 25px;
+    padding: 0;
+    margin: 0;
+    border: 0.2vw;
+}
+
+.form-check-label {
+    padding-left: 1vw;
+    padding-right: 1vw;
 }
 </style>
