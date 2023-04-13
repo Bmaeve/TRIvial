@@ -73,6 +73,12 @@ let idx2Scenario = {
     3: "04Fai"
 }
 
+let text2Scenario = {
+    1: "Forte",
+    2: "Moyenne",
+    3: "Faible"
+}
+
 export default {
     name: "FilterSelection",
     components: {
@@ -156,7 +162,7 @@ export default {
     computed: {
         rangeValueText() {
             this.$emit('scenarioChanged', idx2Scenario[this.rangeValue]);
-            return "Probabilité " + idx2Scenario[this.rangeValue];
+            return "Probabilité " + text2Scenario[this.rangeValue];
         },
         btnIsDisabled: function () {
             return this.buttonDisable;
