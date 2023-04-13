@@ -20,7 +20,7 @@
             "liblongcat"
         ]
     },
-    "trans_l_flat_p": {
+    "trans_l_flat": {
         "full_name": "transport (réseau)",
         "columnsToKeep": [
             "nature"

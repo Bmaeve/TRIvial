@@ -71,7 +71,7 @@ let api2itowns = {
                         style: new Style({
                             fill: {
                                 color: color,
-                                base_altitude: 5,
+                                base_altitude: setAltitude,
                                 extrusion_height: setExtrusions,
                             }
                         })
@@ -207,12 +207,14 @@ let api2itowns = {
 }
 
 function setExtrusions(properties) {
+
     return properties.hauteur;
+
 }
 
-/*function setAltitude(properties) {
-    return properties.z_min - properties.hauteur;
-}*/
+function setAltitude(properties) {
+    return parseFloat(properties.z_median);
+}
 
 function setId(properties) {
     if (!properties.id) {

@@ -31,7 +31,7 @@
 
 <script>
 
-import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer } from "../../../node_modules/itowns/dist/itowns";
+import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer } from "../../../node_modules/itowns/dist/itowns";
 
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
@@ -133,11 +133,25 @@ export default {
 
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
-    view.addLayer(layerOrtho);
 
+    view.addLayer(layerOrtho)
+    let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
+    let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
+
+    console.log(IGN_MNT, WORLD_DTM)
+
+    // defined in a json file.
+    function addElevationLayerFromConfig(config) {
+      config.source = new WMTSSource(config.source);
+      view.addLayer(
+        new ElevationLayer(config.id, config),
+      );
+    }
+    addElevationLayerFromConfig(IGN_MNT);
+    addElevationLayerFromConfig(WORLD_DTM);
     // // Define the source of the dem data
-    /* var elevationSource = new WMTSSource({
-      url: 'https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer',
+    /*var elevationSource = new WMTSSource({
+      url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
       crs: 'EPSG:4326',
       name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
       tileMatrixSet: 'WGS84G',
