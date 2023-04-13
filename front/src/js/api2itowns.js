@@ -8,6 +8,80 @@ let epsg = require('epsg');
 
 let index = {}
 let last_parameters = {}
+let cleanProperties = (keys) => {
+    let value = '';
+    switch (keys) {
+        case 'Detail_enjeu':
+            value = 'Detail enjeu';
+            break;
+        case 'Nature_u00':
+            value = 'Nature';
+            break;
+        case 'Patronyme_':
+            value = 'Patronyme';
+            break;
+        case 'Code_posta':
+            value = 'Code postal';
+            break;
+        case 'Et_etabli0':
+            value = 'Etablissement';
+            break;
+        case 'Libbelle_ac':
+            value = 'Libelle ac';
+            break;
+        case 'Date_ouver':
+            value = "Date d'ouverture";
+            break;
+        case 'Rs':
+            value = 'Raison sociale';
+            break;
+        case 'Rslongue':
+            value = 'Raison sociale longue';
+            break;
+        case 'Numvoie':
+            value = 'Numero de voie';
+            break;
+        case 'Typvoie':
+            value = 'Type de voie';
+            break;
+        case 'Codepostal':
+            value = 'Code postal';
+            break;
+        case 'Libcatgre':
+            value = 'Categorie etablissement';
+            break;
+        case 'Libcodeape':
+            value = 'Code APE';
+            break;
+        case 'Liblongmft':
+            value = 'Code MFT longue';
+            break;
+        case 'Dateouvert':
+            value = "Date d'ouverture";
+            break;
+        case 'Datemaj':
+            value = 'Date mise a jour';
+            break;
+        case 'Cl_admin':
+            value = 'Classe Admin';
+            break;
+        case 'It_europ':
+            value = 'It europe';
+            break;
+        case 'Nb_voies':
+            value = 'Nbr voies';
+            break;
+        case 'Inseecom_d':
+            value = 'Inseecom';
+            break;
+
+        default:
+            value = keys;
+    }
+
+    return value
+}
+
 
 let api2itowns = {
     async addLayerToView(view, table_name, parameters = {}) {
@@ -134,7 +208,7 @@ let api2itowns = {
                                             info = value.toString();
                                             htmlInfo.getElementsByTagName("tbody");
                                             text += `<tr>
-                                              <th>`+ key.replace(key[0], key[0].toUpperCase()) + `</th>
+                                              <th>`+ cleanProperties(key.replace(key[0], key[0].toUpperCase())) + `</th>
                                               <td>`+ info + `</td>
                                           </tr>`;
                                         }

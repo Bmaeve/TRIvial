@@ -137,7 +137,7 @@
 </template>
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
-import api2itowns from '../../js/api2itowns'
+import api2itowns from './api2itowns2.js'
 import Scene1 from '@/components/Comparaisons/Scene1.vue'
 import Scene2 from '@/components/Comparaisons/Scene2.vue'
 
