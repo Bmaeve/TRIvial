@@ -4,7 +4,7 @@
             <div class="card-body" v-if="infosScenario.proba != ''">
                 <p class="card-text">
                 <ul>
-                    <li>{{ infosScenario.proba }} </li>
+                    <li>{{ infosScenario.proba }} - {{ infosScenario.textProba }}</li>
                     <li>{{ infosScenario.type }}</li>
                 </ul>
                 </p>
@@ -57,6 +57,12 @@ import api2stats from '../../js/api2stats'
 //import the store
 import { store } from '../Store.js';
 
+let probasScenarios = {
+    1: "Décennale",
+    2: "Centennale",
+    3: "Millennale"
+}
+
 export default {
     name: "AnStats",
     data() {
@@ -64,7 +70,8 @@ export default {
             store,
             infosScenario: {
                 proba: "",
-                type: ""
+                type: "",
+                textProba: "",
             },
             infosPop: {
                 totalEleves: null,
@@ -81,25 +88,33 @@ export default {
         bouton_valider.addEventListener("click", () => {
             api2stats.scenarioType().then((infos) => {
                 this.infosScenario.type = infos[0];
+                this.infosScenario.type = this.infosScenario.type.replace(this.infosScenario.type[0], this.infosScenario.type[0].toUpperCase());
             })
 
             api2stats.scenarioProba(this.store.num_scenario).then((infos) => {
-                this.infosScenario.proba = infos
+                this.infosScenario.proba = infos;
+                if (this.infosScenario.proba.includes("forte")) {
+                    this.infosScenario.textProba = probasScenarios[1];
+                } else if (this.infosScenario.proba.includes("moyenne")) {
+                    this.infosScenario.textProba = probasScenarios[2];
+                } else if (this.infosScenario.proba.includes("faible")) {
+                    this.infosScenario.textProba = probasScenarios[3];
+                }
             })
 
             let params = JSON.parse(JSON.stringify(this.store.params));
             if (Object.keys(params).includes('ens')) {
                 api2stats.getNbEleves(params['ens'], this.store.prob_scenario).then((infos) => {
-                    this.infosPop.totalEleves = infos[0]
-                    this.infosPop.elevesImpact = infos[1]
-                    this.infosPop.pourcentageEleves = infos[2]
+                    this.infosPop.totalEleves = infos[0];
+                    this.infosPop.elevesImpact = infos[1];
+                    this.infosPop.pourcentageEleves = infos[2];
                 })
             }
             if (Object.keys(params).includes('san')) {
                 api2stats.getNbPopSante(params['san'], this.store.prob_scenario).then((infos) => {
-                    this.infosPop.totalPopSante = infos[0]
-                    this.infosPop.popSanteImpact = infos[1]
-                    this.infosPop.pourcentageSante = infos[2]
+                    this.infosPop.totalPopSante = infos[0];
+                    this.infosPop.popSanteImpact = infos[1];
+                    this.infosPop.pourcentageSante = infos[2];
                 })
             }
 
