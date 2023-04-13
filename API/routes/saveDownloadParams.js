@@ -6,13 +6,14 @@ const fs = require('fs');
 router.post('/', function (req, res) {
     let bool = true;
     let i = 0;
+    let fileName = "parameters/paramSaved/" + req.body.name + ".json";
     while (bool) {
-        let name = "parameters/parameters" + i.toString() + ".json";
-        if (fs.existsSync(name)) {
+        if (fs.existsSync(fileName)) {
+            fileName = "parameters/paramSaved/" + req.body.name + i.toString() + ".json";
             i++;
         } else {
             bool = false;
-            fs.writeFileSync(name, JSON.stringify(req.body.params));
+            fs.writeFileSync(fileName, JSON.stringify(req.body.params));
         }
     }
 

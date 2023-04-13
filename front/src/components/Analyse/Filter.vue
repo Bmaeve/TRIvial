@@ -61,7 +61,7 @@ import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
 
 import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
 
-import { THREE } from '../../../node_modules/itowns/dist/itowns';
+import accessParams from '../../js/getParams'
 
 
 //import the store
@@ -164,41 +164,8 @@ export default {
     },
     methods: {
         btnValidate() {
-            // defining parameters
-            let params = {};
+            let params = accessParams.getParams();
 
-            // for each enjeu, defining the corresponding value in json
-            let enjeux = document.getElementsByClassName("form-enjeu");
-            for (let enjeu of enjeux) {
-                if (enjeu.checked) {
-                    let color = document.getElementById("color_" + enjeu.id).value
-                    params[enjeu.id] = {
-                        filters: [],
-                        minHeigh: this.barMinValue,
-                        maxHeigh: this.barMaxValue,
-                        color: new THREE.Color(color),
-                        concernedByScenario: idx2Scenario[this.rangeValue]
-                    };
-                }
-            }
-
-            // browsing each type and adding the filter in the corresponding array
-            let types = document.querySelectorAll("#type");
-            types.forEach(type => {
-                if (type.checked) {
-                    let enjeu = type.value;
-                    let input_enjeu = document.querySelector("#" + enjeu);
-                    if (input_enjeu.checked) {
-                        let filterName = type.nextSibling.innerText;
-                        if (filterName == "null") {
-                            // when filter accepts null values
-                            params[enjeu].displayNullValues = true;
-                        } else {
-                            params[enjeu].filters.push(filterName);
-                        }
-                    }
-                }
-            })
             //storing necessary values for statistics
             this.store.params = params;
             this.store.prob_scenario = idx2Scenario[this.rangeValue]
