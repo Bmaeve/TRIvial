@@ -42,7 +42,7 @@
                 </p>
             </div>
         </div>
-        <button id="an_bouton" type="button" class="btn btn-outline-success  " v-on:click="btnEnregistrer">Enregister la
+        <button id="an_bouton" type="button" class="btn btn-outline-success  " v-on:click="btnEnregistrer">Enregistrer la
             vue</button>
         <a id="an_bouton2" href="/TRIvial"> <button class="btn btn-outline-success">
                 <!-- <img src="../../assets/menu(1).png" width="50"

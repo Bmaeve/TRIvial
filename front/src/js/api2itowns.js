@@ -50,7 +50,7 @@ let api2itowns = {
                         source: source2,
                         style: new Style({
                             fill: {
-                                color: "#66ACF6", //#FCE94F
+                                color: "#66ACF6",
                                 opacity: 0.4
                             }
                         }),
