@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer } from "../../../node_modules/itowns/dist/itowns";
+import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer } from "../../../node_modules/itowns/dist/itowns";
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
@@ -142,7 +142,25 @@ export default {
     // const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     // view.addLayer(layerDEM);
 
+    // Define the source of the dem data
+    let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
+    let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
+
+    console.log(IGN_MNT, WORLD_DTM)
+
+    // defined in a json file.
+    function addElevationLayerFromConfig(config, name) {
+      config.source.name = name
+      config.source = new WMTSSource(config.source);
+      view.addLayer(
+        new ElevationLayer(config.id, config),
+      );
+    }
+    addElevationLayerFromConfig(IGN_MNT, 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES');
+    addElevationLayerFromConfig(WORLD_DTM, 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3');
+
   }
+
 }
 </script>
 
