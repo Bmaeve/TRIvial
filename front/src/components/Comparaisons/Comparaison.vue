@@ -140,8 +140,7 @@ import * as itowns from "../../../node_modules/itowns/dist/itowns";
 import api2itowns from '../../js/api2itowns'
 import Scene1 from '@/components/Comparaisons/Scene1.vue'
 import Scene2 from '@/components/Comparaisons/Scene2.vue'
-//iTowns Widgets 
-//import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
+
 import '../../css/widgets.css';
 import $ from 'jquery'
 
@@ -257,7 +256,6 @@ export default {
             this.changeFicheTitle()
         })
 
-        //let layerlist = fetch('http://localhost:3000/dbInfo/getTables').then(res => res.json())
 
         // Define the view geographic extent
         itowns.proj4.defs(
@@ -305,47 +303,25 @@ export default {
         var layer = new itowns.ColorLayer(orthoScene1.id, orthoScene1);
         view.addLayer(layer);
 
+        // Define the source of the dem data
+        let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
+        let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
 
+        console.log(IGN_MNT, WORLD_DTM)
+
+        // defined in a json file.
+        function addElevationLayerFromConfig(config, name) {
+            config.source.name = name
+            config.source = new itowns.WMTSSource(config.source);
+            view.addLayer(
+                new itowns.ElevationLayer(config.id, config),
+            );
+        }
+        addElevationLayerFromConfig(IGN_MNT, 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES');
+        addElevationLayerFromConfig(WORLD_DTM, 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3');
 
         // Define the source of the dem data
-        /* var elevationSource = new itowns.WMTSSource({
-             url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-             crs: 'EPSG:4326',
-             name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
-             tileMatrixSet: 'WGS84G',
-             format: 'image/x-bil;bits=32',
-             zoom: { min: 3, max: 10 }
-         });
-         // Create the dem ElevationLayer and add it to the view
-         const layerDEM = new itowns.ElevationLayer('DEM', { source: elevationSource });
- 
-         view.addLayer(layerDEM)*/
 
-        /*let createLayer = (views, layer, color) => {
-            fetch('http://localhost:3000/data/' + layer + '/selectData').then(res => res.json()).then(data => {
-                function setExtrusions(properties) {
-                    return properties.hauteur;
-                }
-                let marne = new itowns.FeatureGeometryLayer(layer, {
-                    // Use a FileSource to load a single file once
-                    source: new itowns.FileSource({
-                        fetchedData: data,
-                        crs: 'EPSG:2154',
-                        format: 'application/json',
-                    }),
-                    transparent: true,
-                    opacity: 0.7,
-                    style: new itowns.Style({
-                        fill: {
-                            color: new itowns.THREE.Color(color),
-                            base_altitude: 1,
-                            extrusion_height: setExtrusions,
-                        }
-                    })
-                });
-                views.addLayer(marne);
-            })
-        }*/
 
         let createScenarioIntersect = (Scenario, views) => {
             let scenario = Scenario
@@ -382,7 +358,7 @@ export default {
                     color: 'white',
                     concernedByScenario: scenario
                 },
-                trans_l_flat_p: {
+                trans_l_flat: {
                     color: 'white',
                     concernedByScenario: scenario
                 }
@@ -393,27 +369,6 @@ export default {
 
         }
 
-        /* layerlist.then(data => {
-             const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
-             const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
-   
-             const admin = polyLayer.filter(el => { return el == 'arrond' || el == 'comm' })
-             const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' && el != 'trans_l_flat' && el != 'trans_l_round' })
-             const transport = polyLayer.filter(el => { return el == 'trans_l_flat' })
-             console.log( batis, admin, transport)
- 
-             batis.forEach((layer) => { 
-                 createLayer(view, layer, '#ffffff')
-             })
- 
-             transport.forEach(layer => {
-                 console.log(layer)
- 
-                 createLayer(view, layer, '#D5CABC')
-             })
- 
- 
-         })*/
         let counter = 0
         let counter2 = 0
         let getProxy = (data) => {
@@ -428,12 +383,8 @@ export default {
             this.changeScene1(value)
 
 
-            // const enjeuxList = ['admin', 'autre', 'def', 'ens', 'indus', 'patrim', 'san', 'trans_s', 'trans_l_flat_p']
-
             try {
-                /*enjeuxList.forEach(el => {
-                    view.removeLayer(el)
-                })*/
+
                 view.removeLayer('scenarios')
 
 
@@ -448,7 +399,7 @@ export default {
                 const featuresIntersectList = []
                 layers.forEach((el, index) => {
                     const lastindex = el.id.split('_').length - 1
-                    if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat_p' + '_' + (counter + counter2).toString()) {
+                    if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen1[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList.push(ft.properties)
@@ -506,40 +457,19 @@ export default {
         planarView.addLayer(wmsImageryLayer);
 
         // Define the source of the dem data
-        /* var elevationSource2 = new itowns.WMTSSource({
-             url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-             crs: 'EPSG:4326',
-             name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
-             tileMatrixSet: 'WGS84G',
-             format: 'image/x-bil;bits=32',
-             zoom: { min: 3, max: 10 }
-         });
-         // Create the dem ElevationLayer and add it to the view
-         const layerDEM2 = new itowns.ElevationLayer('DEM', { source: elevationSource2 });
- 
-         planarView.addLayer(layerDEM2)*/
 
-
-        /*layerlist.then(data => {
-            const spatialLayer = data.filter(el => { return el != 'login' && el != 'view_save' })
-            const polyLayer = spatialLayer.filter(el => { return el != 'trans_l' })
-
-            const admin = polyLayer.filter(el => { return el == 'arrond' || el == 'comm' })
-            const batis = polyLayer.filter(el => { return el != 'scenarios' && el != 'arrond' && el != 'comm' && el != 'trans_l_flat' && el != 'trans_l_round' })
-            const transport = polyLayer.filter(el => { return el == 'trans_l_flat' })
-            console.log(batis, admin, transport)
-
-            batis.forEach((layer) => {
-                createLayer(planarView, layer, '#ffffff')
-            })
-
-            transport.forEach(layer => {
-                createLayer(planarView, layer, '#D5CABC')
-
-            })
-
-        })*/
-        //createScenarioIntersect(this.getScen2[0], planarView)
+        // defined in a json file.
+        let IGN_MNT2 = require('../DEMConfig/IGN_MNT_HIGHRES.json')
+        let WORLD_DTM2 = require('../DEMConfig/WORLD_DTM.json')
+        function addElevationLayerFromConfig2(config, name) {
+            config.source.name = name
+            config.source = new itowns.WMTSSource(config.source);
+            planarView.addLayer(
+                new itowns.ElevationLayer(config.id, config),
+            );
+        }
+        addElevationLayerFromConfig2(IGN_MNT2, 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES1');
+        addElevationLayerFromConfig2(WORLD_DTM2, 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM32');
 
         $('.scen2').change((e) => {
             $('#com_Itowns2').click()
@@ -556,7 +486,7 @@ export default {
                 const featuresIntersectList2 = []
                 layers.forEach((el, index) => {
                     const lastindex = el.id.split('_').length - 1
-                    if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat_p' + '_' + (counter + counter2).toString()) {
+                    if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen2[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList2.push(ft.properties)

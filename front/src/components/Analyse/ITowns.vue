@@ -155,9 +155,22 @@ export default {
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
     view.addLayer(layerOrtho)
+    let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
+    let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
 
+    console.log(IGN_MNT, WORLD_DTM)
+
+    // defined in a json file.
+    function addElevationLayerFromConfig(config) {
+      config.source = new WMTSSource(config.source);
+      view.addLayer(
+        new ElevationLayer(config.id, config),
+      );
+    }
+    addElevationLayerFromConfig(IGN_MNT);
+    addElevationLayerFromConfig(WORLD_DTM);
     // // Define the source of the dem data
-    var elevationSource = new WMTSSource({
+    /*var elevationSource = new WMTSSource({
       url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
       crs: 'EPSG:4326',
       name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
@@ -167,7 +180,7 @@ export default {
     });
     // // Create the dem ElevationLayer and add it to the view
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
-    view.addLayer(layerDEM);
+    view.addLayer(layerDEM);*/
 
     let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: 'red' };
     api2itowns.addLayerToView(view, "scenarios", scenarioParams);

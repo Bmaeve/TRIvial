@@ -52,9 +52,9 @@ function buildQuery(table_name_enjeu, table_name_scenario, newColumnName, filter
         UPDATE " + table_name_enjeu + " AS ENJ \
         SET " + newColumnName + " = true \
         FROM " + table_name_scenario + " AS SCE \
-        WHERE st_intersects(ENJ.geom, SCE.validgeom) \
+        WHERE st_intersects(ENJ.geom, SCE.geom) \
         AND ST_IsValid(ENJ.geom) \
-        AND ST_IsValid(SCE.validgeom) \
+        AND ST_IsValid(SCE.geom) \
         ";
 
     if (filter != undefined) {
