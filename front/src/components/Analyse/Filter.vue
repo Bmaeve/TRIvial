@@ -199,7 +199,10 @@ export default {
                     }
                 }
             })
-
+            //storing necessary values for statistics
+            this.store.params = params;
+            this.store.prob_scenario = idx2Scenario[this.rangeValue]
+            this.store.num_scenario = this.rangeValue;
             // return parameters to parent
             this.$emit("validate", params);
         },

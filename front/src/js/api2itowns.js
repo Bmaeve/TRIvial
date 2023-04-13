@@ -2,6 +2,7 @@ const host = 'http://localhost:3000/'
 import { ColorLayer } from "itowns";
 import { FileSource, THREE, Style, FeatureGeometryLayer, proj4 } from "../../node_modules/itowns/dist/itowns";
 import { toWgs84 } from "reproject";
+
 let epsg = require('epsg');
 //let counter = 0
 
@@ -64,6 +65,7 @@ let api2itowns = {
                     newLayer = new FeatureGeometryLayer(table_name + '_' + index[table_name], {
                         // Use a FileSource to load a single file once
                         source: source,
+                        batchId: setId,
                         transparent: true,
                         opacity: 0.7,
                         style: new Style({
@@ -75,22 +77,79 @@ let api2itowns = {
                         })
                     });
                 }
-
-
+                let map = document.getElementById('viewerDiv');
 
                 view.getLayers().forEach((l) => {
                     // if the table is updated, remove the previous layer 
-
                     if (table_name + '_' + (index[table_name] - 1).toString() == l.id) {
-
                         view.removeLayer(table_name + '_' + (index[table_name] - 1).toString(), true);
                     }
                 })
 
                 // add the layer to the view
                 view.addLayer(newLayer);
-            })
+                view.getLayers().forEach(layer => {
+                    if (!["scenarios", "atmosphere", "DEM", "Ortho", "globe"].includes(layer.id) && !layer.id.includes("trans_l")) {
+                        map.addEventListener('click', (e) => { picking(e, layer.id) }, true);
+                    }
+                })
 
+                function picking(event, layer) {
+                    if (view.controls.isPaused) {
+                        var intersects = view.pickFeaturesAt(event, 3, layer);
+                        let properties;
+                        let batchId;
+                        let info;
+                        let htmlInfo = document.getElementById('info');
+                        try {
+                            if (intersects[layer].length !== 0) {
+                                htmlInfo.innerHTML = '';
+                                batchId = intersects[layer][0].object.geometry.attributes.batchId.array[intersects[layer][0].face.a];
+                                intersects[layer][0].object.feature.geometries.forEach(geom => {
+                                    if (geom.properties.id == batchId) {
+                                        properties = geom.properties;
+                                    }
+                                })
+                                if (properties == undefined) {
+                                    properties = intersects[layer][0].object.feature.geometries[batchId].properties;
+                                }
+                                let text = `<table class="table table-striped an_table_info">
+                            <thead><tr><th scope="col">Propriété</th><th scope="col">Valeur</th></tr></thead>
+                            <tbody>`;
+                                Object.keys(properties).map(function (objectKey) {
+                                    var value = properties[objectKey];
+                                    if (value) {
+                                        var key = objectKey.toString();
+                                        let bool = false;
+                                        if (layer.includes("ens") && ["enjeu", "nature", "detail_enjeu", "hauteur", "nature_u00", "patronyme_", "code_posta", "et_etabli0", "libbelle_ac", "date_ouver"].includes(key)) {
+                                            bool = true;
+                                        } else if (layer.includes("san") && ["enjeu", "nature", "detail_enjeu", "hauteur", "rs", "rslongue", "numvoie", "typvoie", "voie", "codepostal", "liblongcat", "libcatgre", "libcodeape", "liblongmft", "dateouvert", "datemaj"].includes(key)) {
+                                            bool = true;
+                                        } else if (layer.includes("trans_l") && ["enjeu", "nature", "detail_enjeu", "cl_admin", "it_europ", "largeur", "nb_voies", "sens", "inseecom_d"].includes(key)) {
+                                            bool = true;
+                                        } else if (key[0] !== '_' && key !== 'geometry_name' && ["enjeu", "nature", "detail_enjeu", "hauteur"].includes(key)) {
+                                            bool = true;
+                                        }
+                                        if (bool) {
+                                            info = value.toString();
+                                            htmlInfo.getElementsByTagName("tbody");
+                                            text += `<tr>
+                                              <th>`+ key.replace(key[0], key[0].toUpperCase()) + `</th>
+                                              <td>`+ info + `</td>
+                                          </tr>`;
+                                        }
+                                    }
+                                });
+                                text += '</tbody></table>';
+                                htmlInfo.innerHTML = text;
+                            }
+                        } catch (error) {
+                            console.log(error)
+                        }
+
+                    }
+                }
+            })
         return promise;
     },
 
@@ -155,6 +214,16 @@ function setExtrusions(properties) {
 
 function setAltitude(properties) {
     return parseFloat(properties.z_median);
+}
+
+function setId(properties) {
+    if (!properties.id) {
+        return properties.uuid;
+    }
+    else {
+        return properties.id;
+    }
+
 }
 
 export default api2itowns;

@@ -43,7 +43,7 @@ async function dataSelection(table_name, body) {
 
     // adding a filter with min heigh
     if ((body.minHeigh != undefined) && enjeux[table_name].hasColumnNamedHauteur) {
-        query += " AND hauteur > " + body.minHeigh;
+        query += " AND hauteur >= " + body.minHeigh;
     }
 
     // adding a filter with max heigh

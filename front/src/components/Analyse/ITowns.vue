@@ -13,7 +13,14 @@
 
       </div>
     </div>
-    <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
+    <!-- Feature information block -->
+    <div class="an_info_enjeux" id="displayInfo">
+      <span>Informations</span>
+      <!-- Feature information table block -->
+      <div class="an_info_enjeux_table" id="info">
+        <!-- Feature information table -->
+      </div>
+    </div>
   </div>
   <div id="an_map">
 
@@ -23,23 +30,23 @@
 </template>
 
 <script>
+
 import { proj4, Coordinates, GlobeView, WMTSSource, ColorLayer, ElevationLayer } from "../../../node_modules/itowns/dist/itowns";
+
 //iTowns Widgets 
 import { Navigation } from "../../../node_modules/itowns/dist/itowns_widgets";
 import '../../css/widgets.css';
 import api2itowns from '../../js/api2itowns'
-import SectionInfo from '@/components/Analyse/Selection.vue'
 import Filter from '@/components/Analyse/Filter.vue'
-//import jquery module
-import $ from 'jquery'
 //import the store
 import { store } from '../Store.js'
+
 //import the vuejs Dom reference function
-import { ref, isProxy, toRaw } from 'vue';
+import { isProxy, toRaw } from 'vue';
+
 export default {
   name: 'MyItowns',
   components: {
-    SectionInfo,
     Filter
   },
   data() {
@@ -48,17 +55,10 @@ export default {
       view: null,
       buttonDisable: false,
       current_scenario: "01For",
-      componentKey: ref(0),
       scenarioId: 0
     }
   },
   methods: {
-    changefeatureInfo(data) {
-      this.store.featureInfo = data
-    },
-    forceRerender() {
-      this.componentKey += 1;
-    },
     onScenarioChanged(value) {
       this.scenarioId = value;
     },
@@ -93,9 +93,6 @@ export default {
     }
   },
   computed: {
-    featureInfo() {
-      return this.store.featureInfo
-    },
     getScenarioId() {
       return this.scenarioId;
     }
@@ -103,24 +100,6 @@ export default {
   mounted() {
     // Retrieve the view container
     const viewerDiv = document.getElementById('viewerDiv');
-
-    $('#viewerDiv').click(() => {
-      const newfeature = [{
-        "id": this.store.featureInfo[0].id ? this.store.featureInfo[0].id += 1 : 1,
-        "titre": "Avenue",
-        "taille": 20,
-        "RN": "A231",
-        "Nombre": 4543,
-        "enabled": true,
-        "Superficie": "A231",
-        "Capatite": 4543,
-        "vul": true
-      }]
-
-      this.changefeatureInfo(newfeature)
-      this.forceRerender()
-
-    })
 
     // Define the view geographic extent
     proj4.defs(
@@ -154,6 +133,7 @@ export default {
 
     // Create the ortho-images ColorLayer and add it to the view
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
+
     view.addLayer(layerOrtho)
     let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
     let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
@@ -182,13 +162,14 @@ export default {
     const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
     view.addLayer(layerDEM);*/
 
+
     let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: 'red' };
     api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+
 
   }
 }
 </script>
-
 
 <style >
 #viewerDiv {
@@ -196,5 +177,28 @@ export default {
   width: 100vw;
   padding: 0;
   overflow-x: hidden;
+}
+
+/* Feature information block */
+.an_info_enjeux {
+  color: white !important;
+  width: 100%;
+  margin-top: 15%;
+}
+
+/* Feature information table */
+.an_table_info {
+  background-color: white;
+}
+
+/* Feature information table block*/
+.an_info_enjeux_table {
+  overflow-y: auto;
+  height: 40vh;
+}
+
+.an_select_form {
+  height: 50vh;
+  overflow-y: auto;
 }
 </style>
