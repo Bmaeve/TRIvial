@@ -6,13 +6,25 @@ const fs = require('fs');
 router.post('/', function (req, res) {
     let bool = true;
     let i = 0;
+    let store_directory = "parameters/paramSaved/"
+
+    // check if the directory exist, and create it if not
+    if (!fs.existsSync(store_directory)) {
+        fs.mkdir(store_directory, (err) => {
+            if (err) {
+                return console.log(err);
+            }
+        })
+    }
+
+    let fileName = store_directory + req.body.name + ".json";
     while (bool) {
-        let name = "parameters/parameters" + i.toString() + ".json";
-        if (fs.existsSync(name)) {
+        if (fs.existsSync(fileName)) {
+            fileName = store_directory + req.body.name + i.toString() + ".json";
             i++;
         } else {
             bool = false;
-            fs.writeFileSync(name, JSON.stringify(req.body.params));
+            fs.writeFileSync(fileName, JSON.stringify(req.body.params));
         }
     }
 

@@ -52,8 +52,8 @@
 </template>
 
 <script>
-import { THREE } from '../../../node_modules/itowns/dist/itowns';
 import api2stats from '../../js/api2stats'
+import accessParams from '../../js/getParams'
 //import the store
 import { store } from '../Store.js';
 
@@ -126,31 +126,11 @@ export default {
     methods: {
         btnEnregistrer() {
             if (confirm("Voulez-vous enregistrer cette vue (sélection de paramètres) ?")) {
-                let types = document.querySelectorAll("#type");
-                let params = {};
-                let filters = new Map();
-                for (var i = 0; i < types.length; i++) {
-                    if (types[i].checked) {
-                        let enjeu = types[i].value;
-                        let input_enjeu = document.querySelector("#" + enjeu);
-                        if (input_enjeu.checked) {
-                            if (filters.has(input_enjeu.id)) {
-                                filters[input_enjeu.id] = filters.get(input_enjeu.id).push(types[i].nextSibling.innerText);
+                let fileName = prompt('Nommez votre fichier : ', "parameters");
 
-                            } else {
-                                filters.set(input_enjeu.id, [types[i].nextSibling.innerText]);
-                            }
-                        }
-                        if (document.querySelector("#autre").checked) {
-                            filters.set("autre", []);
-                        }
-                    }
-                }
-                filters.forEach((tab_types, enjeu) => {
-                    params[enjeu] = { filters: tab_types, color: new THREE.Color(0xffffff) };
-                })
+                let params = accessParams.getParams();
                 fetch('http://localhost:3000/saveDownParams', {
-                    body: JSON.stringify({ params: params }),
+                    body: JSON.stringify({ name: fileName, params: params }),
                     headers: { 'Content-Type': 'application/json' },
                     method: 'post'
                 }).then(res => res.json())

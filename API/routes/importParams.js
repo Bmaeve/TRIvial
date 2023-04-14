@@ -4,17 +4,12 @@ const fs = require('fs');
 
 /* POST  request */
 router.post('/name', function (req, res) {
-    let bool = true;
-    let i = 0;
     let data = [];
-    while (bool) {
-        let name = "parameters/parameters" + i.toString() + ".json";
-        if (fs.existsSync(name)) {
-            data.push(name);
-        } else {
-            bool = false;
+    let dir = fs.readdirSync("parameters/paramSaved/");
+    for (let i = 0; i < dir.length; i++) {
+        if (fs.existsSync("parameters/paramSaved/" + dir[i])) {
+            data.push(dir[i]);
         }
-        i++;
     }
 
     //Json data
@@ -27,8 +22,6 @@ router.post('/name', function (req, res) {
 router.post('/data', function (req, res) {
     let data = [];
     if (fs.existsSync(req.body.texte)) {
-        console.log(JSON.parse(fs.readFileSync(req.body.texte)));
-        console.log(req.body.texte);
         data.push(JSON.parse(fs.readFileSync(req.body.texte)));
     } else {
         console.error("Le fichier n'existe pas !");

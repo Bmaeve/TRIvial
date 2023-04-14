@@ -42,7 +42,7 @@ export default {
             for (let i = 0; i < r.data.length; i++) {
                 var e = document.createElement("option");
                 e.value = i.toString();
-                e.innerText = r.data[i].substr(11, 20);
+                e.innerText = r.data[i].substr(0, r.data[i].length - 5);
                 items.appendChild(e);
             }
         })

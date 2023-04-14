@@ -57,7 +57,7 @@ export default {
     },
     importScenario(scenarioName) {
       fetch('http://localhost:3000/importParams/data', {
-        body: JSON.stringify({ texte: "parameters/" + scenarioName }),
+        body: JSON.stringify({ texte: "parameters/paramSaved/" + scenarioName + ".json" }),
         headers: { 'Content-Type': 'application/json' },
         method: 'post'
       }).then(res => res.json()).then(r => {
