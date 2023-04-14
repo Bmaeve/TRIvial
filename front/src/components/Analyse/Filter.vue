@@ -25,7 +25,7 @@
                         <label class="form-check-label" :for="enjeu.id">
                             {{ enjeu.text }}
                         </label>
-                        <input type="color" class="color" :id="enjeu.id_color" value="#a7bed3">
+                        <input type="color" class="color" :id="enjeu.id_color" value="#6ACE3C">
                         <div v-if="enjeu.value">
                             <div v-for="typeEnjeu in types_enjeux" :key="typeEnjeu.enjeu">
                                 <div v-if="typeEnjeu.enjeu == enjeu.id">
@@ -58,11 +58,8 @@
 
 import MultiRangeSlider from 'multi-range-slider-vue'
 import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
-
 import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
-
 import accessParams from '../../js/getParams'
-
 
 //import the store
 import { store } from '../Store.js';
@@ -71,6 +68,12 @@ let idx2Scenario = {
     1: "01For",
     2: "02Moy",
     3: "04Fai"
+}
+
+let text2Scenario = {
+    1: "Forte",
+    2: "Moyenne",
+    3: "Faible"
 }
 
 export default {
@@ -103,6 +106,8 @@ export default {
 
     },
     created() {
+        //Callback function to sort the arrays
+        const sorter = (sortBy) => (a, b) => a[sortBy].toLowerCase() > b[sortBy].toLowerCase() ? 1 : -1;
         let new_enjeux = [];
 
         let types = [];
@@ -123,6 +128,7 @@ export default {
                     });
                 })
                 this.enjeux = new_enjeux;
+                this.enjeux.sort(sorter('text'));
 
                 //types enjeux
                 data_fetched.forEach((enjeu) => {
@@ -138,17 +144,23 @@ export default {
                                 .then((data) => {
                                     data.forEach(el => {
                                         if (el != null) {
+                                            if (enjeu_name == "ens") {
+                                                el = el.toLowerCase()
+                                                el = el.replace(el[0], el[0].toUpperCase())
+                                            }
                                             list.push({ text: el, value: enjeu_name, id: "type" })
                                         } else {
                                             list.push({ text: "null", value: enjeu_name, id: "type" })
                                         }
                                     });
+                                    list.sort(sorter("text"))
                                     types.push({ enjeu: enjeu_name, types: list });
                                 })
                         }
                     }
                 })
                 this.types_enjeux = types;
+
             })
 
 
@@ -156,7 +168,7 @@ export default {
     computed: {
         rangeValueText() {
             this.$emit('scenarioChanged', idx2Scenario[this.rangeValue]);
-            return "Probabilité " + idx2Scenario[this.rangeValue];
+            return "Probabilité " + text2Scenario[this.rangeValue];
         },
         btnIsDisabled: function () {
             return this.buttonDisable;
@@ -165,6 +177,7 @@ export default {
     methods: {
         btnValidate() {
             let params = accessParams.getParams();
+            console.log(params)
 
             //storing necessary values for statistics
             this.store.params = params;

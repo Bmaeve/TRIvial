@@ -1,60 +1,60 @@
 <template>
     <div id="com_scen1">
-        <span>Scenario 1</span>
+        <span>Probabilité du scénario 1</span>
         <div class="form-check">
             <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="04Fai"
                 :disabled="getDisabled1">
             <label class="form-check-label " for="flexRadioDefault1">
-                04Fai
+                Faible
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="02Moy"
                 :disabled="getDisabled1">
             <label class="form-check-label" for="flexRadioDefault2">
-                02Moy
+                Moyenne
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen1" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="01For"
                 :disabled="getDisabled1">
             <label class="form-check-label" for="flexRadioDefault3">
-                01For
+                Forte
             </label>
         </div>
-        <span style="font-size: .7em;">Click map for active</span>
+        <span style="font-size: .7em;">Cliquez sur la carte pour activer</span>
     </div>
     <div id="com_scen2">
-        <span>Scenario 2</span>
+        <span>Probabilité du scénario 2</span>
         <div class="form-check">
             <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault4" value="04Fai"
                 :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault4">
-                04Fai
+                Faible
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault5" value="02Moy"
                 :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault5">
-                02Moy
+                Moyenne
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input scen2" type="radio" name="flexRadioDefault2" id="flexRadioDefault6" value="01For"
                 :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault6">
-                01For
+                Forte
             </label>
         </div>
-        <span style="font-size: .7em;">Click map for active</span>
+        <span style="font-size: .7em;">Cliquez sur la carte pour activer</span>
     </div>
     <div id="com_box">
         <Scene1 />
         <Scene2 />
     </div>
     <div id="com_fiche1">
-        <div class="com_count"><span>bâtiments atteints ({{ getCount1 }})</span></div>
+        <div class="com_count"><span>Bâtiment(s) touché(s) ({{ getCount1 }})</span></div>
         <table class="table table-dark table-striped">
             <!-- Feature properties table header -->
             <thead>
@@ -88,7 +88,7 @@
         </table>
     </div>
     <div id="com_fiche2">
-        <div class="com_count"><span>bâtiments atteints ({{ getCount2 }})</span></div>
+        <div class="com_count"><span>Bâtiment(s) touché(s) ({{ getCount2 }})</span></div>
         <table class="table table-dark table-striped">
 
             <!-- Feature properties table header -->
@@ -124,7 +124,7 @@
             <button type="button" class="btn btn-light">{{ getFicheTitle }}</button>
         </id>
         <div id="com_indic">
-            <p>Ctrl + mouse drag for use 3D</p>
+            <p>Ctrl+souris pour utiliser la 3D</p>
 
         </div>
         <img src="../../assets/logo.png" width="60" height="60" />
@@ -137,7 +137,7 @@
 </template>
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
-import api2itowns from '../../js/api2itowns'
+import api2itowns from './api2itowns2.js'
 import Scene1 from '@/components/Comparaisons/Scene1.vue'
 import Scene2 from '@/components/Comparaisons/Scene2.vue'
 
@@ -165,7 +165,7 @@ export default {
             scen2: [],
             componentKey: ref(0),
             viewType: "2D",
-            fiche: "Voir fiche",
+            fiche: "Voir les informations",
             featuresIntersect: [],
             featuresIntersect2: [],
             disabledScn1: true,
@@ -222,10 +222,10 @@ export default {
             }
         },
         changeFicheTitle() {
-            if (this.fiche == 'Voir fiche') {
-                this.fiche = 'Masquer fiche'
+            if (this.fiche == 'Voir les informations') {
+                this.fiche = 'Masquer les informations'
             } else {
-                this.fiche = 'Voir fiche'
+                this.fiche = 'Voir les informations'
             }
         },
         changeFtIntersect(data) {
