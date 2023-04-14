@@ -144,8 +144,10 @@ export default {
                                 .then((data) => {
                                     data.forEach(el => {
                                         if (el != null) {
-                                            el = el.toLowerCase()
-                                            el = el.replace(el[0], el[0].toUpperCase())
+                                            if (enjeu_name == "ens") {
+                                                el = el.toLowerCase()
+                                                el = el.replace(el[0], el[0].toUpperCase())
+                                            }
                                             list.push({ text: el, value: enjeu_name, id: "type" })
                                         } else {
                                             list.push({ text: "null", value: enjeu_name, id: "type" })
@@ -200,6 +202,9 @@ export default {
                     let input_enjeu = document.querySelector("#" + enjeu);
                     if (input_enjeu.checked) {
                         let filterName = type.nextSibling.innerText;
+                        if (enjeu == "ens" && filterName != "null") {
+                            filterName = filterName.toUpperCase();
+                        }
                         if (filterName == "null") {
                             // when filter accepts null values
                             params[enjeu].displayNullValues = true;

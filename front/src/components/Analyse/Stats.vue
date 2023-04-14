@@ -86,6 +86,8 @@ export default {
     mounted() {
         let bouton_valider = document.getElementById("validate");
         bouton_valider.addEventListener("click", () => {
+            this.infosPop.totalEleves = null;
+            this.infosPop.totalPopSante = null;
             api2stats.scenarioType().then((infos) => {
                 this.infosScenario.type = infos[0];
                 this.infosScenario.type = this.infosScenario.type.replace(this.infosScenario.type[0], this.infosScenario.type[0].toUpperCase());
