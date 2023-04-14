@@ -118,10 +118,22 @@
         </table>
     </div>
     <div id="com_stats1">
-        <div class="com_stats_title"><span>Statistiques</span></div>
+        <div class="com_stats_title"><span>Statistiques {{ getScen1Text }}</span></div>
+        {{ infosStats.totalEleves1 }}
+        {{ infosStats.elevesImpact1 }}
+        {{ infosStats.pourcentageEleves1 }}
+        {{ infosStats.totalPopSante1 }}
+        {{ infosStats.popSanteImpact1 }}
+        {{ infosStats.pourcentageSante1 }}
     </div>
     <div id="com_stats2">
-        <div class="com_stats_title"><span>Statistiques aaaaaa</span></div>
+        <div class="com_stats_title"><span>Statistiques {{ getScen2Text }}</span></div>
+        {{ infosStats.totalEleves2 }}
+        {{ infosStats.elevesImpact2 }}
+        {{ infosStats.pourcentageEleves2 }}
+        {{ infosStats.totalPopSante2 }}
+        {{ infosStats.popSanteImpact2 }}
+        {{ infosStats.pourcentageSante2 }}
     </div>
     <div id="com_footer">
         <div id="com_btns">
@@ -152,7 +164,12 @@ import $ from 'jquery'
 //import the vuejs Dom reference function
 import { ref } from 'vue';
 
+let textScenario = {
+    "04Fai": "Probabilité Faible",
+    "02Moy": "Probabilité Moyenne",
+    "01For": "Probabilité Forte"
 
+}
 
 export default {
     name: 'ComparaisonTRIvial',
@@ -166,7 +183,7 @@ export default {
     data() {
         return {
             layerlist: [],
-            scen1: ["04Fai"],
+            scen1: [],
             scen2: [],
             componentKey: ref(0),
             viewType: "2D",
@@ -175,7 +192,21 @@ export default {
             featuresIntersect: [],
             featuresIntersect2: [],
             disabledScn1: true,
-            disabledScn2: true
+            disabledScn2: true,
+            infosStats: {
+                totalEleves1: 0,
+                elevesImpact1: 0,
+                pourcentageEleves1: 0,
+                totalPopSante1: 0,
+                popSanteImpact1: 0,
+                pourcentageSante1: 0,
+                totalEleves2: 0,
+                elevesImpact2: 0,
+                pourcentageEleves2: 0,
+                totalPopSante2: 0,
+                popSanteImpact2: 0,
+                pourcentageSante2: 0,
+            }
         }
     },
     computed: {
@@ -184,6 +215,12 @@ export default {
         },
         getScen2() {
             return this.scen2
+        },
+        getScen1Text() {
+            return textScenario[this.getScen1]
+        },
+        getScen2Text() {
+            return textScenario[this.getScen2]
         },
         getViewType() {
             return this.viewType
@@ -411,7 +448,16 @@ export default {
             const value = e.target.value
             this.changeScene1(value)
             //Stats
-            api2stats.getNbEleves()
+            api2stats.getNbEleves("all", this.getScen1[0]).then(infos => {
+                this.infosStats.totalEleves1 = infos[0];
+                this.infosStats.elevesImpact1 = infos[1];
+                this.infosStats.pourcentageEleves1 = infos[2];
+            });
+            api2stats.getNbPopSante("all", this.getScen1[0]).then(infos => {
+                this.infosStats.totalPopSante1 = infos[0];
+                this.infosStats.popSanteImpact1 = infos[1];
+                this.infosStats.pourcentageSante1 = infos[2];
+            })
             try {
                 view.removeLayer('scenarios')
             } catch (err) {
@@ -434,11 +480,7 @@ export default {
                 this.changeFtIntersect(featuresIntersectList)
 
                 counter++
-
-
             })
-
-
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
             api2itowns.addLayerToView(view, "scenarios", paramsScentest);
 
@@ -499,6 +541,17 @@ export default {
             $('#com_Itowns2').click()
             const value = e.target.value
             this.changeScene2(value)
+            //Stats
+            api2stats.getNbEleves("all", this.getScen2[0]).then(infos => {
+                this.infosStats.totalEleves2 = infos[0];
+                this.infosStats.elevesImpact2 = infos[1];
+                this.infosStats.pourcentageEleves2 = infos[2];
+            });
+            api2stats.getNbPopSante("all", this.getScen2[0]).then(infos => {
+                this.infosStats.totalPopSante2 = infos[0];
+                this.infosStats.popSanteImpact2 = infos[1];
+                this.infosStats.pourcentageSante2 = infos[2];
+            });
             try {
                 planarView.removeLayer('scenarios')
             } catch (err) {
@@ -742,7 +795,7 @@ export default {
     max-height: 20vh;
     width: 50%;
     background-color: black;
-    /* border-right: 5px solid black; */
+    color: white;
     overflow: auto;
     z-index: 200;
 
@@ -755,7 +808,7 @@ export default {
     max-height: 20vh;
     width: 50%;
     background-color: black;
-    /* border-right: 5px solid black; */
+    color: white;
     overflow: auto;
     z-index: 200;
 
