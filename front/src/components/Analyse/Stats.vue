@@ -191,11 +191,9 @@ export default {
 
 #an_bouton2 button {
     height: 50px;
-}
-
-#an_bouton2 button {
     width: 100%;
 }
+
 
 .card {
     margin: 2%;
