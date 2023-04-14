@@ -109,6 +109,8 @@ export default {
 
     },
     created() {
+        //Callback function to sort the arrays
+        const sorter = (sortBy) => (a, b) => a[sortBy].toLowerCase() > b[sortBy].toLowerCase() ? 1 : -1;
         let new_enjeux = [];
 
         let types = [];
@@ -129,6 +131,7 @@ export default {
                     });
                 })
                 this.enjeux = new_enjeux;
+                this.enjeux.sort(sorter('text'));
 
                 //types enjeux
                 data_fetched.forEach((enjeu) => {
@@ -149,12 +152,14 @@ export default {
                                             list.push({ text: "null", value: enjeu_name, id: "type" })
                                         }
                                     });
+                                    list.sort(sorter("text"))
                                     types.push({ enjeu: enjeu_name, types: list });
                                 })
                         }
                     }
                 })
                 this.types_enjeux = types;
+
             })
 
 
