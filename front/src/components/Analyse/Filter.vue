@@ -58,11 +58,8 @@
 
 import MultiRangeSlider from 'multi-range-slider-vue'
 import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
-
 import "../../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
-
 import { THREE } from '../../../node_modules/itowns/dist/itowns';
-
 
 //import the store
 import { store } from '../Store.js';
@@ -147,6 +144,8 @@ export default {
                                 .then((data) => {
                                     data.forEach(el => {
                                         if (el != null) {
+                                            el = el.toLowerCase()
+                                            el = el.replace(el[0], el[0].toUpperCase())
                                             list.push({ text: el, value: enjeu_name, id: "type" })
                                         } else {
                                             list.push({ text: "null", value: enjeu_name, id: "type" })
