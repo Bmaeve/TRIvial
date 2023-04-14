@@ -119,13 +119,19 @@
             </tbody>
         </table>
     </div>
+    <div id="com_stats1">
+        <div class="com_stats_title"><span>Statistiques</span></div>
+    </div>
+    <div id="com_stats2">
+        <div class="com_stats_title"><span>Statistiques aaaaaa</span></div>
+    </div>
     <div id="com_footer">
-        <id id="com_fiche_btn">
-            <button type="button" class="btn btn-light">{{ getFicheTitle }}</button>
-        </id>
+        <div id="com_btns">
+            <button type="button" class="btn btn-light" id="com_fiche_btn">{{ getFicheTitle }}</button>
+            <button type="button" class="btn btn-light" id="com_btn_stats">{{ getStatsTitle }}</button>
+        </div>
         <div id="com_indic">
             <p>Ctrl+souris pour utiliser la 3D</p>
-
         </div>
         <img src="../../assets/logo.png" width="60" height="60" />
         <div id="com_boutonAn"> <a href="/TRIVial"><button type="button" class="btn btn-outline-success  ">
@@ -166,6 +172,7 @@ export default {
             componentKey: ref(0),
             viewType: "2D",
             fiche: "Voir les informations",
+            title_stats: "Voir les statistiques",
             featuresIntersect: [],
             featuresIntersect2: [],
             disabledScn1: true,
@@ -184,6 +191,9 @@ export default {
         },
         getFicheTitle() {
             return this.fiche
+        },
+        getStatsTitle() {
+            return this.title_stats
         },
         getFeatureIntersect() {
             return this.featuresIntersect
@@ -224,8 +234,19 @@ export default {
         changeFicheTitle() {
             if (this.fiche == 'Voir les informations') {
                 this.fiche = 'Masquer les informations'
+                $('#com_btn_stats')[0].disabled = true;
             } else {
                 this.fiche = 'Voir les informations'
+                $('#com_btn_stats')[0].disabled = false;
+            }
+        },
+        changeStatsTitle() {
+            if (this.title_stats == 'Voir les statistiques') {
+                this.title_stats = 'Masquer les statistiques'
+                $('#com_fiche_btn')[0].disabled = true;
+            } else {
+                this.title_stats = 'Voir les statistiques'
+                $('#com_fiche_btn')[0].disabled = false;
             }
         },
         changeFtIntersect(data) {
@@ -246,14 +267,25 @@ export default {
 
         const fiche1 = $('#com_fiche1')
         const fiche2 = $('#com_fiche2')
+        const stats1 = $("#com_stats1")
+        const stats2 = $("#com_stats2")
         const action = $('#com_fiche_btn')
+        const btn_stats = $('#com_btn_stats')
         fiche1.hide()
         fiche2.hide()
+        stats1.hide()
+        stats2.hide()
 
         action.click(() => {
             fiche1.slideToggle('slow')
             fiche2.slideToggle('slow')
             this.changeFicheTitle()
+        })
+
+        btn_stats.click(() => {
+            stats1.slideToggle('slow')
+            stats2.slideToggle('slow')
+            this.changeStatsTitle();
         })
 
 
@@ -510,8 +542,6 @@ export default {
 
                     Promise.all(promises).then(function init() {
 
-
-
                         var planarCamera = planarView.camera.camera3D;
                         var globeCamera = view.camera.camera3D;
                         var params;
@@ -713,10 +743,41 @@ export default {
     z-index: 100;
 }
 
-#com_fiche_btn {
+#com_stats1 {
+    position: absolute;
+    left: 0;
+    bottom: 10vh;
+    max-height: 20vh;
+    width: 50%;
+    background-color: black;
+    /* border-right: 5px solid black; */
+    overflow: auto;
+    z-index: 200;
+
+}
+
+#com_stats2 {
+    position: absolute;
+    right: 0;
+    bottom: 10vh;
+    max-height: 20vh;
+    width: 50%;
+    background-color: black;
+    /* border-right: 5px solid black; */
+    overflow: auto;
+    z-index: 200;
+
+}
+
+#com_btns {
     position: absolute;
     left: 2%;
     bottom: 2vh;
+    width: 40%;
+}
+
+#com_btn_stats {
+    margin-left: 2%;
 }
 
 .com_count {
