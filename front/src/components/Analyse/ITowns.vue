@@ -4,9 +4,9 @@
       <div id="col_select">
 
         <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh">
-          <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <div class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-5 d-none d-sm-inline">TRIvial - Analyse</span>
-          </a>
+          </div>
           <Filter @scenarioChanged="onScenarioChanged" @validate="onValidate" v-bind:buttonDisable="buttonDisable" />
 
         </div>
@@ -149,21 +149,8 @@ export default {
     }
     addElevationLayerFromConfig(IGN_MNT);
     addElevationLayerFromConfig(WORLD_DTM);
-    // // Define the source of the dem data
-    /*var elevationSource = new WMTSSource({
-      url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-      crs: 'EPSG:4326',
-      name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
-      tileMatrixSet: 'WGS84G',
-      format: 'image/x-bil;bits=32',
-      zoom: { min: 3, max: 10 }
-    });
-    // // Create the dem ElevationLayer and add it to the view
-    const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
-    view.addLayer(layerDEM);*/
 
-
-    let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: 'red' };
+    let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: '#66ACF6' };
     api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
 
@@ -193,7 +180,8 @@ export default {
 
 /* Feature information table block*/
 .an_info_enjeux_table {
-  overflow-y: auto;
+  /* overflow-y: auto; */
+  margin-top: 2%;
   height: 40vh;
 }
 

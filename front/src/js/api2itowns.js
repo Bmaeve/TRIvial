@@ -124,8 +124,8 @@ let api2itowns = {
                         source: source2,
                         style: new Style({
                             fill: {
-                                color: color,
-                                opacity: 0.5
+                                color: "#66ACF6",
+                                opacity: 0.4
                             }
                         }),
                     });
