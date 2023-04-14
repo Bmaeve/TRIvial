@@ -155,4 +155,9 @@ export default {
     left: 35%;
     margin-top: 5px;
 }
+
+
+.sec_info_enjeux {
+    margin-bottom: 19%;
+}
 </style>
