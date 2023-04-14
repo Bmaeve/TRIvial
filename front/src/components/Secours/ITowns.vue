@@ -159,6 +159,9 @@ export default {
     addElevationLayerFromConfig(IGN_MNT, 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES');
     addElevationLayerFromConfig(WORLD_DTM, 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3');
 
+    let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: '#66ACF6' };
+    api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+
   }
 
 }
