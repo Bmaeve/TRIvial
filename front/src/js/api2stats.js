@@ -26,10 +26,16 @@ let api2stats = {
     },
 
     async getNbEleves(params, scenario) {
+        let methodAPI;
+        if (params == "all") {
+            methodAPI = 'get';
+        } else {
+            methodAPI = 'post';
+        }
         let promise = await fetch(host + 'data/ens/selectData', {
             body: JSON.stringify(params),
             headers: { 'Content-Type': 'application/json' },
-            method: 'post'
+            method: methodAPI
         })
             .then((res) => {
                 return res.json()
@@ -58,10 +64,16 @@ let api2stats = {
     },
 
     async getNbPopSante(params, scenario) {
+        let methodAPI;
+        if (params == "all") {
+            methodAPI = 'get';
+        } else {
+            methodAPI = 'post';
+        }
         let promise = await fetch(host + 'data/san/selectData', {
             body: JSON.stringify(params),
             headers: { 'Content-Type': 'application/json' },
-            method: 'post'
+            method: methodAPI
         })
             .then((res) => {
                 return res.json()

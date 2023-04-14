@@ -34,6 +34,9 @@ let accessParams = {
                 let input_enjeu = document.querySelector("#" + enjeu);
                 if (input_enjeu.checked) {
                     let filterName = type.nextSibling.innerText;
+                    if (enjeu == "ens" && filterName != "null") {
+                        filterName = filterName.toUpperCase();
+                    }
                     if (filterName == "null") {
                         // when filter accepts null values
                         params[enjeu].displayNullValues = true;

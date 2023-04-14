@@ -66,7 +66,6 @@
                     <th scope="col">HAUTEUR</th>
                     <th scope="col">NATURE</th>
 
-
                 </tr>
             </thead>
             <tbody>
@@ -79,7 +78,6 @@
                         <td>{{ properties.detail_enj }}</td>
                         <td>{{ properties.hauteur }}</td>
                         <td>{{ properties.nature }}</td>
-
 
                     </tr>
 
@@ -144,6 +142,7 @@
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
 import api2itowns from './api2itowns2.js'
+import api2stats from '../../js/api2stats'
 import Scene1 from '@/components/Comparaisons/Scene1.vue'
 import Scene2 from '@/components/Comparaisons/Scene2.vue'
 
@@ -409,22 +408,15 @@ export default {
 
         $('.scen1').change((e) => {
             $('#com_Itowns1').click()
-
-
             const value = e.target.value
             this.changeScene1(value)
-
-
+            //Stats
+            api2stats.getNbEleves()
             try {
-
                 view.removeLayer('scenarios')
-
-
-
             } catch (err) {
                 console.log(err)
             }
-
             createScenarioIntersect(this.getScen1[0], view).then(res => {
                 const layers = view.getLayers()
                 console.log(res)
