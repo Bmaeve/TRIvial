@@ -252,10 +252,12 @@ export default {
         changeFtIntersect(data) {
             this.featuresIntersect = data
             this.ClonefeaturesIntersect = data
+            $('#com_filter1').val('ALL')
         },
         changeFtIntersect2(data) {
             this.featuresIntersect2 = data
             this.ClonefeaturesIntersect2 = data
+            $('#com_filter2').val('ALL')
         },
         changeDisabled1() {
             this.disabledScn1 = !this.disabledScn1
