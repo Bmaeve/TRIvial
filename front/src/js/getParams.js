@@ -18,10 +18,10 @@ let accessParams = {
                 let color = document.getElementById("color_" + enjeu.id).value
                 params[enjeu.id] = {
                     filters: [],
-                    minHeigh: this.barMinValue,
-                    maxHeigh: this.barMaxValue,
+                    minHeigh: Math.round(parseInt(document.getElementsByClassName("bar-left")[0].style.width) * 300 / 1000) * 10,
+                    maxHeigh: document.getElementsByClassName("input-type-range input-type-range-max")[0].valueAsNumber,
                     color: new THREE.Color(color),
-                    concernedByScenario: idx2Scenario[this.rangeValue]
+                    concernedByScenario: idx2Scenario[document.getElementById("rangeScenario").valueAsNumber]
                 };
             }
         }

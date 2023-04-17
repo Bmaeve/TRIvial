@@ -74,6 +74,9 @@ let cleanProperties = (keys) => {
         case 'Inseecom_d':
             value = 'Inseecom';
             break;
+        case 'Liblongcat':
+            value = 'Categorie';
+            break;
 
         default:
             value = keys;

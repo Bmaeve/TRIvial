@@ -55,13 +55,24 @@
     </div>
     <div id="com_fiche1">
         <div class="com_count"><span>Bâtiment(s) touché(s) ({{ getCount1 }})</span></div>
-        <table class="table table-dark table-striped">
+        <select id="com_filter1" class="form-select com_filt" aria-label="Default select example">
+            <option value="ALL">Tous</option>
+            <option value="ADMIN">Administration</option>
+            <option value="DEF">Defense</option>
+            <option value="INDUS">Industrie</option>
+            <option value="PATRIM">Patrimoine</option>
+            <option value="ENS">Enseignement</option>
+            <option value="SAN">Sante</option>
+            <option value="AUTRE">Autre</option>
+        </select>
+        <table class="table table-dark table-striped nowrap" id="com_table1">
             <!-- Feature properties table header -->
             <thead>
                 <tr>
                     <th scope="col">ID TRI</th>
                     <th scope="col">ID DBTOPO</th>
-                    <th scope="col">ENJEU</th>
+                    <th scope="col">ENJEU
+                    </th>
                     <th scope="col">DETAIL</th>
                     <th scope="col">HAUTEUR</th>
                     <th scope="col">NATURE</th>
@@ -78,7 +89,6 @@
                         <td>{{ properties.detail_enj }}</td>
                         <td>{{ properties.hauteur }}</td>
                         <td>{{ properties.nature }}</td>
-
                     </tr>
 
                 </template>
@@ -87,6 +97,16 @@
     </div>
     <div id="com_fiche2">
         <div class="com_count"><span>Bâtiment(s) touché(s) ({{ getCount2 }})</span></div>
+        <select id="com_filter2" class="form-select com_filt" aria-label="Default select example">
+            <option value="ALL">Tous</option>
+            <option value="ADMIN">Administration</option>
+            <option value="DEF">Defense</option>
+            <option value="INDUS">Industrie</option>
+            <option value="PATRIM">Patrimoine</option>
+            <option value="ENS">Enseignement</option>
+            <option value="SAN">Sante</option>
+            <option value="AUTRE">Autre</option>
+        </select>
         <table class="table table-dark table-striped">
 
             <!-- Feature properties table header -->
@@ -204,7 +224,9 @@ export default {
             fiche: "Voir les informations",
             title_stats: "Voir les statistiques",
             featuresIntersect: [],
+            ClonefeaturesIntersect: [],
             featuresIntersect2: [],
+            ClonefeaturesIntersect2: [],
             disabledScn1: true,
             disabledScn2: true,
             infosStats: {
@@ -301,19 +323,55 @@ export default {
         },
         changeFtIntersect(data) {
             this.featuresIntersect = data
+            this.ClonefeaturesIntersect = data
+            $('#com_filter1').val('ALL')
         },
         changeFtIntersect2(data) {
             this.featuresIntersect2 = data
+            this.ClonefeaturesIntersect2 = data
+            $('#com_filter2').val('ALL')
         },
         changeDisabled1() {
             this.disabledScn1 = !this.disabledScn1
         },
         changeDisabled2() {
             this.disabledScn2 = !this.disabledScn2
+        },
+        filterIntersect(value) {
+            this.featuresIntersect = this.ClonefeaturesIntersect
+            if (value == 'ALL') {
+                this.featuresIntersect = this.ClonefeaturesIntersect
+            } else {
+                const filt = this.featuresIntersect.filter(el => { return el.enjeu == value })
+                this.featuresIntersect = filt
+            }
+        },
+        filterIntersect2(value) {
+            this.featuresIntersect2 = this.ClonefeaturesIntersect2
+            if (value == 'ALL') {
+                this.featuresIntersect2 = this.ClonefeaturesIntersect2
+            } else {
+
+                const filt = this.featuresIntersect2.filter(el => { return el.enjeu == value })
+                this.featuresIntersect2 = filt
+            }
         }
 
     },
     mounted() {
+
+        const filter1Val = $('#com_filter1')
+        const filter2Val = $('#com_filter2')
+
+        filter1Val.change(e => {
+
+            this.filterIntersect(e.target.value)
+        })
+
+        filter2Val.change(e => {
+
+            this.filterIntersect2(e.target.value)
+        })
 
         const fiche1 = $('#com_fiche1')
         const fiche2 = $('#com_fiche2')
@@ -495,7 +553,9 @@ export default {
 
                 counter++
             })
-            const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
+
+            const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario", color: '#66ACF6' };
+
             api2itowns.addLayerToView(view, "scenarios", paramsScentest);
 
         })
@@ -589,7 +649,7 @@ export default {
                 counter2++
 
             })
-            const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario" };
+            const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario", color: '#66ACF6' };
             api2itowns.addLayerToView(planarView, "scenarios", paramsScentest);
         })
 
@@ -855,5 +915,9 @@ export default {
 #messageAlter {
     text-align: center;
     margin-bottom: 2%;
+
+.com_filt {
+    width: 30%;
+
 }
 </style>
