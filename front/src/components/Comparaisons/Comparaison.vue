@@ -472,7 +472,7 @@ export default {
             })
 
 
-            const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario" };
+            const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario", color: '#66ACF6' };
             api2itowns.addLayerToView(view, "scenarios", paramsScentest);
 
         })
@@ -555,7 +555,7 @@ export default {
                 counter2++
 
             })
-            const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario" };
+            const paramsScentest = { filters: getProxy(this.getScen2), columnFiltered: "scenario", color: '#66ACF6' };
             api2itowns.addLayerToView(planarView, "scenarios", paramsScentest);
         })
 
