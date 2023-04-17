@@ -118,22 +118,34 @@
         </table>
     </div>
     <div id="com_stats1">
-        <div class="com_stats_title"><span>Statistiques {{ getScen1Text }}</span></div>
-        {{ infosStats.totalEleves1 }}
-        {{ infosStats.elevesImpact1 }}
-        {{ infosStats.pourcentageEleves1 }}
-        {{ infosStats.totalPopSante1 }}
-        {{ infosStats.popSanteImpact1 }}
-        {{ infosStats.pourcentageSante1 }}
+        <div v-if="getScen1Text != undefined">
+            <div class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen1Text }}</span></div>
+            <ul>
+                <li>{{ infosStats.elevesImpact1 }} élèves impactés sur {{ infosStats.totalEleves1 }} soit {{
+                    infosStats.pourcentageEleves1 }} %</li>
+            </ul>
+            <br>
+            <ul>
+                <li>{{ infosStats.popSanteImpact1 }} patients impactés sur {{ infosStats.totalPopSante1 }} soit {{
+                    infosStats.pourcentageSante1 }} %</li>
+            </ul>
+        </div>
+        <div id="messageAlter" v-else>Veuillez sélectionner un scénario</div>
     </div>
     <div id="com_stats2">
-        <div class="com_stats_title"><span>Statistiques {{ getScen2Text }}</span></div>
-        {{ infosStats.totalEleves2 }}
-        {{ infosStats.elevesImpact2 }}
-        {{ infosStats.pourcentageEleves2 }}
-        {{ infosStats.totalPopSante2 }}
-        {{ infosStats.popSanteImpact2 }}
-        {{ infosStats.pourcentageSante2 }}
+        <div v-if="getScen2Text != undefined">
+            <div class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen2Text }}</span></div>
+            <ul>
+                <li>{{ infosStats.elevesImpact2 }} élèves impactés sur {{ infosStats.totalEleves2 }} soit {{
+                    infosStats.pourcentageEleves2 }} %</li>
+            </ul>
+            <br>
+            <ul>
+                <li>{{ infosStats.popSanteImpact2 }} patients impactés sur {{ infosStats.totalPopSante2 }} soit {{
+                    infosStats.pourcentageSante2 }} %</li>
+            </ul>
+        </div>
+        <div id="messageAlter" v-else>Veuillez sélectionner un scénario</div>
     </div>
     <div id="com_footer">
         <div id="com_btns">
@@ -165,9 +177,9 @@ import $ from 'jquery'
 import { ref } from 'vue';
 
 let textScenario = {
-    "04Fai": "Probabilité Faible",
-    "02Moy": "Probabilité Moyenne",
-    "01For": "Probabilité Forte"
+    "04Fai": "probabilité faible",
+    "02Moy": "probabilité moyenne",
+    "01For": "probabilité forte"
 
 }
 
@@ -836,5 +848,9 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 8%;
+}
+
+#messageAlter {
+    text-align: center;
 }
 </style>
