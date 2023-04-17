@@ -8,6 +8,7 @@ let epsg = require('epsg');
 
 let index = {}
 let last_parameters = {}
+let enjeux = ["admin", "def", "ens", "indus", "trans_s", "trans_l_flat", "san", "autre", "patrim"];
 let cleanProperties = (keys) => {
     let value = '';
     switch (keys) {
@@ -167,7 +168,6 @@ let api2itowns = {
                         view.removeLayer(table_name + '_' + (index[table_name] - 1).toString(), true);
                     }
                 })
-
                 // add the layer to the view
                 view.addLayer(newLayer);
                 view.getLayers().forEach(layer => {
@@ -177,6 +177,12 @@ let api2itowns = {
                 })
 
                 function picking(event, layer, where) {
+                    let table;
+                    enjeux.forEach(enjeu => {
+                        if (layer.includes(enjeu)) {
+                            table = enjeu
+                        }
+                    })
                     if (view.controls.isPaused) {
                         var intersects = view.pickFeaturesAt(event, 3, layer);
                         let properties;
@@ -210,7 +216,16 @@ let api2itowns = {
                                     <thead><tr><th scope="col">Propriété</th><th scope="col">Valeur</th></tr></thead>
                                     <tbody>`;
                                 }
-
+                                let params = { id: batchId }
+                                let promise2 = fetch(host + 'data/' + table + '/selectData', {
+                                    body: JSON.stringify(params),
+                                    headers: { 'Content-Type': 'application/json' },
+                                    method: 'post'
+                                })
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        console.log(data)
+                                    })
                                 Object.keys(properties).map(function (objectKey) {
                                     var value = properties[objectKey];
                                     if (value) {
@@ -237,12 +252,14 @@ let api2itowns = {
                                 });
                                 text += '</tbody></table>';
                                 htmlInfo.innerHTML = text;
+                                return promise2
                             }
                         } catch (error) {
                             console.log(error)
                         }
 
                     }
+
                 }
             })
         return promise;
