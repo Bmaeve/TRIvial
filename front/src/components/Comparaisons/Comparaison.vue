@@ -92,6 +92,7 @@
                         <td>{{ properties.nature }}</td>
                     </tr>
 
+
                 </template>
             </tbody>
         </table>
@@ -108,7 +109,7 @@
             <option value="SAN">Sante</option>
             <option value="AUTRE">Autre</option>
         </select>
-        <table class="table table-dark table-striped">
+        <table class="table table-dark table-striped nowrap" id="com_table2">
 
             <!-- Feature properties table header -->
             <thead>
@@ -190,7 +191,9 @@ export default {
             featuresIntersect2: [],
             ClonefeaturesIntersect2: [],
             disabledScn1: true,
-            disabledScn2: true
+            disabledScn2: true,
+            zoomdata1: [],
+            zoomdata2: [],
         }
     },
     computed: {
@@ -223,6 +226,12 @@ export default {
         },
         getDisabled2() {
             return this.disabledScn2
+        },
+        getzoomdata1() {
+            return this.zoomdata1
+        },
+        getzoomdata2() {
+            return this.zoomdata2
         }
     },
     methods: {
@@ -283,6 +292,12 @@ export default {
                 const filt = this.featuresIntersect2.filter(el => { return el.enjeu == value })
                 this.featuresIntersect2 = filt
             }
+        },
+        changezoomdata1(data) {
+            this.zoomdata1 = data
+        },
+        changezoomdata2(data) {
+            this.zoomdata2 = data
         }
 
     },
@@ -364,8 +379,6 @@ export default {
         let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
         let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
 
-        console.log(IGN_MNT, WORLD_DTM)
-
         // defined in a json file.
         function addElevationLayerFromConfig(config, name) {
             config.source.name = name
@@ -432,6 +445,8 @@ export default {
             return JSON.parse(JSON.stringify(data))
         }
 
+
+
         $('.scen1').change((e) => {
             $('#com_Itowns1').click()
 
@@ -454,20 +469,94 @@ export default {
                 const layers = view.getLayers()
                 console.log(res)
                 const featuresIntersectList = []
+                const features = []
                 layers.forEach((el, index) => {
                     const lastindex = el.id.split('_').length - 1
                     if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen1[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList.push(ft.properties)
+                            features.push(ft)
                         })
                     }
 
                 })
                 this.changeFtIntersect(featuresIntersectList)
+                this.changezoomdata1(features)
+
+
+
+
+                let ficheFeatureclick = $('#com_table1 tbody')
+                ficheFeatureclick.click((e) => {
+                    const key = e.target.firstChild.data
+                    const feature = this.getzoomdata1.filter(el => { return el.properties.id_bdtopo == key })
+                    console.log(key, features, feature)
+                    const coodinates = feature[0].geometry.coordinates[0][0]
+                    const Xs = []
+                    const Ys = []
+                    coodinates.forEach(el => {
+                        Xs.push(el[0])
+                        Ys.push(el[1])
+                    })
+                    const getMin = (array) => {
+                        let val
+                        array.forEach((el, index) => {
+                            if (index == 0) {
+                                val = el
+                            } else {
+                                if (el < val) {
+                                    val = el
+                                }
+                            }
+
+                        })
+
+                        return val
+                    }
+
+                    const getMax = (array) => {
+                        let val
+                        array.forEach((el, index) => {
+                            if (index == 0) {
+                                val = el
+                            } else {
+                                if (el > val) {
+                                    val = el
+                                }
+                            }
+
+                        })
+
+                        return val
+                    }
+
+                    const Xmin = getMin(Xs)
+                    const Ymin = getMin(Ys)
+                    const Xmax = getMax(Xs)
+                    const Ymax = getMax(Ys)
+
+
+                    const Xmoy = (Xmin + Xmax) / 2
+                    const Ymoy = (Ymin + Ymax) / 2
+
+                    const act = []
+                    const time = 5000
+
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 500, time: time * 0.4 })
+
+                    function zoomFeature(views) {
+                        return itowns.CameraUtils
+                            .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, act);
+                    }
+
+                    zoomFeature(view).then(zoomFeature).catch(console.error)
+
+
+                })
 
                 counter++
-
 
             })
 
@@ -475,7 +564,11 @@ export default {
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario", color: '#66ACF6' };
             api2itowns.addLayerToView(view, "scenarios", paramsScentest);
 
+
+
         })
+
+
 
         // Listen for globe full initialisation event
         const time = 5000;
@@ -541,17 +634,89 @@ export default {
                 const layers = planarView.getLayers()
                 console.log(res)
                 const featuresIntersectList2 = []
+                const features2 = []
                 layers.forEach((el, index) => {
                     const lastindex = el.id.split('_').length - 1
                     if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen2[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList2.push(ft.properties)
+                            features2.push(ft)
                         })
                     }
 
                 })
                 this.changeFtIntersect2(featuresIntersectList2)
+                this.changezoomdata2(features2)
+
+                let ficheFeatureclick2 = $('#com_table2 tbody')
+                ficheFeatureclick2.click((e) => {
+                    const key = e.target.firstChild.data
+                    const feature = this.getzoomdata2.filter(el => { return el.properties.id_bdtopo == key })
+                    console.log(key, feature)
+                    const coodinates = feature[0].geometry.coordinates[0][0]
+                    const Xs = []
+                    const Ys = []
+                    coodinates.forEach(el => {
+                        Xs.push(el[0])
+                        Ys.push(el[1])
+                    })
+                    const getMin = (array) => {
+                        let val
+                        array.forEach((el, index) => {
+                            if (index == 0) {
+                                val = el
+                            } else {
+                                if (el < val) {
+                                    val = el
+                                }
+                            }
+
+                        })
+
+                        return val
+                    }
+
+                    const getMax = (array) => {
+                        let val
+                        array.forEach((el, index) => {
+                            if (index == 0) {
+                                val = el
+                            } else {
+                                if (el > val) {
+                                    val = el
+                                }
+                            }
+
+                        })
+
+                        return val
+                    }
+
+                    const Xmin = getMin(Xs)
+                    const Ymin = getMin(Ys)
+                    const Xmax = getMax(Xs)
+                    const Ymax = getMax(Ys)
+
+
+                    const Xmoy = (Xmin + Xmax) / 2
+                    const Ymoy = (Ymin + Ymax) / 2
+
+                    const act = []
+                    const time = 5000
+
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 500, time: time * 0.4 })
+
+                    function zoomFeature(views) {
+                        return itowns.CameraUtils
+                            .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, act);
+                    }
+
+                    zoomFeature(planarView).then(zoomFeature).catch(console.error)
+
+
+                })
                 counter2++
 
             })
@@ -791,5 +956,15 @@ export default {
 
 .com_filt {
     width: 30%;
+}
+
+#com_table1 tbody tr:hover {
+    cursor: pointer;
+    border: 2px solid rgb(130, 32, 222);
+}
+
+#com_table2 tbody tr:hover {
+    cursor: pointer;
+    border: 2px solid rgb(130, 32, 222);
 }
 </style>
