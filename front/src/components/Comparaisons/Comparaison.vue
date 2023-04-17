@@ -915,6 +915,7 @@ export default {
 #messageAlter {
     text-align: center;
     margin-bottom: 2%;
+}
 
 .com_filt {
     width: 30%;
