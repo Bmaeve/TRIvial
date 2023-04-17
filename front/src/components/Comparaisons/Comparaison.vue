@@ -119,14 +119,15 @@
     </div>
     <div id="com_stats1">
         <div v-if="getScen1Text != undefined">
-            <div class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen1Text }}</span></div>
+            <div id="messageAlter" class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen1Text }}</span>
+            </div>
             <ul>
-                <li>{{ infosStats.elevesImpact1 }} élèves impactés sur {{ infosStats.totalEleves1 }} soit {{
+                <li>Enseignement : {{ infosStats.elevesImpact1 }} élèves impactés sur {{ infosStats.totalEleves1 }} soit {{
                     infosStats.pourcentageEleves1 }} %</li>
             </ul>
             <br>
             <ul>
-                <li>{{ infosStats.popSanteImpact1 }} patients impactés sur {{ infosStats.totalPopSante1 }} soit {{
+                <li>Santé : {{ infosStats.popSanteImpact1 }} patients impactés sur {{ infosStats.totalPopSante1 }} soit {{
                     infosStats.pourcentageSante1 }} %</li>
             </ul>
         </div>
@@ -134,14 +135,15 @@
     </div>
     <div id="com_stats2">
         <div v-if="getScen2Text != undefined">
-            <div class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen2Text }}</span></div>
+            <div id="messageAlter" class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen2Text }}</span>
+            </div>
             <ul>
-                <li>{{ infosStats.elevesImpact2 }} élèves impactés sur {{ infosStats.totalEleves2 }} soit {{
+                <li>Enseignement : {{ infosStats.elevesImpact2 }} élèves impactés sur {{ infosStats.totalEleves2 }} soit {{
                     infosStats.pourcentageEleves2 }} %</li>
             </ul>
             <br>
             <ul>
-                <li>{{ infosStats.popSanteImpact2 }} patients impactés sur {{ infosStats.totalPopSante2 }} soit {{
+                <li>Santé : {{ infosStats.popSanteImpact2 }} patients impactés sur {{ infosStats.totalPopSante2 }} soit {{
                     infosStats.pourcentageSante2 }} %</li>
             </ul>
         </div>
@@ -852,5 +854,6 @@ export default {
 
 #messageAlter {
     text-align: center;
+    margin-bottom: 2%;
 }
 </style>
