@@ -77,7 +77,6 @@
                     <th scope="col">HAUTEUR</th>
                     <th scope="col">NATURE</th>
 
-
                 </tr>
             </thead>
             <tbody>
@@ -138,13 +137,45 @@
             </tbody>
         </table>
     </div>
+    <div id="com_stats1">
+        <div v-if="getScen1Text != undefined">
+            <div id="messageAlter" class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen1Text }}</span>
+            </div>
+            <ul>
+                <li>Enseignement : {{ infosStats.elevesImpact1 }} élèves impactés sur {{ infosStats.totalEleves1 }} soit {{
+                    infosStats.pourcentageEleves1 }} %</li>
+            </ul>
+            <br>
+            <ul>
+                <li>Santé : {{ infosStats.popSanteImpact1 }} patients impactés sur {{ infosStats.totalPopSante1 }} soit {{
+                    infosStats.pourcentageSante1 }} %</li>
+            </ul>
+        </div>
+        <div id="messageAlter" v-else>Veuillez sélectionner un scénario</div>
+    </div>
+    <div id="com_stats2">
+        <div v-if="getScen2Text != undefined">
+            <div id="messageAlter" class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen2Text }}</span>
+            </div>
+            <ul>
+                <li>Enseignement : {{ infosStats.elevesImpact2 }} élèves impactés sur {{ infosStats.totalEleves2 }} soit {{
+                    infosStats.pourcentageEleves2 }} %</li>
+            </ul>
+            <br>
+            <ul>
+                <li>Santé : {{ infosStats.popSanteImpact2 }} patients impactés sur {{ infosStats.totalPopSante2 }} soit {{
+                    infosStats.pourcentageSante2 }} %</li>
+            </ul>
+        </div>
+        <div id="messageAlter" v-else>Veuillez sélectionner un scénario</div>
+    </div>
     <div id="com_footer">
-        <id id="com_fiche_btn">
-            <button type="button" class="btn btn-light">{{ getFicheTitle }}</button>
-        </id>
+        <div id="com_btns">
+            <button type="button" class="btn btn-light" id="com_fiche_btn">{{ getFicheTitle }}</button>
+            <button type="button" class="btn btn-light" id="com_btn_stats">{{ getStatsTitle }}</button>
+        </div>
         <div id="com_indic">
             <p>Ctrl+souris pour utiliser la 3D</p>
-
         </div>
         <img src="../../assets/logo.png" width="60" height="60" />
         <div id="com_boutonAn"> <a href="/TRIVial"><button type="button" class="btn btn-outline-success  ">
@@ -157,6 +188,7 @@
 <script>
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
 import api2itowns from './api2itowns2.js'
+import api2stats from '../../js/api2stats'
 import Scene1 from '@/components/Comparaisons/Scene1.vue'
 import Scene2 from '@/components/Comparaisons/Scene2.vue'
 
@@ -166,7 +198,12 @@ import $ from 'jquery'
 //import the vuejs Dom reference function
 import { ref } from 'vue';
 
+let textScenario = {
+    "04Fai": "probabilité faible",
+    "02Moy": "probabilité moyenne",
+    "01For": "probabilité forte"
 
+}
 
 export default {
     name: 'ComparaisonTRIvial',
@@ -180,17 +217,32 @@ export default {
     data() {
         return {
             layerlist: [],
-            scen1: ["04Fai"],
+            scen1: [],
             scen2: [],
             componentKey: ref(0),
             viewType: "2D",
             fiche: "Voir les informations",
+            title_stats: "Voir les statistiques",
             featuresIntersect: [],
             ClonefeaturesIntersect: [],
             featuresIntersect2: [],
             ClonefeaturesIntersect2: [],
             disabledScn1: true,
-            disabledScn2: true
+            disabledScn2: true,
+            infosStats: {
+                totalEleves1: 0,
+                elevesImpact1: 0,
+                pourcentageEleves1: 0,
+                totalPopSante1: 0,
+                popSanteImpact1: 0,
+                pourcentageSante1: 0,
+                totalEleves2: 0,
+                elevesImpact2: 0,
+                pourcentageEleves2: 0,
+                totalPopSante2: 0,
+                popSanteImpact2: 0,
+                pourcentageSante2: 0,
+            }
         }
     },
     computed: {
@@ -200,11 +252,20 @@ export default {
         getScen2() {
             return this.scen2
         },
+        getScen1Text() {
+            return textScenario[this.getScen1]
+        },
+        getScen2Text() {
+            return textScenario[this.getScen2]
+        },
         getViewType() {
             return this.viewType
         },
         getFicheTitle() {
             return this.fiche
+        },
+        getStatsTitle() {
+            return this.title_stats
         },
         getFeatureIntersect() {
             return this.featuresIntersect
@@ -245,8 +306,19 @@ export default {
         changeFicheTitle() {
             if (this.fiche == 'Voir les informations') {
                 this.fiche = 'Masquer les informations'
+                $('#com_btn_stats')[0].disabled = true;
             } else {
                 this.fiche = 'Voir les informations'
+                $('#com_btn_stats')[0].disabled = false;
+            }
+        },
+        changeStatsTitle() {
+            if (this.title_stats == 'Voir les statistiques') {
+                this.title_stats = 'Masquer les statistiques'
+                $('#com_fiche_btn')[0].disabled = true;
+            } else {
+                this.title_stats = 'Voir les statistiques'
+                $('#com_fiche_btn')[0].disabled = false;
             }
         },
         changeFtIntersect(data) {
@@ -303,14 +375,25 @@ export default {
 
         const fiche1 = $('#com_fiche1')
         const fiche2 = $('#com_fiche2')
+        const stats1 = $("#com_stats1")
+        const stats2 = $("#com_stats2")
         const action = $('#com_fiche_btn')
+        const btn_stats = $('#com_btn_stats')
         fiche1.hide()
         fiche2.hide()
+        stats1.hide()
+        stats2.hide()
 
         action.click(() => {
             fiche1.slideToggle('slow')
             fiche2.slideToggle('slow')
             this.changeFicheTitle()
+        })
+
+        btn_stats.click(() => {
+            stats1.slideToggle('slow')
+            stats2.slideToggle('slow')
+            this.changeStatsTitle();
         })
 
 
@@ -434,22 +517,24 @@ export default {
 
         $('.scen1').change((e) => {
             $('#com_Itowns1').click()
-
-
             const value = e.target.value
             this.changeScene1(value)
-
-
+            //Stats
+            api2stats.getNbEleves("all", this.getScen1[0]).then(infos => {
+                this.infosStats.totalEleves1 = infos[0];
+                this.infosStats.elevesImpact1 = infos[1];
+                this.infosStats.pourcentageEleves1 = infos[2];
+            });
+            api2stats.getNbPopSante("all", this.getScen1[0]).then(infos => {
+                this.infosStats.totalPopSante1 = infos[0];
+                this.infosStats.popSanteImpact1 = infos[1];
+                this.infosStats.pourcentageSante1 = infos[2];
+            })
             try {
-
                 view.removeLayer('scenarios')
-
-
-
             } catch (err) {
                 console.log(err)
             }
-
             createScenarioIntersect(this.getScen1[0], view).then(res => {
                 const layers = view.getLayers()
                 console.log(res)
@@ -467,12 +552,10 @@ export default {
                 this.changeFtIntersect(featuresIntersectList)
 
                 counter++
-
-
             })
 
-
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario", color: '#66ACF6' };
+
             api2itowns.addLayerToView(view, "scenarios", paramsScentest);
 
         })
@@ -532,6 +615,17 @@ export default {
             $('#com_Itowns2').click()
             const value = e.target.value
             this.changeScene2(value)
+            //Stats
+            api2stats.getNbEleves("all", this.getScen2[0]).then(infos => {
+                this.infosStats.totalEleves2 = infos[0];
+                this.infosStats.elevesImpact2 = infos[1];
+                this.infosStats.pourcentageEleves2 = infos[2];
+            });
+            api2stats.getNbPopSante("all", this.getScen2[0]).then(infos => {
+                this.infosStats.totalPopSante2 = infos[0];
+                this.infosStats.popSanteImpact2 = infos[1];
+                this.infosStats.pourcentageSante2 = infos[2];
+            });
             try {
                 planarView.removeLayer('scenarios')
             } catch (err) {
@@ -566,8 +660,6 @@ export default {
                     console.info('Globe initialized');
 
                     Promise.all(promises).then(function init() {
-
-
 
                         var planarCamera = planarView.camera.camera3D;
                         var globeCamera = view.camera.camera3D;
@@ -770,10 +862,41 @@ export default {
     z-index: 100;
 }
 
-#com_fiche_btn {
+#com_stats1 {
+    position: absolute;
+    left: 0;
+    bottom: 10vh;
+    max-height: 20vh;
+    width: 50%;
+    background-color: black;
+    color: white;
+    overflow: auto;
+    z-index: 200;
+
+}
+
+#com_stats2 {
+    position: absolute;
+    right: 0;
+    bottom: 10vh;
+    max-height: 20vh;
+    width: 50%;
+    background-color: black;
+    color: white;
+    overflow: auto;
+    z-index: 200;
+
+}
+
+#com_btns {
     position: absolute;
     left: 2%;
     bottom: 2vh;
+    width: 40%;
+}
+
+#com_btn_stats {
+    margin-left: 2%;
 }
 
 .com_count {
@@ -789,7 +912,12 @@ export default {
     right: 8%;
 }
 
+#messageAlter {
+    text-align: center;
+    margin-bottom: 2%;
+
 .com_filt {
     width: 30%;
+
 }
 </style>
