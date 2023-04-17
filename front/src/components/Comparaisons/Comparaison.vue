@@ -177,7 +177,7 @@
         <div id="com_indic">
             <p>Ctrl+souris pour utiliser la 3D</p>
         </div>
-        <img src="../../assets/logo.png" width="60" height="60" />
+        <img src="../../assets/logoBlack.png" width="60" height="60" />
         <div id="com_boutonAn"> <a href="/TRIVial"><button type="button" class="btn btn-outline-success  ">
                     MENU</button></a></div>
 
