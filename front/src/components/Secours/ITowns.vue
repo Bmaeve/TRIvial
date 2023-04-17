@@ -5,7 +5,8 @@
       <h4>TRIvial - Secours</h4>
     </div>
     <viewImport @import="importScenario" />
-    <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
+    <SectionInfo />
+    <!-- :featureInfoData="featureInfo" :key="componentKey" -->
   </div>
   <div id="sec_map">
 
@@ -65,7 +66,7 @@ export default {
         if (isProxy(view)) {
           view = toRaw(view);
         }
-        api2itowns.addEnjeuxToView(view, r.data[0]);
+        api2itowns.addEnjeuxToView(view, r.data[0], "sec");
       })
     }
   },

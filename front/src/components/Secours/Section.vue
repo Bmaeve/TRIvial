@@ -3,10 +3,10 @@
     <div class="sec_info_enjeux">
         <span>Informations</span>
         <!-- Feature information table block -->
-        <div class="sec_info_enjeux_table">
+        <div class="sec_info_enjeux_table" id="info_sec">
             <!-- Feature information table -->
-            <table class="table table-striped sec_table_info">
-                <!-- Feature properties table header -->
+            <!-- <table class="table table-striped sec_table_info">
+                Feature properties table header 
                 <thead>
                     <tr>
                         <th scope="col">Propriété</th>
@@ -14,7 +14,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Loop for show the properties informations -->
+                    Loop for show the properties informations 
                     <template v-for="(properties, key) in getfeatureKeys" :key='key'>
                         <tr>
                             <th>{{ properties }}</th>
@@ -23,7 +23,7 @@
 
                     </template>
                 </tbody>
-            </table>
+            </table> -->
         </div>
 
     </div>
@@ -67,39 +67,39 @@
 <script>
 
 //function for return object properties
-const getKeys = (object) => {
-    return Object.keys(object)
-}
+// const getKeys = (object) => {
+//     return Object.keys(object)
+// }
 
 //component exporte
 export default {
     name: 'sec_Section',
-    props: {
-        //feature information props config
-        featureInfoData: Array
-    },
-    data() {
-        return {
-            //get feature information object in array
-            featureInfo: this.$props.featureInfoData,
-            //get attributes properties list in array
-            featureKeys: getKeys(this.$props.featureInfoData[0]),
+    // props: {
+    //     //feature information props config
+    //     featureInfoData: Array
+    // },
+    // data() {
+    //     return {
+    //         //get feature information object in array
+    //         featureInfo: this.$props.featureInfoData,
+    //         //get attributes properties list in array
+    //         featureKeys: getKeys(this.$props.featureInfoData[0]),
 
-        }
-    },
-    computed: {
-        // return feature information data for the reactive vue
-        getfeatureinfo() {
-            return this.featureInfo
-        },
-        // return feature information properties for the reactive vue
-        getfeatureKeys() {
-            return this.featureKeys
-        }
-    },
-    mounted() {
+    //     }
+    // },
+    // computed: {
+    //     // return feature information data for the reactive vue
+    //     getfeatureinfo() {
+    //         return this.featureInfo
+    //     },
+    //     // return feature information properties for the reactive vue
+    //     getfeatureKeys() {
+    //         return this.featureKeys
+    //     }
+    // },
+    // mounted() {
 
-    }
+    // }
 
 }
 
@@ -107,7 +107,6 @@ export default {
 
 <style>
 /* Section */
-#sec_section {}
 
 /* Section title */
 .sec_info_title {

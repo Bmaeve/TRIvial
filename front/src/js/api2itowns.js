@@ -87,7 +87,7 @@ let cleanProperties = (keys) => {
 
 
 let api2itowns = {
-    async addLayerToView(view, table_name, parameters = {}) {
+    async addLayerToView(view, table_name, parameters = {}, where = "an") {
         let color;
         if (parameters.color == undefined) {
             color = new THREE.Color(Math.random() * 0xffffff)
@@ -154,7 +154,12 @@ let api2itowns = {
                         })
                     });
                 }
-                let map = document.getElementById('viewerDiv');
+                let map;
+                if (where == "an") {
+                    map = document.getElementById('viewerDiv');
+                } else if (where == "sec") {
+                    map = document.getElementById("sec_viewerDiv");
+                }
 
                 view.getLayers().forEach((l) => {
                     // if the table is updated, remove the previous layer 
@@ -167,17 +172,22 @@ let api2itowns = {
                 view.addLayer(newLayer);
                 view.getLayers().forEach(layer => {
                     if (!["scenarios", "atmosphere", "DEM", "Ortho", "globe"].includes(layer.id) && !layer.id.includes("trans_l")) {
-                        map.addEventListener('click', (e) => { picking(e, layer.id) }, true);
+                        map.addEventListener('click', (e) => { picking(e, layer.id, where) }, true);
                     }
                 })
 
-                function picking(event, layer) {
+                function picking(event, layer, where) {
                     if (view.controls.isPaused) {
                         var intersects = view.pickFeaturesAt(event, 3, layer);
                         let properties;
                         let batchId;
                         let info;
-                        let htmlInfo = document.getElementById('info');
+                        let htmlInfo;
+                        if (where == "an") {
+                            htmlInfo = document.getElementById('info');
+                        } else if (where == "sec") {
+                            htmlInfo = document.getElementById('info_sec');
+                        }
                         try {
                             if (intersects[layer].length !== 0) {
                                 htmlInfo.innerHTML = '';
@@ -190,9 +200,17 @@ let api2itowns = {
                                 if (properties == undefined) {
                                     properties = intersects[layer][0].object.feature.geometries[batchId].properties;
                                 }
-                                let text = `<table class="table table-striped an_table_info">
-                            <thead><tr><th scope="col">Propriété</th><th scope="col">Valeur</th></tr></thead>
-                            <tbody>`;
+                                let text;
+                                if (where == "an") {
+                                    text = `<table class="table table-striped an_table_info">
+                                    <thead><tr><th scope="col">Propriété</th><th scope="col">Valeur</th></tr></thead>
+                                    <tbody>`;
+                                } else if (where == "sec") {
+                                    text = `<table class="table table-striped sec_table_info">
+                                    <thead><tr><th scope="col">Propriété</th><th scope="col">Valeur</th></tr></thead>
+                                    <tbody>`;
+                                }
+
                                 Object.keys(properties).map(function (objectKey) {
                                     var value = properties[objectKey];
                                     if (value) {
@@ -230,7 +248,7 @@ let api2itowns = {
         return promise;
     },
 
-    addEnjeuxToView(view, parameters) {
+    addEnjeuxToView(view, parameters, where = "an") {
         let promises = [];
 
         // removing useless layers
@@ -250,7 +268,7 @@ let api2itowns = {
             // check parameters are different with the last request, else nothing to do
             if (!(JSON.stringify(parameters[new_table]) == JSON.stringify(last_parameters[new_table]))) {
                 // adding layers
-                let promise = this.addLayerToView(view, new_table, parameters[new_table]);
+                let promise = this.addLayerToView(view, new_table, parameters[new_table], where);
                 promises.push(promise);
             }
         })
