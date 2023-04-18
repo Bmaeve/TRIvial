@@ -491,9 +491,8 @@ export default {
 
                 let ficheFeatureclick = $('#com_table1 tbody')
                 ficheFeatureclick.click((e) => {
-                    const key = e.target.firstChild.data
-                    const feature = this.getzoomdata1.filter(el => { return el.properties.id_bdtopo == key })
-                    console.log(key, features, feature)
+                    const keySur = e.target.parentNode.cells['1'].firstChild.data
+                    const feature = this.getzoomdata1.filter(el => { return el.properties.id_bdtopo == keySur })
                     const coodinates = feature[0].geometry.coordinates[0][0]
                     const Xs = []
                     const Ys = []
@@ -546,7 +545,7 @@ export default {
                     const time = 5000
 
                     act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
-                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 400, time: time * 0.4 })
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 350, time: time * 0.4 })
 
                     function zoomFeature(views) {
                         return itowns.CameraUtils
@@ -653,9 +652,8 @@ export default {
 
                 let ficheFeatureclick2 = $('#com_table2 tbody')
                 ficheFeatureclick2.click((e) => {
-                    const key = e.target.firstChild.data
-                    const feature = this.getzoomdata2.filter(el => { return el.properties.id_bdtopo == key })
-                    console.log(key, feature)
+                    const keySur = e.target.parentNode.cells['1'].firstChild.data
+                    const feature = this.getzoomdata2.filter(el => { return el.properties.id_bdtopo == keySur })
                     const coodinates = feature[0].geometry.coordinates[0][0]
                     const Xs = []
                     const Ys = []
@@ -708,7 +706,7 @@ export default {
                     const time = 5000
 
                     act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
-                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 400, time: time * 0.4 })
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 350, time: time * 0.4 })
 
                     function zoomFeature(views) {
                         return itowns.CameraUtils
