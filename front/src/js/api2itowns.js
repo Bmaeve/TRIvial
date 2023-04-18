@@ -215,17 +215,28 @@ let api2itowns = {
                                     text = `<table class="table table-striped sec_table_info">
                                     <thead><tr><th scope="col">Propriété</th><th scope="col">Valeur</th></tr></thead>
                                     <tbody>`;
-                                }
-                                let params = { id: batchId }
-                                let promise2 = fetch(host + 'data/' + table + '/selectData', {
-                                    body: JSON.stringify(params),
-                                    headers: { 'Content-Type': 'application/json' },
-                                    method: 'post'
-                                })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        console.log(data)
+                                    let params = { id: batchId }
+                                    fetch(host + 'data/' + table + '/selectData', {
+                                        body: JSON.stringify(params),
+                                        headers: { 'Content-Type': 'application/json' },
+                                        method: 'post'
                                     })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            let params2 = { geometry: data.features[0].geometry };
+                                            fetch(host + 'data/getClosestFireHouse', {
+                                                body: JSON.stringify(params2),
+                                                headers: { 'Content-Type': 'application/json' },
+                                                method: 'post'
+                                            })
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    //We have the closest fire house
+                                                    console.log(data)
+                                                })
+                                        })
+                                }
+
                                 Object.keys(properties).map(function (objectKey) {
                                     var value = properties[objectKey];
                                     if (value) {
@@ -252,7 +263,6 @@ let api2itowns = {
                                 });
                                 text += '</tbody></table>';
                                 htmlInfo.innerHTML = text;
-                                return promise2
                             }
                         } catch (error) {
                             console.log(error)
