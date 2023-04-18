@@ -42,6 +42,8 @@ services:
       - ./database:/var/lib/postgresql/data
     networks:
       - tcp1
+    # command: >
+    #   bash -c "apt-get update && yes > apt-get install postgresql-15-pgrouting"
   adminer:
     image: adminer
     restart: always
