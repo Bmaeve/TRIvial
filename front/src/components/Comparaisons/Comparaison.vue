@@ -441,13 +441,63 @@ export default {
 
         }
 
+
+        let addFeature = (data, table_name, views) => {
+            let source = new itowns.FileSource({
+                fetchedData: data,
+                crs: 'EPSG:2154',
+                format: 'application/json',
+            });
+
+            let newLayer = new itowns.FeatureGeometryLayer(table_name, {
+                // Use a FileSource to load a single file once
+                source: source,
+                batchId: setId,
+                transparent: true,
+                opacity: 0.7,
+                style: new itowns.Style({
+                    fill: {
+                        color: new itowns.THREE.Color('#BBFFBB'),
+                        base_altitude: setAltitude,
+                        extrusion_height: setExtrusions,
+                    }
+                })
+            });
+
+            function setExtrusions(properties) {
+
+                return properties.hauteur;
+
+            }
+
+            function setAltitude(properties) {
+                return parseFloat(properties.z_median + 10);
+            }
+
+            function setId(properties) {
+                if (!properties.id) {
+                    return properties.uuid;
+                }
+                else {
+                    return properties.id;
+                }
+
+            }
+
+            views.addLayer(newLayer)
+
+
+        }
+
         let counter = 0
         let counter2 = 0
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
         }
 
-
+        let oldFeat1 = 0;
+        let oldTableName
+        console.log(oldFeat1)
 
         $('.scen1').change((e) => {
             $('#com_Itowns1').click()
@@ -553,6 +603,32 @@ export default {
                     }
 
                     zoomFeature(view).then(zoomFeature).catch(console.error)
+
+                    let tablename = feature[0].properties.enjeu.toLowerCase()
+
+                    if (tablename == 'trans') {
+                        tablename = 'trans_s'
+                    }
+
+                    //oldFeat1 = 'feat_' + tablename
+
+                    fetch('http://localhost:3000/dataFeature/' + tablename + '/' + keySur).then(res => res.json()).then(data => {
+
+                        view.getLayers().forEach((l) => {
+                            // if the table is updated, remove the previous layer 
+                            if ('feat_' + oldTableName + '_' + (oldFeat1 - 1).toString() == l.id) {
+                                view.removeLayer('feat_' + oldTableName + '_' + (oldFeat1 - 1).toString(), true);
+                            }
+                        })
+
+                        addFeature(data, 'feat_' + tablename + '_' + oldFeat1.toString(), view)
+
+                        oldTableName = tablename
+
+                        oldFeat1++
+
+                        //console.log(data, view.getLayers())
+                    })
 
 
                 })
