@@ -61,6 +61,7 @@
             <option value="DEF">Defense</option>
             <option value="INDUS">Industrie</option>
             <option value="PATRIM">Patrimoine</option>
+            <option value="TRANS">Transport</option>
             <option value="ENS">Enseignement</option>
             <option value="SAN">Sante</option>
             <option value="AUTRE">Autre</option>
@@ -105,6 +106,7 @@
             <option value="DEF">Defense</option>
             <option value="INDUS">Industrie</option>
             <option value="PATRIM">Patrimoine</option>
+            <option value="TRANS">Transport</option>
             <option value="ENS">Enseignement</option>
             <option value="SAN">Sante</option>
             <option value="AUTRE">Autre</option>
@@ -544,7 +546,7 @@ export default {
                     const time = 5000
 
                     act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
-                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 500, time: time * 0.4 })
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 400, time: time * 0.4 })
 
                     function zoomFeature(views) {
                         return itowns.CameraUtils
@@ -706,7 +708,7 @@ export default {
                     const time = 5000
 
                     act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
-                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 500, time: time * 0.4 })
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 400, time: time * 0.4 })
 
                     function zoomFeature(views) {
                         return itowns.CameraUtils
@@ -962,6 +964,7 @@ export default {
     cursor: pointer;
     border: 2px solid rgb(130, 32, 222);
 }
+
 
 #com_table2 tbody tr:hover {
     cursor: pointer;
