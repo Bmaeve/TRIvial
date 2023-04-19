@@ -454,12 +454,17 @@ export default {
                 source: source,
                 batchId: setId,
                 transparent: true,
-                opacity: 0.7,
+                opacity: 1,
                 style: new itowns.Style({
                     fill: {
                         color: new itowns.THREE.Color('#BBFFBB'),
                         base_altitude: setAltitude,
                         extrusion_height: setExtrusions,
+                    },
+                    stroke: {
+                        color: new itowns.THREE.Color('#BBFFBB'),
+                        width: 4.0,
+                        base_altitude: setAltitude
                     }
                 })
             });
