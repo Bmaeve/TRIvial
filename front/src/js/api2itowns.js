@@ -4,11 +4,15 @@ import { FileSource, THREE, Style, FeatureGeometryLayer, proj4 } from "../../nod
 import { toWgs84 } from "reproject";
 
 let epsg = require('epsg');
+
+//Fonction pour trier la séquence dans l'ordre
+const sorter = (sortBy) => (a, b) => a[sortBy] > b[sortBy] ? 1 : -1;
+
 //let counter = 0
 
 let index = {}
 let last_parameters = {}
-let enjeux = ["admin", "def", "ens", "indus", "trans_s", "trans_l_flat", "san", "autre", "patrim"];
+let enjeux = ["admin", "def", "ens", "indus", "trans_s", "trans_l_noded", "san", "autre", "patrim"];
 let cleanProperties = (keys) => {
     let value = '';
     switch (keys) {
@@ -176,6 +180,7 @@ let api2itowns = {
                     }
                 })
 
+
                 function picking(event, layer, where) {
                     let table;
                     enjeux.forEach(enjeu => {
@@ -215,6 +220,10 @@ let api2itowns = {
                                     text = `<table class="table table-striped sec_table_info">
                                     <thead><tr><th scope="col">Propriété</th><th scope="col">Valeur</th></tr></thead>
                                     <tbody>`;
+
+                                    //Trouver l'itinéraire
+                                    let id_vertex_enjeu;
+                                    let id_vertex_caserne;
                                     let params = { id: batchId }
                                     fetch(host + 'data/' + table + '/selectData', {
                                         body: JSON.stringify(params),
@@ -222,18 +231,70 @@ let api2itowns = {
                                         method: 'post'
                                     })
                                         .then(res => res.json())
-                                        .then(data => {
-                                            let params2 = { geometry: data.features[0].geometry };
-                                            fetch(host + 'data/getClosestFireHouse', {
+                                        .then(enj => {
+                                            //Coordonnées de l'enjeu sur lequel on a cliqué
+                                            let long_enj = enj.features[0].geometry.coordinates[0][0][0][0];
+                                            let lat_enj = enj.features[0].geometry.coordinates[0][0][0][1];
+                                            //Aller chercher les coordonnées du vertex le plus proche de l'enjeu
+                                            let params2 = { long: long_enj, lat: lat_enj };
+                                            fetch(host + 'routing/getNearestVertex', {
                                                 body: JSON.stringify(params2),
                                                 headers: { 'Content-Type': 'application/json' },
                                                 method: 'post'
                                             })
                                                 .then(res => res.json())
-                                                .then(data => {
-                                                    //We have the closest fire house
-                                                    console.log(data)
+                                                .then(vertex_enj => {
+                                                    //Enregistrer l'id du morceau de route le plus proche
+                                                    // de l'enjeu sélectionné
+                                                    id_vertex_enjeu = vertex_enj.id;
+                                                    console.log("vertex_enj", vertex_enj);
                                                 })
+
+                                            //Aller chercher la caserne de pompiers la plus proche
+                                            let params3 = { geometry: data.features[0].geometry };
+                                            fetch(host + 'data/getClosestFireHouse', {
+                                                body: JSON.stringify(params3),
+                                                headers: { 'Content-Type': 'application/json' },
+                                                method: 'post'
+                                            })
+                                                .then(res => res.json())
+                                                .then(caserne => {
+                                                    //Coordonnées de la caserne la plus proche de l'enjeu
+                                                    // sur lequel on a cliqué
+                                                    let long_caserne = caserne.geometry.coordinates[0][0][0][0];
+                                                    let lat_caserne = caserne.geometry.coordinates[0][0][0][1];
+                                                    let params4 = { long: long_caserne, lat: lat_caserne };
+                                                    fetch(host + 'routing/getNearestVertex', {
+                                                        body: JSON.stringify(params4),
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        method: 'post'
+                                                    })
+                                                        .then(res => res.json())
+                                                        .then(vertex_cas => {
+                                                            //Enregistrer l'id du morceau de route le plus proche
+                                                            // de la caserne
+                                                            id_vertex_caserne = vertex_cas.id;
+                                                            console.log("vertex_cas", id_vertex_caserne);
+
+                                                            //Trouver le chemin le plus court entre les deux vertex trouvés
+                                                            //On suppose que la source est la caserne et que la cible est l'enjeu
+                                                            let params5 = { source: id_vertex_caserne, target: id_vertex_enjeu };
+                                                            fetch(host + 'routing/getShortestPath', {
+                                                                body: JSON.stringify(params5),
+                                                                headers: { 'Content-Type': 'application/json' },
+                                                                method: 'post'
+                                                            })
+                                                                .then(res => res.json())
+                                                                .then(iti => {
+                                                                    //Trier dans l'ordre l'itinéraire
+                                                                    iti.sort(sorter('seq'))
+                                                                    console.log(iti);
+                                                                })
+                                                        })
+                                                })
+
+
+
                                         })
                                 }
 
