@@ -471,7 +471,7 @@ export default {
             }
 
             function setAltitude(properties) {
-                return parseFloat(properties.z_median + 10);
+                return parseFloat(properties.z_median);
             }
 
             function setId(properties) {
@@ -698,6 +698,10 @@ export default {
         addElevationLayerFromConfig2(IGN_MNT2, 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES1');
         addElevationLayerFromConfig2(WORLD_DTM2, 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM32');
 
+        let oldFeat2 = 0;
+        let oldTableName2
+
+
         $('.scen2').change((e) => {
             $('#com_Itowns2').click()
             const value = e.target.value
@@ -790,6 +794,31 @@ export default {
                     }
 
                     zoomFeature(planarView).then(zoomFeature).catch(console.error)
+                    let tablename2 = feature[0].properties.enjeu.toLowerCase()
+
+                    if (tablename2 == 'trans') {
+                        tablename2 = 'trans_s'
+                    }
+
+                    //oldFeat1 = 'feat_' + tablename
+
+                    fetch('http://localhost:3000/dataFeature/' + tablename2 + '/' + keySur).then(res => res.json()).then(data => {
+                        console.log(oldFeat2, 'feat_' + oldTableName2 + '_' + (oldFeat2 - 1).toString())
+                        planarView.getLayers().forEach((l) => {
+                            // if the table is updated, remove the previous layer 
+                            if ('feat_' + oldTableName2 + '_' + (oldFeat2 - 1).toString() == l.id) {
+                                planarView.removeLayer('feat_' + oldTableName2 + '_' + (oldFeat2 - 1).toString(), true);
+                            }
+                        })
+
+                        addFeature(data, 'feat_' + tablename2 + '_' + oldFeat2.toString(), planarView)
+
+                        oldTableName2 = tablename2
+
+                        oldFeat2++
+
+                        //console.log(data, view.getLayers())
+                    })
 
 
                 })
