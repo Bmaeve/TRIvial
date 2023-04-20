@@ -53,7 +53,7 @@
     <!-- App logo block -->
     <div class="sec_secour_logo">
         <!-- App logo image -->
-        <img src="../../assets/logo.png" width="50" height="50" />
+        <img src="../../assets/logoBlack.png" width="50" height="50" />
     </div>
     <div id="sec_bouton2">
         <a href="/TRIvial"> <button class="btn btn-outline-success">

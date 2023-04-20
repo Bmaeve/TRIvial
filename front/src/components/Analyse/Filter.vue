@@ -177,8 +177,6 @@ export default {
     methods: {
         btnValidate() {
             let params = accessParams.getParams();
-            console.log(params)
-
             //storing necessary values for statistics
             this.store.params = params;
             this.store.prob_scenario = idx2Scenario[this.rangeValue]
