@@ -305,6 +305,8 @@ export default {
     },
     mounted() {
 
+        $('#com_table1').click(false)
+
         const filter1Val = $('#com_filter1')
         const filter2Val = $('#com_filter2')
 
@@ -452,26 +454,19 @@ export default {
             let newLayer = new itowns.FeatureGeometryLayer(table_name, {
                 // Use a FileSource to load a single file once
                 source: source,
-                batchId: setId,
-                transparent: true,
                 opacity: 1,
                 style: new itowns.Style({
                     fill: {
-                        color: new itowns.THREE.Color('#BBFFBB'),
+                        color: new itowns.THREE.Color('#8220de'),
                         base_altitude: setAltitude,
                         extrusion_height: setExtrusions,
-                    },
-                    stroke: {
-                        color: new itowns.THREE.Color('#BBFFBB'),
-                        width: 4.0,
-                        base_altitude: setAltitude
                     }
                 })
             });
 
             function setExtrusions(properties) {
 
-                return properties.hauteur;
+                return properties.hauteur + 1;
 
             }
 
@@ -479,7 +474,7 @@ export default {
                 return parseFloat(properties.z_median);
             }
 
-            function setId(properties) {
+            /*function setId(properties) {
                 if (!properties.id) {
                     return properties.uuid;
                 }
@@ -487,7 +482,7 @@ export default {
                     return properties.id;
                 }
 
-            }
+            }*/
 
             views.addLayer(newLayer)
 
@@ -1070,12 +1065,12 @@ export default {
 
 #com_table1 tbody tr:hover {
     cursor: pointer;
-    border: 2px solid rgb(130, 32, 222);
+    border: 2px solid #8220de;
 }
 
 
 #com_table2 tbody tr:hover {
     cursor: pointer;
-    border: 2px solid rgb(130, 32, 222);
+    border: 2px solid #8220de;
 }
 </style>
