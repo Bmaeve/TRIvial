@@ -681,7 +681,7 @@ export default {
                     const time = 5000
 
                     act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
-                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 350, time: time * 0.4 })
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 400, time: time * 0.4 })
 
                     function zoomFeature(views) {
                         return itowns.CameraUtils
@@ -883,7 +883,7 @@ export default {
                     const time = 5000
 
                     act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
-                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 350, time: time * 0.4 })
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 400, time: time * 0.4 })
 
                     function zoomFeature(views) {
                         return itowns.CameraUtils

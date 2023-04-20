@@ -6,17 +6,17 @@
         <div class="button_box">
         <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Analyse">
                     <!-- <img src="../../assets/analytique.png"
-                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
+                                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
                     <h3>Analyse</h3>
                 </a></button>
         <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Comparaisons">
                     <!-- <img src="../../assets/un-camion.png"
-                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
+                                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
                     <h3>Comparaisons</h3>
                 </a></button>
         <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Secours">
                     <!-- <img src="../../assets/comparaison.png"
-                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
+                                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
                     <h3>Secours</h3>
                 </a></button>
         </div>
@@ -56,12 +56,13 @@ export default {
 .button_box {
     position: absolute;
     left: 35%;
-    top: 25vh;
+    top: 20vh;
     width: 30%;
     /* height: 30vh; */
     color: white;
     display: flex;
     flex-direction: column;
+    z-index: 10;
 }
 
 .button_box button {
