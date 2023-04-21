@@ -379,7 +379,7 @@ function itineraire(event, layer, where, view, data, scenario) {
                                 })
 
                             //Aller chercher la caserne de pompiers la plus proche
-                            let params3 = { geometry: data.features[0].geometry };
+                            let params3 = { geometry: data.features[0].geometry, scenario: scenario };
                             fetch(host + 'data/getClosestFireHouse', {
                                 body: JSON.stringify(params3),
                                 headers: { 'Content-Type': 'application/json' },
@@ -406,7 +406,7 @@ function itineraire(event, layer, where, view, data, scenario) {
 
                                             //Trouver le chemin le plus court entre les deux vertex trouvés
                                             //On suppose que la source est la caserne et que la cible est l'enjeu
-                                            let params5 = { source: id_vertex_caserne, target: id_vertex_enjeu };
+                                            let params5 = { source: id_vertex_caserne, target: id_vertex_enjeu, scenario: scenario };
                                             fetch(host + 'routing/getShortestPath', {
                                                 body: JSON.stringify(params5),
                                                 headers: { 'Content-Type': 'application/json' },
@@ -415,19 +415,15 @@ function itineraire(event, layer, where, view, data, scenario) {
                                                 .then(res => res.json())
                                                 .then(iti => {
                                                     //Trier dans l'ordre l'itinéraire
-                                                    iti.sort(sorter('seq'))
-                                                    console.log(iti);
+                                                    iti.sort(sorter('seq'));
                                                     let ids = [];
                                                     iti.forEach(route => {
                                                         ids.push(route.id.toString());
                                                     });
-                                                    console.log(ids);
                                                     let parameters = {
                                                         filters: ids, columnFiltered: "uuid", color: "yellow", concernedByScenario: scenario
 
                                                     };
-                                                    console.log(scenario);
-                                                    console.log(parameters);
                                                     api2itowns.addLayerToView(view, "trans_l_flat", parameters, where = "an");
                                                 })
                                         })

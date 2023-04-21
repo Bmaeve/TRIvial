@@ -41,7 +41,7 @@ router.get('/:table/selectData', function (req, res) {
 /* POST Resquest */
 router.post('/getClosestFireHouse', function (req, res) {
   let body = req.body;
-  let response = closestFireHouse(body.geometry);
+  let response = closestFireHouse(body.geometry, body.scenario);
   response.then((GeoJson) => { res.status(200).jsonp(GeoJson) })
     .catch((err) => {
       console.log("error in promise : " + err);

@@ -19,7 +19,7 @@ router.post('/getNearestVertex', function (req, res) {
 /* POST Resquest */
 router.post('/getShortestPath', function (req, res) {
     let body = req.body;
-    let response = shortestPath(body.source, body.target);
+    let response = shortestPath(body.source, body.target, body.scenario);
     response.then((GeoJson) => { res.status(200).jsonp(GeoJson) })
         .catch((err) => {
             console.log("error in promise : " + err);
