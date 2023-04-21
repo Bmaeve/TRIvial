@@ -604,13 +604,50 @@ export default {
             }
             createScenarioIntersect(this.getScen1[0], view).then(res => {
                 const layers = view.getLayers()
+                const enjeuxLayer = layers.filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
                 console.log(res)
+                enjeuxLayer.forEach((layer, index) => {
+                    let newfeature = layer.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] == true && el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] == false })
+                    layer.source.fetchedData.features = newfeature
+                    layer.style.fill.color = new itowns.THREE.Color('#FF9900')
+                    console.log(layer.source)
+
+                    let source = new itowns.FileSource({
+                        fetchedData: layer.source.fetchedData,
+                        crs: 'EPSG:2154',
+                        format: 'application/json',
+                    });
+                    let newLayerD = new itowns.FeatureGeometryLayer('#' + index + counter, {
+                        // Use a FileSource to load a single file once
+                        source: source,
+                        opacity: 1,
+                        style: layer.style
+                    })
+
+                    view.getLayers().forEach((l) => {
+                        // if the table is updated, remove the previous layer 
+                        if (('#' + index + counter - 1).toString() == l.id) {
+                            view.removeLayer(('#' + index + counter - 1).toString(), true);
+                        }
+                    })
+
+                    if (this.getScen1[0] != this.getScen2[0]) {
+                        view.addLayer(newLayerD)
+                    }
+
+
+
+
+
+                })
+
                 const featuresIntersectList = []
                 const features = []
                 layers.forEach((el, index) => {
                     const lastindex = el.id.split('_').length - 1
                     if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen1[0].toLowerCase()] === true })
+
                         featuresInt.forEach(ft => {
                             featuresIntersectList.push(ft.properties)
                             features.push(ft)
@@ -811,6 +848,39 @@ export default {
             createScenarioIntersect(this.getScen2[0], planarView).then(res => {
                 const layers = planarView.getLayers()
                 console.log(res)
+                const enjeuxLayer = layers.filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+                console.log(res)
+                enjeuxLayer.forEach((layer, index) => {
+                    let newfeature = layer.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] == true && el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] == false })
+                    layer.source.fetchedData.features = newfeature
+                    layer.style.fill.color = new itowns.THREE.Color('#FF9900')
+
+                    let source = new itowns.FileSource({
+                        fetchedData: layer.source.fetchedData,
+                        crs: 'EPSG:2154',
+                        format: 'application/json',
+                    });
+                    let newLayerD = new itowns.FeatureGeometryLayer('#' + index + counter2, {
+                        // Use a FileSource to load a single file once
+                        source: source,
+                        opacity: 1,
+                        style: layer.style
+                    })
+
+                    planarView.getLayers().forEach((l) => {
+                        // if the table is updated, remove the previous layer 
+                        if (('#' + index + counter2 - 1).toString() == l.id) {
+                            planarView.removeLayer(('#' + index + counter2 - 1).toString(), true);
+                        }
+                    })
+
+                    if (this.getScen2[0] != this.getScen1[0]) {
+                        planarView.addLayer(newLayerD)
+                    }
+
+
+
+                })
                 const featuresIntersectList2 = []
                 const features2 = []
                 layers.forEach((el, index) => {
