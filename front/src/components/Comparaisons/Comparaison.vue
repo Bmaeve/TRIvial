@@ -604,73 +604,9 @@ export default {
             }
             createScenarioIntersect(this.getScen1[0], view).then(res => {
                 const layers = view.getLayers()
-                const enjeuxLayer = layers.filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+
                 console.log(res)
-                enjeuxLayer.forEach((layer, index) => {
-                    let newfeature = layer.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] == true && el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] == false })
-                    layer.source.fetchedData.features = newfeature
-                    layer.style.fill.color = new itowns.THREE.Color('#FF9900')
-                    layer.style.fill.base_altitude = setAltitude
-                    layer.style.fill.extrusion_height = setExtrusions
 
-                    function setExtrusions(properties) {
-
-                        return properties.hauteur + 1;
-
-                    }
-
-                    function setAltitude(properties) {
-                        return parseFloat(properties.z_median);
-                    }
-
-
-                    let source = new itowns.FileSource({
-                        fetchedData: layer.source.fetchedData,
-                        crs: 'EPSG:2154',
-                        format: 'application/json',
-                    });
-                    let newLayerD = new itowns.FeatureGeometryLayer('#' + index + counter, {
-                        // Use a FileSource to load a single file once
-                        source: source,
-                        opacity: 1,
-                        style: layer.style
-                    })
-
-                    view.getLayers().forEach((l) => {
-                        // if the table is updated, remove the previous layer 
-                        if (('#' + index + counter - 1).toString() == l.id) {
-                            view.removeLayer(('#' + index + counter - 1).toString(), true);
-                        }
-                    })
-
-                    const getLevelScen = (scene) => {
-                        let level
-                        switch (scene) {
-                            case '01For':
-                                level = 0
-                                break
-                            case '02Moy':
-                                level = 1
-                                break
-                            case '04Fai':
-                                level = 2
-                                break
-                            default:
-                                level = null
-                        }
-
-                        return level
-                    }
-
-                    if (getLevelScen(this.getScen1[0]) < getLevelScen(this.getScen2[0])) {
-                        view.addLayer(newLayerD)
-                    }
-
-
-
-
-
-                })
 
                 const featuresIntersectList = []
                 const features = []
@@ -786,6 +722,72 @@ export default {
 
 
                 })
+                let enjeuxLayer = view.getLayers().filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+                enjeuxLayer.forEach((layer, index) => {
+                    let newfeature = layer.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] == true && el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] == false })
+                    layer.source.fetchedData.features = newfeature
+                    layer.style.fill.color = new itowns.THREE.Color('#FF9900')
+                    layer.style.fill.base_altitude = setAltitude
+                    layer.style.fill.extrusion_height = setExtrusions
+
+                    function setExtrusions(properties) {
+
+                        return properties.hauteur + 1;
+
+                    }
+
+                    function setAltitude(properties) {
+                        return parseFloat(properties.z_median);
+                    }
+
+
+                    let source = new itowns.FileSource({
+                        fetchedData: layer.source.fetchedData,
+                        crs: 'EPSG:2154',
+                        format: 'application/json',
+                    });
+                    let newLayerD = new itowns.FeatureGeometryLayer('#' + index + counter, {
+                        // Use a FileSource to load a single file once
+                        source: source,
+                        opacity: 1,
+                        style: layer.style
+                    })
+
+                    view.getLayers().forEach((l) => {
+                        // if the table is updated, remove the previous layer 
+                        if (('#' + index + counter - 1).toString() == l.id) {
+                            view.removeLayer(('#' + index + counter - 1).toString(), true);
+                        }
+                    })
+
+                    const getLevelScen = (scene) => {
+                        let level
+                        switch (scene) {
+                            case '01For':
+                                level = 0
+                                break
+                            case '02Moy':
+                                level = 1
+                                break
+                            case '04Fai':
+                                level = 2
+                                break
+                            default:
+                                level = null
+                        }
+
+                        return level
+                    }
+
+                    if (getLevelScen(this.getScen1[0]) < getLevelScen(this.getScen2[0])) {
+                        view.addLayer(newLayerD)
+                    }
+
+
+
+
+
+                })
 
                 counter++
 
@@ -879,67 +881,9 @@ export default {
             createScenarioIntersect(this.getScen2[0], planarView).then(res => {
                 const layers = planarView.getLayers()
                 console.log(res)
-                const enjeuxLayer = layers.filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+
                 console.log(res)
-                enjeuxLayer.forEach((layer, index) => {
-                    let newfeature = layer.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] == true && el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] == false })
-                    layer.source.fetchedData.features = newfeature
-                    layer.style.fill.color = new itowns.THREE.Color('#FF9900')
-                    layer.style.fill.base_altitude = setAltitude
-                    layer.style.fill.extrusion_height = setExtrusions
 
-                    function setExtrusions(properties) {
-                        return properties.hauteur + 1;
-                    }
-
-                    function setAltitude(properties) {
-                        return parseFloat(properties.z_median);
-                    }
-
-                    let source = new itowns.FileSource({
-                        fetchedData: layer.source.fetchedData,
-                        crs: 'EPSG:2154',
-                        format: 'application/json',
-                    });
-                    let newLayerD = new itowns.FeatureGeometryLayer('#' + index + counter2, {
-                        // Use a FileSource to load a single file once
-                        source: source,
-                        opacity: 1,
-                        style: layer.style
-                    })
-
-                    planarView.getLayers().forEach((l) => {
-                        // if the table is updated, remove the previous layer 
-                        if (('#' + index + counter2 - 1).toString() == l.id) {
-                            planarView.removeLayer(('#' + index + counter2 - 1).toString(), true);
-                        }
-                    })
-
-                    const getLevelScen = (scene) => {
-                        let level
-                        switch (scene) {
-                            case '01For':
-                                level = 0
-                                break
-                            case '02Moy':
-                                level = 1
-                                break
-                            case '04Fai':
-                                level = 2
-                                break
-                            default:
-                                level = null
-
-                        }
-                        return level
-                    }
-
-                    if (getLevelScen(this.getScen2[0]) < getLevelScen(this.getScen1[0])) {
-                        planarView.addLayer(newLayerD)
-                    }
-
-
-                })
                 const featuresIntersectList2 = []
                 const features2 = []
                 layers.forEach((el, index) => {
@@ -1045,6 +989,66 @@ export default {
 
                         //console.log(data, view.getLayers())
                     })
+
+
+                })
+                let enjeuxLayer = view.getLayers().filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+                enjeuxLayer.forEach((layer, index) => {
+                    let newfeature = layer.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] == true && el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] == false })
+                    layer.source.fetchedData.features = newfeature
+                    layer.style.fill.color = new itowns.THREE.Color('#FF9900')
+                    layer.style.fill.base_altitude = setAltitude
+                    layer.style.fill.extrusion_height = setExtrusions
+
+                    function setExtrusions(properties) {
+                        return properties.hauteur + 1;
+                    }
+
+                    function setAltitude(properties) {
+                        return parseFloat(properties.z_median);
+                    }
+
+                    let source = new itowns.FileSource({
+                        fetchedData: layer.source.fetchedData,
+                        crs: 'EPSG:2154',
+                        format: 'application/json',
+                    });
+                    let newLayerD = new itowns.FeatureGeometryLayer('#' + index + counter2, {
+                        // Use a FileSource to load a single file once
+                        source: source,
+                        opacity: 1,
+                        style: layer.style
+                    })
+
+                    planarView.getLayers().forEach((l) => {
+                        // if the table is updated, remove the previous layer 
+                        if (('#' + index + counter2 - 1).toString() == l.id) {
+                            planarView.removeLayer(('#' + index + counter2 - 1).toString(), true);
+                        }
+                    })
+
+                    const getLevelScen = (scene) => {
+                        let level
+                        switch (scene) {
+                            case '01For':
+                                level = 0
+                                break
+                            case '02Moy':
+                                level = 1
+                                break
+                            case '04Fai':
+                                level = 2
+                                break
+                            default:
+                                level = null
+
+                        }
+                        return level
+                    }
+
+                    if (getLevelScen(this.getScen2[0]) < getLevelScen(this.getScen1[0])) {
+                        planarView.addLayer(newLayerD)
+                    }
 
 
                 })
