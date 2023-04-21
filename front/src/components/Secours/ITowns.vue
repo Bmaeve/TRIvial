@@ -55,18 +55,53 @@ export default {
     forceRerender() {
       this.componentKey += 1;
     },
-    importScenario(scenarioName) {
-      fetch('http://localhost:3000/importParams/data', {
+    async importScenario(scenarioName) {
+      let res = await fetch('http://localhost:3000/importParams/data', {
         body: JSON.stringify({ texte: "parameters/paramSaved/" + scenarioName + ".json" }),
         headers: { 'Content-Type': 'application/json' },
         method: 'post'
-      }).then(res => res.json()).then(r => {
-        let view = this.view;
-        if (isProxy(view)) {
-          view = toRaw(view);
-        }
-        api2itowns.addEnjeuxToView(view, r.data[0]);
       })
+
+      // init promises
+      let promises = []
+
+      // getting params
+      let r = await res.json()
+      let params = r.data[0]
+
+      // getting view
+      let view = this.view;
+      if (isProxy(view)) {
+        view = toRaw(view);
+      }
+
+      // checking if params has elements
+      if (Object.keys(params).length > 0) {
+
+        // getting scenario
+        let scenario = params[Object.keys(params)[0]].concernedByScenario
+
+        // displaying scenario
+        try {
+          view.removeLayer("scenarios");
+        } catch (e) {
+          //pass
+        }
+        let scenarioParams = { filters: [scenario], columnFiltered: "scenario", color: 'red' };
+        let scenarioPromise = api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+
+        // displaying enjeux
+        let enjeuxPromise = api2itowns.addEnjeuxToView(view, params);
+
+        promises.push(scenarioPromise);
+        promises.push(enjeuxPromise);
+
+      }
+
+      return Promise.all(promises)
+        .then(() => {
+          console.log("done")
+        })
     }
   },
   computed: {
@@ -146,8 +181,6 @@ export default {
     let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
     let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
 
-    console.log(IGN_MNT, WORLD_DTM)
-
     // defined in a json file.
     function addElevationLayerFromConfig(config, name) {
       config.source.name = name
@@ -159,7 +192,7 @@ export default {
     addElevationLayerFromConfig(IGN_MNT, 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES');
     addElevationLayerFromConfig(WORLD_DTM, 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3');
 
-    let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: '#66ACF6' };
+    let scenarioParams = { filters: ["01For"], columnFiltered: "scenario", color: '#66ACF6' };
     api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
   }
