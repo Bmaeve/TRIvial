@@ -1,0 +1,14 @@
+{
+    "geom": "geometry",
+    "codcovadis": "varchar",
+    "id_si_ext": "varchar",
+    "ver_si_ext": "varchar",
+    "nom_si_ext": "varchar",
+    "categorie": "varchar",
+    "bdtopo_toponyme": "varchar",
+    "bdtopo_hauteur": "numeric",
+    "bdtopo_id": "varchar",
+    "bdtopo_z_max_toit": "numeric",
+    "bdtopo_z_min_sol": "numeric",
+    "bdtopo_nature": "varchar"
+}

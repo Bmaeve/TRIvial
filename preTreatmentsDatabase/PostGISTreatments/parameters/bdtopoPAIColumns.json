@@ -1,0 +1,7 @@
+{
+    "id": "varchar",
+    "nom": "varchar",
+    "nature": "varchar",
+    "toponyme": "varchar",
+    "importance": "varchar"
+}
