@@ -6,10 +6,11 @@
     </div>
     <viewImport @import="importScenario" />
     <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
+    <div id="info"> </div>
   </div>
   <div id="sec_map">
 
-    <div id="sec_viewerDiv">
+    <div id="viewerDiv">
     </div>
   </div>
 </template>
@@ -23,8 +24,6 @@ import '../../css/widgets.css';
 import SectionInfo from '@/components/Secours/Section.vue'
 //import decision view component
 import viewImport from "@/components/Secours/viewImport.vue";
-//import jquery module
-import $ from 'jquery'
 //import the store
 import { store } from '../Store.js'
 //import the vuejs Dom reference function
@@ -111,23 +110,7 @@ export default {
   },
   mounted() {
     // Retrieve the view container
-    const viewerDiv = document.getElementById('sec_viewerDiv');
-
-
-    $('#sec_viewerDiv').click(() => {
-      const newfeature = [{
-        "id": this.store.featureInfo[0].id ? this.store.featureInfo[0].id += 1 : 1,
-        "titre": "Avenue",
-        "taille": 20,
-        "RN": "A231",
-        "Nombre": 4543,
-        "enabled": true
-      }]
-
-      this.changefeatureInfo(newfeature)
-      this.forceRerender()
-
-    })
+    const viewerDiv = document.getElementById('viewerDiv');
 
     // Define the view geographic extent
     proj4.defs(
@@ -209,7 +192,7 @@ export default {
   color: white;
 }
 
-#sec_viewerDiv {
+#viewerDiv {
   margin: auto;
   height: 100vh;
   width: 100%;
