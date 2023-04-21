@@ -610,7 +610,19 @@ export default {
                     let newfeature = layer.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] == true && el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] == false })
                     layer.source.fetchedData.features = newfeature
                     layer.style.fill.color = new itowns.THREE.Color('#FF9900')
-                    console.log(layer.source)
+                    layer.style.fill.base_altitude = setAltitude
+                    layer.style.fill.extrusion_height = setExtrusions
+
+                    function setExtrusions(properties) {
+
+                        return properties.hauteur + 1;
+
+                    }
+
+                    function setAltitude(properties) {
+                        return parseFloat(properties.z_median);
+                    }
+
 
                     let source = new itowns.FileSource({
                         fetchedData: layer.source.fetchedData,
@@ -631,7 +643,26 @@ export default {
                         }
                     })
 
-                    if (this.getScen1[0] != this.getScen2[0]) {
+                    const getLevelScen = (scene) => {
+                        let level
+                        switch (scene) {
+                            case '01For':
+                                level = 0
+                                break
+                            case '02Moy':
+                                level = 1
+                                break
+                            case '04Fai':
+                                level = 2
+                                break
+                            default:
+                                level = null
+                        }
+
+                        return level
+                    }
+
+                    if (getLevelScen(this.getScen1[0]) < getLevelScen(this.getScen2[0])) {
                         view.addLayer(newLayerD)
                     }
 
@@ -854,6 +885,16 @@ export default {
                     let newfeature = layer.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] == true && el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] == false })
                     layer.source.fetchedData.features = newfeature
                     layer.style.fill.color = new itowns.THREE.Color('#FF9900')
+                    layer.style.fill.base_altitude = setAltitude
+                    layer.style.fill.extrusion_height = setExtrusions
+
+                    function setExtrusions(properties) {
+                        return properties.hauteur + 1;
+                    }
+
+                    function setAltitude(properties) {
+                        return parseFloat(properties.z_median);
+                    }
 
                     let source = new itowns.FileSource({
                         fetchedData: layer.source.fetchedData,
@@ -874,10 +915,28 @@ export default {
                         }
                     })
 
-                    if (this.getScen2[0] != this.getScen1[0]) {
-                        planarView.addLayer(newLayerD)
+                    const getLevelScen = (scene) => {
+                        let level
+                        switch (scene) {
+                            case '01For':
+                                level = 0
+                                break
+                            case '02Moy':
+                                level = 1
+                                break
+                            case '04Fai':
+                                level = 2
+                                break
+                            default:
+                                level = null
+
+                        }
+                        return level
                     }
 
+                    if (getLevelScen(this.getScen2[0]) < getLevelScen(this.getScen1[0])) {
+                        planarView.addLayer(newLayerD)
+                    }
 
 
                 })
