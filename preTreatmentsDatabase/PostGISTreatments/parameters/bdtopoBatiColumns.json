@@ -1,0 +1,8 @@
+{
+    "id": "varchar",
+    "nature": "varchar",
+    "hauteur": "int",
+    "z_min_sol": "numeric",
+    "z_max_toit": "numeric",
+    "geom": "geometry"
+}

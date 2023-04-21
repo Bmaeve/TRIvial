@@ -1,0 +1,19 @@
+{
+  "name": "traitementspostgis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv": "^6.2.10",
+    "csv-parser": "^3.0.0",
+    "pg": "^8.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
