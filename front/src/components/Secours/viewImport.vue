@@ -34,18 +34,17 @@ export default {
             store
         }
     }, mounted() {
-        fetch('http://localhost:3000/importParams/name', {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'post'
-        }).then(res => res.json()).then(r => {
-            let items = document.getElementsByClassName("form-select")[0];
-            for (let i = 0; i < r.data.length; i++) {
-                var e = document.createElement("option");
-                e.value = i.toString();
-                e.innerText = r.data[i].substr(0, r.data[i].length - 5);
-                items.appendChild(e);
-            }
-        })
+        fetch('http://localhost:3000/saveDownParams/filenames')
+            .then(res => res.json())
+            .then(r => {
+                let items = document.getElementsByClassName("form-select")[0];
+                for (let i = 0; i < r.data.length; i++) {
+                    var e = document.createElement("option");
+                    e.value = i.toString();
+                    e.innerText = r.data[i].substr(0, r.data[i].length - 5);
+                    items.appendChild(e);
+                }
+            })
     }, methods: {
         btnImporter() {
             let items = document.getElementsByClassName("form-select")[0].children;

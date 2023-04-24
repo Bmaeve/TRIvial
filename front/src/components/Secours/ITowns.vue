@@ -55,11 +55,7 @@ export default {
       this.componentKey += 1;
     },
     async importScenario(scenarioName) {
-      let res = await fetch('http://localhost:3000/importParams/data', {
-        body: JSON.stringify({ texte: "parameters/paramSaved/" + scenarioName + ".json" }),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'post'
-      })
+      let res = await fetch('http://localhost:3000/saveDownParams/getData?filename=' + scenarioName)
 
       // init promises
       let promises = []

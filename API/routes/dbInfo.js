@@ -1,13 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
+/*
+dbInfo prefix in url permit to access services 
+which will return basic information about the database
+*/
+
 let pool = require('./poolPg');
 let selectDistinct = require('../js/selectDistinct');
 
+/* Finds every available table */
 /* GET  request */
 router.get('/getTables', async function (req, res, next) {
-
-  //SQL request
+  // SQL query
   var query = " \
         SELECT table_name \
         FROM information_schema.tables \
@@ -35,6 +40,7 @@ router.get('/getTables', async function (req, res, next) {
 
 });
 
+/* Returns table information */
 /* GET  request */
 router.get('/:table', async function (req, res, next) {
   let table_name = req.params.table;
@@ -80,6 +86,7 @@ router.get('/:table', async function (req, res, next) {
     })
 });
 
+/* Find the minimum and maximum values of the column */
 /* GET  request */
 router.get('/:table/:column/getMinMax', async function (req, res, next) {
   let table_name = req.params.table;
@@ -119,6 +126,7 @@ router.get('/:table/:column/getMinMax', async function (req, res, next) {
     })
 });
 
+/* Find the distinct values of the column */
 /* GET  request */
 router.get('/:table/:column/getDistinctValues', async function (req, res, next) {
   let table_name = req.params.table;

@@ -1,9 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
+/*
+data prefix in url permit to access services 
+which will return the data in geojson format
+*/
+
 let dataSelection = require('../js/dataSelection')
 
 
+/* every row is returned with its geometry and features in geojson format */
 /* POST  request */
 router.post('/:table/selectData', function (req, res) {
   let table_name = req.params.table;
@@ -21,6 +27,7 @@ router.post('/:table/selectData', function (req, res) {
     })
 });
 
+/* every row is returned with its geometry and features in geojson format */
 /* GET  request */
 router.get('/:table/selectData', function (req, res) {
   let table_name = req.params.table;

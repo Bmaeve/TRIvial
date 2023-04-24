@@ -4,13 +4,11 @@ var router = express.Router();
 let dataFeature = require('../js/selectFeatureByIdtopo')
 
 
-
+/* Returns the selected feature in geojson */
 /* GET  request */
 router.get('/:table/:id_topo', function (req, res) {
     let table_name = req.params.table;
     let id_topo = req.params.id_topo;
-
-    //let body = { GETrequest: true };
 
     let response = dataFeature(table_name, id_topo);
     response.then((GeoJson) => { res.status(200).jsonp(GeoJson) })
