@@ -242,6 +242,34 @@
         }
       }
     },
+    "/data/getClosestFireHouse": {
+      "post": {
+        "tags": [
+          "data"
+        ],
+        "summary": "Returns the feature closest to the geometry given",
+        "description": "Returns the requested data, geometry object is sent to the body of the request. \nFor example, you need to give the geometry of the feature that you want to find a closest feature to\n```\n  data = {\n    geometry : { type: 'MultiPolygon', coordinates: [ [ [Array], [Array] ] ] }\n  }\n```",
+        "operationId": "postClosestGeometry",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Feature"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "table/column not exists"
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
     "/enjeux/getTypesEnjeu": {
       "get": {
         "tags": [
@@ -424,6 +452,31 @@
         }
       }
     },
+    "/routing/getNearestVertex": {
+      "post": {
+        "tags": [
+          "routing"
+        ],
+        "summary": "returns the nearest vertex from a given \"enjeu\"",
+        "description": "Wants a body like that :\n```\n  body = { long: 651719.800000008, lat: 6861274.100000935 }\n```",
+        "operationId": "getNearestVertex",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Vertex"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/saveDownParams/saveData": {
       "get": {
         "tags": [
@@ -456,10 +509,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "example": {
-                    "status:true": null
-                  }
+                  "type": "string",
+                  "example": "{status:true}"
                 }
               }
             }
@@ -480,14 +531,36 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
+                  "type": "string",
                   "example": [
                     "santéTouchée",
                     "scénarioFaible"
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/routing/getShortestPath": {
+      "post": {
+        "tags": [
+          "routing"
+        ],
+        "summary": "returns the shortest path between two vertices",
+        "description": "Wants a body like that :\n```\n  body = { geometry: {type: \"MultiPolygon\", coordinates: (1) […] } }\n```",
+        "operationId": "getShortestPath",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Path"
+                  }
                 }
               }
             }
@@ -519,7 +592,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Data"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Data"
+                  }
                 }
               }
             }
@@ -666,6 +742,58 @@
         },
         "xml": {
           "name": "##default"
+        }
+      },
+      "Vertex": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "4995"
+          },
+          "the_geom": {
+            "type": "string",
+            "example": "010100000033333333D9E3234100000080872C5A41"
+          },
+          "name": {
+            "type": "string",
+            "example": "Route à 1 chaussée"
+          }
+        }
+      },
+      "Path": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Edge"
+        }
+      },
+      "Edge": {
+        "type": "object",
+        "properties": {
+          "distance": {
+            "type": "number",
+            "example": 43.732068728291395
+          },
+          "geom": {
+            "type": "string",
+            "example": "01050000000100000001020000000B0000009A999999C9D62341CDCCCC6C20305A41CDCCCCCCCCD623413333339320305A41CDCCCCCCCED62341CDCCCCAC20305A4133333333D0D623419A9999B920305A4100000000DED623419A99995921305A41CDCCCCCCEED623419A99993922305A4100000000F3D623416666666622305A41CDCCCCCCFBD62341333333D322305A413333333307D723410000006023305A416666666610D72341CDCCCCCC23305A41333333331BD723419A99995924305A41"
+          },
+          "id": {
+            "type": "integer",
+            "example": 27182
+          },
+          "name": {
+            "type": "string",
+            "example": "27182"
+          },
+          "seq": {
+            "type": "integer",
+            "example": 1
+          },
+          "type": {
+            "type": "string",
+            "example": "Route à une chaussée"
+          }
         }
       }
     }

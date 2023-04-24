@@ -3,27 +3,8 @@
     <div class="sec_info_enjeux">
         <span>Informations</span>
         <!-- Feature information table block -->
-        <div class="sec_info_enjeux_table">
+        <div class="sec_info_enjeux_table" id="info_sec">
             <!-- Feature information table -->
-            <table class="table table-striped sec_table_info">
-                <!-- Feature properties table header -->
-                <thead>
-                    <tr>
-                        <th scope="col">Propriété</th>
-                        <th scope="col">Valeur</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Loop for show the properties informations -->
-                    <template v-for="(properties, key) in getfeatureKeys" :key='key'>
-                        <tr>
-                            <th>{{ properties }}</th>
-                            <td>{{ getfeatureinfo[0][properties] }}</td>
-                        </tr>
-
-                    </template>
-                </tbody>
-            </table>
         </div>
 
     </div>
@@ -32,21 +13,11 @@
         <span>Itineraire</span>
         <!-- Itineraire calcul container -->
         <div class="sec_itin">
-            <!-- Itineraire start button -->
-            <button type="button" class="btn btn-secondary rounded float-start">
-                <img src="../../assets/start.png" width="35" height="35" />
-                <span>Start</span>
-            </button>
-            <!-- Itineraire end button -->
-            <button type="button" class="btn btn-secondary rounded float-end">
-                <span>End</span>
-                <img src="../../assets/end.png" width="35" height="35" />
-            </button>
-            <!-- Itineraire calcul start button -->
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <br>
-                <button class="btn btn-info" type="button">Calculer</button>
-            </div>
+            <ul>
+                <li v-for="etape in store.itineraire" :key="etape.name">
+                    Parcourir {{ etape.distance }} m sur {{ etape.rue_g }}
+                </li>
+            </ul>
         </div>
     </div>
     <br>
@@ -66,40 +37,17 @@
 
 <script>
 
-//function for return object properties
-const getKeys = (object) => {
-    return Object.keys(object)
-}
+//import the store
+import { store } from '../Store.js'
 
-//component exporte
+//component export
 export default {
     name: 'sec_Section',
-    props: {
-        //feature information props config
-        featureInfoData: Array
-    },
     data() {
         return {
-            //get feature information object in array
-            featureInfo: this.$props.featureInfoData,
-            //get attributes properties list in array
-            featureKeys: getKeys(this.$props.featureInfoData[0]),
-
+            store
         }
     },
-    computed: {
-        // return feature information data for the reactive vue
-        getfeatureinfo() {
-            return this.featureInfo
-        },
-        // return feature information properties for the reactive vue
-        getfeatureKeys() {
-            return this.featureKeys
-        }
-    },
-    mounted() {
-
-    }
 
 }
 
@@ -107,7 +55,6 @@ export default {
 
 <style>
 /* Section */
-#sec_section {}
 
 /* Section title */
 .sec_info_title {
@@ -132,16 +79,16 @@ export default {
 }
 
 /* Itineraire calcul block */
-.sec_calcul_itin {
-    overflow-y: auto;
-}
+
 
 /* Itineraire calcul container */
 .sec_itin {
+    overflow-y: auto;
     background-color: white;
     margin-top: 10px;
     padding: 10px;
     height: 16vh;
+    color: black;
 }
 
 /* App logo block */

@@ -7,7 +7,7 @@ which will return the data in geojson format
 */
 
 let dataSelection = require('../js/dataSelection')
-
+let closestFireHouse = require('../js/closestFireHouse')
 
 /* every row is returned with its geometry and features in geojson format */
 /* POST  request */
@@ -42,6 +42,17 @@ router.get('/:table/selectData', function (req, res) {
         console.log("error in promise : " + err);
         res.status(500).send("Internal error");
       }
+    })
+});
+
+/* POST Resquest */
+router.post('/getClosestFireHouse', function (req, res) {
+  let body = req.body;
+  let response = closestFireHouse(body.geometry, body.scenario);
+  response.then((GeoJson) => { res.status(200).jsonp(GeoJson) })
+    .catch((err) => {
+      console.log("error in promise : " + err);
+      res.status(500).send("Internal error");
     })
 });
 

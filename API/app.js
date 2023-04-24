@@ -27,7 +27,9 @@ app.use('/dbInfo', require('./routes/dbInfo'));
 app.use('/data', require('./routes/data'));
 app.use('/enjeux', require('./routes/enjeux'));
 app.use('/saveDownParams', require('./routes/saveDownloadParams'));
+app.use('/routing', require('./routes/routing'));
 app.use('/dataFeature', require('./routes/getFeature'));
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

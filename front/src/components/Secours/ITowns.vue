@@ -5,8 +5,9 @@
       <h4>TRIvial - Secours</h4>
     </div>
     <viewImport @import="importScenario" />
-    <SectionInfo :featureInfoData="featureInfo" :key="componentKey" />
-    <div id="info"> </div>
+
+    <SectionInfo />
+    <!-- :featureInfoData="featureInfo" :key="componentKey" -->
   </div>
   <div id="sec_map">
 
@@ -82,11 +83,13 @@ export default {
         } catch (e) {
           //pass
         }
+
+
         let scenarioParams = { filters: [scenario], columnFiltered: "scenario", color: 'red' };
         let scenarioPromise = api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
         // displaying enjeux
-        let enjeuxPromise = api2itowns.addEnjeuxToView(view, params);
+        let enjeuxPromise = api2itowns.addEnjeuxToView(view, params, "sec");
 
         promises.push(scenarioPromise);
         promises.push(enjeuxPromise);

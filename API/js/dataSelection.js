@@ -60,6 +60,10 @@ async function dataSelection(table_name, body) {
     if ((body.maxHeigh != undefined) && enjeux[table_name].hasColumnNamedHauteur) {
         query += " AND hauteur < " + body.maxHeigh;
     }
+    //adding a filter with id
+    if ((body.id != undefined)) {
+        query += " AND id = " + body.id
+    }
 
     // send and retrieve data
     let results = await pool.query(query);
