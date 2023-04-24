@@ -1,4 +1,4 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 
 async function getClosestFireHouse(geometry, scenario) {
     geometry.crs = { "type": "name", "properties": { "name": "EPSG:2154" } };
