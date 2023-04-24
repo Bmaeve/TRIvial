@@ -8,6 +8,9 @@ let epsg = require('epsg');
 //Fonction pour trier la séquence dans l'ordre
 const sorter = (sortBy) => (a, b) => a[sortBy] > b[sortBy] ? 1 : -1;
 
+//import the store
+import { store } from '../components/Store.js'
+
 //let counter = 0
 
 let index = {}
@@ -408,7 +411,8 @@ function itineraire(event, layer, where, view, data, scenario) {
                                                 .then(iti => {
                                                     //Trier dans l'ordre l'itinéraire
                                                     iti.sort(sorter('seq'));
-                                                    console.log(iti)
+                                                    console.log(iti);
+                                                    store.itineraire = iti;
                                                     let ids = [];
                                                     iti.forEach(route => {
                                                         ids.push(route.id.toString());
