@@ -5,5 +5,8 @@ export const store = reactive({
     params: {},
     num_scenario: "",
     prob_scenario: 0,
-    itineraire: {}
+    dblclick: false,
+    itineraire: [],
+    depart: {},
+    arrivee: {}
 })

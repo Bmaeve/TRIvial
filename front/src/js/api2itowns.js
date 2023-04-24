@@ -334,6 +334,7 @@ function picking(event, layer, where, view) {
 }
 
 function itineraire(event, layer, where, view, data, scenario) {
+
     if (view.controls.isPaused) {
         //Trouver l'itinéraire
         let table;
@@ -357,6 +358,7 @@ function itineraire(event, layer, where, view, data, scenario) {
                     })
                         .then(res => res.json())
                         .then(enj => {
+                            store.arrivee = enj;
                             //Coordonnées de l'enjeu sur lequel on a cliqué
                             let long_enj = enj.features[0].geometry.coordinates[0][0][0][0];
                             let lat_enj = enj.features[0].geometry.coordinates[0][0][0][1];
@@ -383,6 +385,7 @@ function itineraire(event, layer, where, view, data, scenario) {
                             })
                                 .then(res => res.json())
                                 .then(caserne => {
+                                    store.depart = caserne;
                                     //Coordonnées de la caserne la plus proche de l'enjeu
                                     // sur lequel on a cliqué
                                     let long_caserne = caserne.geometry.coordinates[0][0][0][0];
@@ -411,7 +414,6 @@ function itineraire(event, layer, where, view, data, scenario) {
                                                 .then(iti => {
                                                     //Trier dans l'ordre l'itinéraire
                                                     iti.sort(sorter('seq'));
-                                                    console.log(iti);
                                                     store.itineraire = iti;
                                                     let ids = [];
                                                     iti.forEach(route => {
@@ -423,7 +425,16 @@ function itineraire(event, layer, where, view, data, scenario) {
                                                     };
 
                                                     try {
-                                                        view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
+                                                        let to_remove = [];
+                                                        view.getLayers().forEach(layer => {
+                                                            if (layer.id.includes('trans_l_flat')) {
+                                                                to_remove.push(layer.id);
+                                                            }
+                                                        })
+                                                        // view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
+                                                        to_remove.forEach(id => {
+                                                            view.removeLayer(id, true);
+                                                        })
                                                     } catch (e) {
                                                         //console.log(e)
                                                     }
