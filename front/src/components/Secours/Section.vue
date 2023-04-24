@@ -11,11 +11,14 @@
     <!-- Itineraire calcul block -->
     <div class="sec_calcul_itin">
         <span>Itineraire</span>
+        <p id="explications"> Double-cliquez sur un bâtiment</p>
         <!-- Itineraire calcul container -->
         <div class="sec_itin">
+
             <ul>
-                <li v-for="etape in store.itineraire" :key="etape.name">
-                    Parcourir {{ etape.distance }} m sur {{ etape.rue_g }}
+                <li v-for="etape in liste_etapes" :key="etape.seq">
+                    Parcourir {{ Math.round(etape.distance) }} m sur {{ etape.rue_g }}
+                    <span id="inondation" v-if="etape.concerned == true">Attention route inondée !</span>
                 </li>
             </ul>
         </div>
@@ -45,9 +48,14 @@ export default {
     name: 'sec_Section',
     data() {
         return {
-            store
+            store,
         }
     },
+    computed: {
+        liste_etapes() {
+            return store.itineraire
+        }
+    }
 
 }
 
@@ -106,5 +114,13 @@ export default {
 
 .sec_info_enjeux {
     margin-bottom: 19%;
+}
+
+#inondation {
+    color: red;
+}
+
+#explications {
+    font-size: small;
 }
 </style>
