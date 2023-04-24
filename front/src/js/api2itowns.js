@@ -115,9 +115,6 @@ let api2itowns = {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(table_name);
-                console.log(data);
-                console.log(parameters);
                 let newLayer;
                 proj4.defs(
                     'EPSG:2154',
@@ -183,7 +180,6 @@ let api2itowns = {
                         map.addEventListener('dblclick', (e) => { itineraire(e, layer.id, where, view, data, parameters.concernedByScenario) }, true);
                     }
                 })
-                console.log(view.getLayers());
 
 
             })
@@ -346,8 +342,6 @@ function itineraire(event, layer, where, view, data, scenario) {
         let intersects = view.pickFeaturesAt(event, 3, layer);
         try {
             if (intersects[layer].length !== 0) {
-                console.log(intersects);
-                console.log(intersects[layer]);
                 let batchId = intersects[layer][0].object.geometry.attributes.batchId.array[intersects[layer][0].face.a];
                 if (where == "sec") {
                     let id_vertex_enjeu;
@@ -375,11 +369,10 @@ function itineraire(event, layer, where, view, data, scenario) {
                                     //Enregistrer l'id du morceau de route le plus proche
                                     // de l'enjeu sélectionné
                                     id_vertex_enjeu = vertex_enj.id;
-                                    console.log("vertex_enj", vertex_enj);
                                 })
 
                             //Aller chercher la caserne de pompiers la plus proche
-                            let params3 = { geometry: data.features[0].geometry, scenario: scenario };
+                            let params3 = { geometry: enj.features[0].geometry, scenario: scenario.toLowerCase() };
                             fetch(host + 'data/getClosestFireHouse', {
                                 body: JSON.stringify(params3),
                                 headers: { 'Content-Type': 'application/json' },
@@ -402,11 +395,10 @@ function itineraire(event, layer, where, view, data, scenario) {
                                             //Enregistrer l'id du morceau de route le plus proche
                                             // de la caserne
                                             id_vertex_caserne = vertex_cas.id;
-                                            console.log("vertex_cas", id_vertex_caserne);
 
                                             //Trouver le chemin le plus court entre les deux vertex trouvés
                                             //On suppose que la source est la caserne et que la cible est l'enjeu
-                                            let params5 = { source: id_vertex_caserne, target: id_vertex_enjeu, scenario: scenario };
+                                            let params5 = { source: id_vertex_caserne, target: id_vertex_enjeu, scenario: scenario.toLowerCase() };
                                             fetch(host + 'routing/getShortestPath', {
                                                 body: JSON.stringify(params5),
                                                 headers: { 'Content-Type': 'application/json' },
@@ -416,6 +408,7 @@ function itineraire(event, layer, where, view, data, scenario) {
                                                 .then(iti => {
                                                     //Trier dans l'ordre l'itinéraire
                                                     iti.sort(sorter('seq'));
+                                                    console.log(iti)
                                                     let ids = [];
                                                     iti.forEach(route => {
                                                         ids.push(route.id.toString());
@@ -424,7 +417,14 @@ function itineraire(event, layer, where, view, data, scenario) {
                                                         filters: ids, columnFiltered: "uuid", color: "yellow", concernedByScenario: scenario
 
                                                     };
-                                                    api2itowns.addLayerToView(view, "trans_l_flat", parameters, where = "an");
+
+                                                    try {
+                                                        view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
+                                                    } catch (e) {
+                                                        //console.log(e)
+                                                    }
+
+                                                    api2itowns.addLayerToView(view, "trans_l_flat", parameters, where = "sec");
                                                 })
                                         })
                                 })
