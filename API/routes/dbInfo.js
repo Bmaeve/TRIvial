@@ -6,10 +6,10 @@ dbInfo prefix in url permit to access services
 which will return basic information about the database
 */
 
-let pool = require('./poolPg');
 let selectDistinct = require('../js/selectDistinct');
 let getTables = require('../js/getTables');
 let getTableInfo = require('../js/getTableInfo');
+let getMinMax = require('../js/getMinMax');
 
 /* Finds every available table */
 /* GET  request */
@@ -55,30 +55,16 @@ router.get('/:table/:column/getMinMax', async function (req, res, next) {
   let table_name = req.params.table;
   let column_name = req.params.column;
 
-  //SQL request
-  var query = " \
-        SELECT MIN(" + column_name + "), MAX(" + column_name + ") \
-        FROM " + table_name + " \
-        ";
-
-  // send and retrieve data
-  let promise = pool.query(query);
-
-  promise.then((results) => {
-    let minimum = results.rows[0].min;
-    let maximum = results.rows[0].max;
-
-    if (isNaN(minimum)) {
-      // check if the result is a number
-      res.status(400).send("column" + column_name + " is not a number type");
-    } else {
-      // api response
-      res.status(200).jsonp({
-        minimum: minimum,
-        maximum: maximum
-      })
-    }
-  })
+  getMinMax(table_name, column_name)
+    .then(data => {
+      if (isNaN(data.minimum)) {
+        // check if the result is a number
+        res.status(400).send("column " + column_name + " is not a number type");
+      } else {
+        // api response
+        res.status(200).jsonp(data)
+      }
+    })
     .catch((err) => {
       if ((err.code == "42P01") || (err.code == "42703")) { // column or table doesn't exists
         res.status(400).send(err.message);

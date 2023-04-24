@@ -1,4 +1,4 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 let enjeux = require('../parameters/enjeux.json')
 
 function getTypesEnjeux() {

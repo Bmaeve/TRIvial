@@ -1,4 +1,4 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 
 async function selectDistinct(table_name, column_name) {
   /*

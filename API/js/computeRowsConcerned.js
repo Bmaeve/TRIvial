@@ -1,4 +1,4 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 let selectDistinct = require('./selectDistinct')
 
 async function computeRowsConcernedByScenario(table_name_enjeu, table_name_scenario, distinctScenarioColumn) {

@@ -1,4 +1,4 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 
 async function getTables() {
   /*

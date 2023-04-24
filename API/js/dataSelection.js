@@ -1,4 +1,4 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 let enjeux = require('../parameters/enjeux.json')
 
 async function dataSelection(table_name, body) {
@@ -17,9 +17,9 @@ async function dataSelection(table_name, body) {
 
     //SQL query
     var query = " \
-          SELECT *,ST_AsGeoJSON(geom)::json as geometry \
-          FROM " + table_name + " \
-          WHERE 1=1 \ "; // WHERE 1=1 permit to add "AND" filters next
+        SELECT *,ST_AsGeoJSON(geom)::json as geometry \
+        FROM " + table_name + " \
+        WHERE 1=1 \ "; // WHERE 1=1 permit to add "AND" filters next
 
 
 
