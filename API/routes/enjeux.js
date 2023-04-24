@@ -1,19 +1,22 @@
 var express = require('express');
 var router = express.Router();
 
-let pool = require('./poolPg');
+/*
+enjeux prefix in url permit to access services 
+specifics to enjeux relative table
+*/
+
 let enjeux = require('../parameters/enjeux.json');
 let dataSelection = require('../js/dataSelection');
-let typesEnjeux = require('../js/typesEnjeux');
+let getTypesEnjeux = require('../js/typesEnjeux');
 let computeRowsConcernedByScenario = require('../js/computeRowsConcerned');
 
+/* returns types of enjeu */
 /* GET  request */
 router.get('/getTypesEnjeux', function (req, res, next) {
-  let result_array = []
-  let promises = typesEnjeux(result_array);
-  Promise.all(promises)
-    .then(() => {
-      res.status(200).jsonp(result_array) // api response
+  getTypesEnjeux()
+    .then((result) => {
+      res.status(200).jsonp(result) // api response
     })
     .catch((error) => {
       console.log("error in promise : " + error);
@@ -21,6 +24,8 @@ router.get('/getTypesEnjeux', function (req, res, next) {
     })
 });
 
+/* Return every row of the given "enjeu" */
+/* GET  request */
 router.get('/:enjeu/selectData', function (req, res, next) {
   let table_name = req.params.enjeu;
   let body = { GETrequest: true };
@@ -36,6 +41,8 @@ router.get('/:enjeu/selectData', function (req, res, next) {
     })
 });
 
+/* Returns data of the given "enjeu" according to parameters */
+/* POST  request */
 router.post('/:enjeu/selectData', function (req, res, next) {
   let table_name = req.params.enjeu;
   let body = req.body;
@@ -52,6 +59,8 @@ router.post('/:enjeu/selectData', function (req, res, next) {
     })
 });
 
+/* compute new columns to know if a feature is concerned by the specified scenario */
+/* PUT  request */
 router.put('/:enjeu/:scenario/computeConcernedRows', function (req, res, next) {
   let table_name_enjeu = req.params.enjeu;
   let table_name_scenario = req.params.scenario;

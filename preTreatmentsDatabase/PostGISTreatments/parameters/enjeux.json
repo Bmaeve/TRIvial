@@ -1,0 +1,125 @@
+{
+    "san": {
+        "filters": {
+            "categorie": [
+                "02",
+                "04",
+                "Santé"
+            ],
+            "nom_si_ext": [
+                "www.data.gouv.fr_FINESS",
+                "FINESS"
+            ]
+        },
+        "columnsToKeep": {
+            "geom": "geometry",
+            "id_si_ext": "varchar",
+            "categorie": "varchar",
+            "codcovadis": "varchar"
+        }
+    },
+    "ens": {
+        "filters": {
+            "categorie": [
+                "08",
+                "Enseignement"
+            ],
+            "nom_si_ext": [
+                "www.data.gouv.fr_MENJVA",
+                "MENJVA"
+            ]
+        },
+        "columnsToKeep": {
+            "geom": "geometry",
+            "id_si_ext": "varchar",
+            "categorie": "varchar",
+            "codcovadis": "varchar"
+        }
+    },
+    "trans": {
+        "filters": {
+            "categorie": [
+                "Transport"
+            ],
+            "type_activ": [
+                "06"
+            ],
+            "nature": [
+                "Gare",
+                "Pont",
+                "Piste en dur"
+            ]
+        },
+        "columnsToKeep": {
+            "geom": "geometry",
+            "id_si_ext": "varchar",
+            "categorie": "varchar",
+            "codcovadis": "varchar"
+        }
+    },
+    "patrim": {
+        "filters": {
+            "categorie": [
+                "aaa"
+            ]
+        },
+        "columnsToKeep": {
+            "geom": "geometry",
+            "id_si_ext": "varchar",
+            "categorie": "varchar",
+            "codcovadis": "varchar"
+        }
+    },
+    "admin": {
+        "filters": {
+            "categorie": [
+                "aaa"
+            ]
+        },
+        "columnsToKeep": {
+            "geom": "geometry",
+            "id_si_ext": "varchar",
+            "categorie": "varchar",
+            "codcovadis": "varchar"
+        }
+    },
+    "def": {
+        "filters": {
+            "categorie": [
+                "aaa"
+            ]
+        },
+        "columnsToKeep": {
+            "geom": "geometry",
+            "id_si_ext": "varchar",
+            "categorie": "varchar",
+            "codcovadis": "varchar"
+        }
+    },
+    "indus": {
+        "filters": {
+            "categorie": [
+                "aaa"
+            ]
+        },
+        "columnsToKeep": {
+            "geom": "geometry",
+            "id_si_ext": "varchar",
+            "categorie": "varchar",
+            "codcovadis": "varchar"
+        }
+    },
+    "autre": {
+        "filters": {
+            "categorie": [
+                "aaa"
+            ]
+        },
+        "columnsToKeep": {
+            "geom": "geometry",
+            "id_si_ext": "varchar",
+            "categorie": "varchar",
+            "codcovadis": "varchar"
+        }
+    }
+}

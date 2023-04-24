@@ -5,12 +5,13 @@
       <h4>TRIvial - Secours</h4>
     </div>
     <viewImport @import="importScenario" />
+
     <SectionInfo />
     <!-- :featureInfoData="featureInfo" :key="componentKey" -->
   </div>
   <div id="sec_map">
 
-    <div id="sec_viewerDiv">
+    <div id="viewerDiv">
     </div>
   </div>
 </template>
@@ -24,8 +25,6 @@ import '../../css/widgets.css';
 import SectionInfo from '@/components/Secours/Section.vue'
 //import decision view component
 import viewImport from "@/components/Secours/viewImport.vue";
-//import jquery module
-import $ from 'jquery'
 //import the store
 import { store } from '../Store.js'
 //import the vuejs Dom reference function
@@ -56,18 +55,51 @@ export default {
     forceRerender() {
       this.componentKey += 1;
     },
-    importScenario(scenarioName) {
-      fetch('http://localhost:3000/importParams/data', {
-        body: JSON.stringify({ texte: "parameters/paramSaved/" + scenarioName + ".json" }),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'post'
-      }).then(res => res.json()).then(r => {
-        let view = this.view;
-        if (isProxy(view)) {
-          view = toRaw(view);
+    async importScenario(scenarioName) {
+      let res = await fetch('http://localhost:3000/saveDownParams/getData?filename=' + scenarioName)
+
+      // init promises
+      let promises = []
+
+      // getting params
+      let r = await res.json()
+      let params = r.data[0]
+
+      // getting view
+      let view = this.view;
+      if (isProxy(view)) {
+        view = toRaw(view);
+      }
+
+      // checking if params has elements
+      if (Object.keys(params).length > 0) {
+
+        // getting scenario
+        let scenario = params[Object.keys(params)[0]].concernedByScenario
+
+        // displaying scenario
+        try {
+          view.removeLayer("scenarios");
+        } catch (e) {
+          //pass
         }
-        api2itowns.addEnjeuxToView(view, r.data[0], "sec");
-      })
+
+
+        let scenarioParams = { filters: [scenario], columnFiltered: "scenario", color: 'red' };
+        let scenarioPromise = api2itowns.addLayerToView(view, "scenarios", scenarioParams);
+
+        // displaying enjeux
+        let enjeuxPromise = api2itowns.addEnjeuxToView(view, params, "sec");
+
+        promises.push(scenarioPromise);
+        promises.push(enjeuxPromise);
+
+      }
+
+      return Promise.all(promises)
+        .then(() => {
+          console.log("done")
+        })
     }
   },
   computed: {
@@ -77,23 +109,7 @@ export default {
   },
   mounted() {
     // Retrieve the view container
-    const viewerDiv = document.getElementById('sec_viewerDiv');
-
-
-    $('#sec_viewerDiv').click(() => {
-      const newfeature = [{
-        "id": this.store.featureInfo[0].id ? this.store.featureInfo[0].id += 1 : 1,
-        "titre": "Avenue",
-        "taille": 20,
-        "RN": "A231",
-        "Nombre": 4543,
-        "enabled": true
-      }]
-
-      this.changefeatureInfo(newfeature)
-      this.forceRerender()
-
-    })
+    const viewerDiv = document.getElementById('viewerDiv');
 
     // Define the view geographic extent
     proj4.defs(
@@ -147,8 +163,6 @@ export default {
     let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
     let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
 
-    console.log(IGN_MNT, WORLD_DTM)
-
     // defined in a json file.
     function addElevationLayerFromConfig(config, name) {
       config.source.name = name
@@ -160,7 +174,7 @@ export default {
     addElevationLayerFromConfig(IGN_MNT, 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES');
     addElevationLayerFromConfig(WORLD_DTM, 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3');
 
-    let scenarioParams = { filters: [this.current_scenario], columnFiltered: "scenario", color: '#66ACF6' };
+    let scenarioParams = { filters: ["01For"], columnFiltered: "scenario", color: '#66ACF6' };
     api2itowns.addLayerToView(view, "scenarios", scenarioParams);
 
   }
@@ -177,7 +191,7 @@ export default {
   color: white;
 }
 
-#sec_viewerDiv {
+#viewerDiv {
   margin: auto;
   height: 100vh;
   width: 100%;

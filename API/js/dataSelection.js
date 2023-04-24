@@ -1,15 +1,25 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 let enjeux = require('../parameters/enjeux.json')
 
 async function dataSelection(table_name, body) {
+    /*
+    select data in the specified table 
+
+    table_name : name if the table 
+    body : parameters to filter the data, it looks like :
+        { 
+            filters: ["value1", "c'est valide même avec une apostrophe"],
+            columnFiltered: "column1"  // if undefined, it will look into enjeux.json file
+        }
+    */
+
     let features = [];
 
     //SQL query
-    // WHERE 1=1 permit to add "AND" filters next
     var query = " \
-          SELECT *,ST_AsGeoJSON(geom)::json as geometry \
-          FROM " + table_name + " \
-          WHERE 1=1 \ ";
+        SELECT *,ST_AsGeoJSON(geom)::json as geometry \
+        FROM " + table_name + " \
+        WHERE 1=1 \ "; // WHERE 1=1 permit to add "AND" filters next
 
 
 

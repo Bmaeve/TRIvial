@@ -1,23 +1,29 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 
 async function selectDistinct(table_name, column_name) {
+  /*
+  select distinct values of a column in a table
 
-    let features = []
+  table_name: name of the table
+  column_name: name of the column
+  */
 
-    //SQL request
-    var query = " \
+  let features = []
+
+  // SQL query
+  var query = " \
       SELECT DISTINCT " + column_name + " AS value \
       FROM " + table_name + " \
       ";
 
-    // send and retrieve data
-    let results = await pool.query(query)
+  // send and retrieve data
+  let results = await pool.query(query)
 
-    results.rows.forEach(element => {
-        features.push(element.value);
-    })
+  results.rows.forEach(element => {
+    features.push(element.value);
+  })
 
-    return features;
+  return features;
 }
 
 module.exports = selectDistinct;

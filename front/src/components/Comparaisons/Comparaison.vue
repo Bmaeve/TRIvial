@@ -61,6 +61,7 @@
             <option value="DEF">Defense</option>
             <option value="INDUS">Industrie</option>
             <option value="PATRIM">Patrimoine</option>
+            <option value="TRANS">Transport</option>
             <option value="ENS">Enseignement</option>
             <option value="SAN">Sante</option>
             <option value="AUTRE">Autre</option>
@@ -91,6 +92,7 @@
                         <td>{{ properties.nature }}</td>
                     </tr>
 
+
                 </template>
             </tbody>
         </table>
@@ -103,11 +105,12 @@
             <option value="DEF">Defense</option>
             <option value="INDUS">Industrie</option>
             <option value="PATRIM">Patrimoine</option>
+            <option value="TRANS">Transport</option>
             <option value="ENS">Enseignement</option>
             <option value="SAN">Sante</option>
             <option value="AUTRE">Autre</option>
         </select>
-        <table class="table table-dark table-striped">
+        <table class="table table-dark table-striped nowrap" id="com_table2">
 
             <!-- Feature properties table header -->
             <thead>
@@ -229,6 +232,8 @@ export default {
             ClonefeaturesIntersect2: [],
             disabledScn1: true,
             disabledScn2: true,
+            zoomdata1: [],
+            zoomdata2: [],
             infosStats: {
                 totalEleves1: 0,
                 elevesImpact1: 0,
@@ -284,6 +289,12 @@ export default {
         },
         getDisabled2() {
             return this.disabledScn2
+        },
+        getzoomdata1() {
+            return this.zoomdata1
+        },
+        getzoomdata2() {
+            return this.zoomdata2
         }
     },
     methods: {
@@ -355,10 +366,18 @@ export default {
                 const filt = this.featuresIntersect2.filter(el => { return el.enjeu == value })
                 this.featuresIntersect2 = filt
             }
+        },
+        changezoomdata1(data) {
+            this.zoomdata1 = data
+        },
+        changezoomdata2(data) {
+            this.zoomdata2 = data
         }
 
     },
     mounted() {
+
+        $('#com_table1').click(false)
 
         const filter1Val = $('#com_filter1')
         const filter2Val = $('#com_filter2')
@@ -447,8 +466,6 @@ export default {
         let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
         let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
 
-        console.log(IGN_MNT, WORLD_DTM)
-
         // defined in a json file.
         function addElevationLayerFromConfig(config, name) {
             config.source.name = name
@@ -509,11 +526,61 @@ export default {
 
         }
 
+
+        let addFeature = (data, table_name, views) => {
+            let source = new itowns.FileSource({
+                fetchedData: data,
+                crs: 'EPSG:2154',
+                format: 'application/json',
+            });
+
+            let newLayer = new itowns.FeatureGeometryLayer(table_name, {
+                // Use a FileSource to load a single file once
+                source: source,
+                opacity: 1,
+                style: new itowns.Style({
+                    fill: {
+                        color: new itowns.THREE.Color('#8220de'),
+                        base_altitude: setAltitude,
+                        extrusion_height: setExtrusions,
+                    }
+                })
+            });
+
+            function setExtrusions(properties) {
+
+                return properties.hauteur + 1;
+
+            }
+
+            function setAltitude(properties) {
+                return parseFloat(properties.z_median);
+            }
+
+            /*function setId(properties) {
+                if (!properties.id) {
+                    return properties.uuid;
+                }
+                else {
+                    return properties.id;
+                }
+
+            }*/
+
+            views.addLayer(newLayer)
+
+
+        }
+
         let counter = 0
         let counter2 = 0
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
         }
+
+        let oldFeat1 = 0;
+        let oldTableName
+        console.log(oldFeat1)
 
         $('.scen1').change((e) => {
             $('#com_Itowns1').click()
@@ -539,26 +606,132 @@ export default {
                 const layers = view.getLayers()
                 console.log(res)
                 const featuresIntersectList = []
+                const features = []
                 layers.forEach((el, index) => {
                     const lastindex = el.id.split('_').length - 1
                     if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen1[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList.push(ft.properties)
+                            features.push(ft)
                         })
                     }
 
                 })
                 this.changeFtIntersect(featuresIntersectList)
+                this.changezoomdata1(features)
+
+
+
+
+                let ficheFeatureclick = $('#com_table1 tbody')
+                ficheFeatureclick.click((e) => {
+                    const keySur = e.target.parentNode.cells['1'].firstChild.data
+                    const feature = this.getzoomdata1.filter(el => { return el.properties.id_bdtopo == keySur })
+                    const coodinates = feature[0].geometry.coordinates[0][0]
+                    const Xs = []
+                    const Ys = []
+                    coodinates.forEach(el => {
+                        Xs.push(el[0])
+                        Ys.push(el[1])
+                    })
+                    const getMin = (array) => {
+                        let val
+                        array.forEach((el, index) => {
+                            if (index == 0) {
+                                val = el
+                            } else {
+                                if (el < val) {
+                                    val = el
+                                }
+                            }
+
+
+                        })
+
+                        return val
+                    }
+
+                    const getMax = (array) => {
+                        let val
+                        array.forEach((el, index) => {
+                            if (index == 0) {
+                                val = el
+                            } else {
+                                if (el > val) {
+                                    val = el
+                                }
+                            }
+
+                        })
+
+                        return val
+                    }
+
+                    const Xmin = getMin(Xs)
+                    const Ymin = getMin(Ys)
+                    const Xmax = getMax(Xs)
+                    const Ymax = getMax(Ys)
+
+
+                    const Xmoy = (Xmin + Xmax) / 2
+                    const Ymoy = (Ymin + Ymax) / 2
+
+                    const act = []
+                    const time = 5000
+
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 400, time: time * 0.4 })
+
+                    function zoomFeature(views) {
+                        return itowns.CameraUtils
+                            .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, act);
+                    }
+
+                    zoomFeature(view).then(zoomFeature).catch(console.error)
+
+                    let tablename = feature[0].properties.enjeu.toLowerCase()
+
+                    if (tablename == 'trans') {
+                        tablename = 'trans_s'
+                    }
+
+                    //oldFeat1 = 'feat_' + tablename
+
+                    fetch('http://localhost:3000/dataFeature/' + tablename + '/' + keySur).then(res => res.json()).then(data => {
+
+                        view.getLayers().forEach((l) => {
+                            // if the table is updated, remove the previous layer 
+                            if ('feat_' + oldTableName + '_' + (oldFeat1 - 1).toString() == l.id) {
+                                view.removeLayer('feat_' + oldTableName + '_' + (oldFeat1 - 1).toString(), true);
+                            }
+                        })
+
+                        addFeature(data, 'feat_' + tablename + '_' + oldFeat1.toString(), view)
+
+                        oldTableName = tablename
+
+                        oldFeat1++
+
+                        //console.log(data, view.getLayers())
+                    })
+
+
+                })
 
                 counter++
+
             })
 
             const paramsScentest = { filters: getProxy(this.getScen1), columnFiltered: "scenario", color: '#66ACF6' };
 
             api2itowns.addLayerToView(view, "scenarios", paramsScentest);
 
+
+
         })
+
+
 
         // Listen for globe full initialisation event
         const time = 5000;
@@ -611,6 +784,10 @@ export default {
         addElevationLayerFromConfig2(IGN_MNT2, 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES1');
         addElevationLayerFromConfig2(WORLD_DTM2, 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM32');
 
+        let oldFeat2 = 0;
+        let oldTableName2
+
+
         $('.scen2').change((e) => {
             $('#com_Itowns2').click()
             const value = e.target.value
@@ -635,17 +812,113 @@ export default {
                 const layers = planarView.getLayers()
                 console.log(res)
                 const featuresIntersectList2 = []
+                const features2 = []
                 layers.forEach((el, index) => {
                     const lastindex = el.id.split('_').length - 1
                     if (index > 2 && el.id.split('_')[lastindex] == (counter + counter2).toString() && el.id != 'trans_l_flat' + '_' + (counter + counter2).toString()) {
                         const featuresInt = el.source.fetchedData.features.filter(el => { return el.properties['intersectwith_scenarios_' + this.getScen2[0].toLowerCase()] === true })
                         featuresInt.forEach(ft => {
                             featuresIntersectList2.push(ft.properties)
+                            features2.push(ft)
                         })
                     }
 
                 })
                 this.changeFtIntersect2(featuresIntersectList2)
+                this.changezoomdata2(features2)
+
+                let ficheFeatureclick2 = $('#com_table2 tbody')
+                ficheFeatureclick2.click((e) => {
+                    const keySur = e.target.parentNode.cells['1'].firstChild.data
+                    const feature = this.getzoomdata2.filter(el => { return el.properties.id_bdtopo == keySur })
+                    const coodinates = feature[0].geometry.coordinates[0][0]
+                    const Xs = []
+                    const Ys = []
+                    coodinates.forEach(el => {
+                        Xs.push(el[0])
+                        Ys.push(el[1])
+                    })
+                    const getMin = (array) => {
+                        let val
+                        array.forEach((el, index) => {
+                            if (index == 0) {
+                                val = el
+                            } else {
+                                if (el < val) {
+                                    val = el
+                                }
+                            }
+
+                        })
+
+                        return val
+                    }
+
+                    const getMax = (array) => {
+                        let val
+                        array.forEach((el, index) => {
+                            if (index == 0) {
+                                val = el
+                            } else {
+                                if (el > val) {
+                                    val = el
+                                }
+                            }
+
+                        })
+
+                        return val
+                    }
+
+                    const Xmin = getMin(Xs)
+                    const Ymin = getMin(Ys)
+                    const Xmax = getMax(Xs)
+                    const Ymax = getMax(Ys)
+
+
+                    const Xmoy = (Xmin + Xmax) / 2
+                    const Ymoy = (Ymin + Ymax) / 2
+
+                    const act = []
+                    const time = 5000
+
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 10000, tilt: 90, time: time * 0.6 });
+                    act.push({ coord: new itowns.Coordinates('EPSG:2154', Xmoy, Ymoy), range: 400, time: time * 0.4 })
+
+                    function zoomFeature(views) {
+                        return itowns.CameraUtils
+                            .sequenceAnimationsToLookAtTarget(views, views.camera.camera3D, act);
+                    }
+
+                    zoomFeature(planarView).then(zoomFeature).catch(console.error)
+                    let tablename2 = feature[0].properties.enjeu.toLowerCase()
+
+                    if (tablename2 == 'trans') {
+                        tablename2 = 'trans_s'
+                    }
+
+                    //oldFeat1 = 'feat_' + tablename
+
+                    fetch('http://localhost:3000/dataFeature/' + tablename2 + '/' + keySur).then(res => res.json()).then(data => {
+                        console.log(oldFeat2, 'feat_' + oldTableName2 + '_' + (oldFeat2 - 1).toString())
+                        planarView.getLayers().forEach((l) => {
+                            // if the table is updated, remove the previous layer 
+                            if ('feat_' + oldTableName2 + '_' + (oldFeat2 - 1).toString() == l.id) {
+                                planarView.removeLayer('feat_' + oldTableName2 + '_' + (oldFeat2 - 1).toString(), true);
+                            }
+                        })
+
+                        addFeature(data, 'feat_' + tablename2 + '_' + oldFeat2.toString(), planarView)
+
+                        oldTableName2 = tablename2
+
+                        oldFeat2++
+
+                        //console.log(data, view.getLayers())
+                    })
+
+
+                })
                 counter2++
 
             })
@@ -920,5 +1193,16 @@ export default {
 .com_filt {
     width: 30%;
 
+}
+
+#com_table1 tbody tr:hover {
+    cursor: pointer;
+    border: 2px solid #8220de;
+}
+
+
+#com_table2 tbody tr:hover {
+    cursor: pointer;
+    border: 2px solid #8220de;
 }
 </style>
