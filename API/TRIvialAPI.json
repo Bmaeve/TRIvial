@@ -423,6 +423,109 @@
           }
         }
       }
+    },
+    "/saveDownParams/saveData": {
+      "get": {
+        "tags": [
+          "importParams"
+        ],
+        "summary": "save the parameters given into a json file",
+        "description": "the parameters are given in a json passed in the body\n",
+        "operationId": "getParamsPostData",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "description": "name of the file to save"
+          },
+          {
+            "in": "header",
+            "name": "parameters",
+            "schema": {
+              "type": "object"
+            },
+            "description": "parameters to save in json format"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "status:true": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/saveDownParams/filenames": {
+      "get": {
+        "tags": [
+          "importParams"
+        ],
+        "summary": "returns every filenames present in parameters directory",
+        "operationId": "getParamsFilenames",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": [
+                    "santéTouchée",
+                    "scénarioFaible"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/saveDownParams/getData": {
+      "get": {
+        "tags": [
+          "importParams"
+        ],
+        "summary": "returns the parameters contained in the json file",
+        "description": "the filename is precised in a parameter ?filename=...",
+        "operationId": "getParamsGetData",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filename",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The filename"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Data"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
