@@ -13,10 +13,10 @@ function getTypesEnjeux() {
 
         //SQL request
         var query = " \
-        SELECT COLUMN_NAME, DATA_TYPE \
-        FROM INFORMATION_SCHEMA.COLUMNS \
-        WHERE TABLE_NAME = '" + enjeu + "' \
-        ";
+            SELECT COLUMN_NAME, DATA_TYPE \
+            FROM INFORMATION_SCHEMA.COLUMNS \
+            WHERE TABLE_NAME = '" + enjeu + "' \
+            ";
 
         try {
             for (let i = 0; i < enjeux[enjeu].columnsToKeep.length; i++) {
