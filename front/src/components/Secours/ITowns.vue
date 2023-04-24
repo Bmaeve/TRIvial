@@ -11,7 +11,7 @@
   </div>
   <div id="sec_map">
 
-    <div id="viewerDiv">
+    <div id="sec_viewerDiv">
     </div>
   </div>
 </template>
@@ -109,7 +109,7 @@ export default {
   },
   mounted() {
     // Retrieve the view container
-    const viewerDiv = document.getElementById('viewerDiv');
+    const viewerDiv = document.getElementById('sec_viewerDiv');
 
     // Define the view geographic extent
     proj4.defs(
@@ -191,7 +191,7 @@ export default {
   color: white;
 }
 
-#viewerDiv {
+#sec_viewerDiv {
   margin: auto;
   height: 100vh;
   width: 100%;
