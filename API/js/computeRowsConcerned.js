@@ -1,8 +1,18 @@
-const { query } = require('express');
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 let selectDistinct = require('./selectDistinct')
 
 async function computeRowsConcernedByScenario(table_name_enjeu, table_name_scenario, distinctScenarioColumn) {
+    /*
+    for the "enjeu" and the "scenario" selected, compute new columns which respresent the fact
+    that a feature in "enjeu" is concerned by the "scenario"
+    it use the postgis function ST_INTERSECTS in the query
+
+    table_name_enjeu: name of the "enjeu" table
+    table_name_scenario: name of the "scenario" table
+    distinctScenarioColumn: 
+        if undefined it will take every feature in scenario table and compute a single column
+        if a scenario is precised it will compute a new column for each distinct value in scenario table
+    */
 
     let promises = [];
     let newColumns = [];

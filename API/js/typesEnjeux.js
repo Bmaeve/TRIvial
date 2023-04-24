@@ -1,17 +1,22 @@
-let pool = require('../routes/poolPg');
+let pool = require('./poolPg');
 let enjeux = require('../parameters/enjeux.json')
 
-function typesEnjeux(result_array) {
+function getTypesEnjeux() {
+    /*
+    return every types of enjeux which are available
+    */
+
+    let result_array = [];
     let promises = [];
 
     Object.keys(enjeux).forEach((enjeu) => {
 
         //SQL request
         var query = " \
-        SELECT COLUMN_NAME, DATA_TYPE \
-        FROM INFORMATION_SCHEMA.COLUMNS \
-        WHERE TABLE_NAME = '" + enjeu + "' \
-        ";
+            SELECT COLUMN_NAME, DATA_TYPE \
+            FROM INFORMATION_SCHEMA.COLUMNS \
+            WHERE TABLE_NAME = '" + enjeu + "' \
+            ";
 
         try {
             for (let i = 0; i < enjeux[enjeu].columnsToKeep.length; i++) {
@@ -53,7 +58,11 @@ function typesEnjeux(result_array) {
         promises.push(enjeuPromise);
     })
 
-    return promises;
+    // returns promise
+    return Promise.all(promises)
+        .then(() => {
+            return result_array;
+        })
 }
 
-module.exports = typesEnjeux;
+module.exports = getTypesEnjeux;
