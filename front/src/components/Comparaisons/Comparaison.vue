@@ -22,6 +22,14 @@
                 Forte
             </label>
         </div>
+        <br>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="getdiff1" value="true"
+                :disabled="getDisabled1">
+            <label class="form-check-label" for="getdiff1">
+                Voir difference
+            </label>
+        </div>
         <span style="font-size: .7em;">Cliquez sur la carte pour activer</span>
     </div>
     <div id="com_scen2">
@@ -45,6 +53,14 @@
                 :disabled="getDisabled2">
             <label class="form-check-label" for="flexRadioDefault6">
                 Forte
+            </label>
+        </div>
+        <br>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="getdiff2" value="true"
+                :disabled="getDisabled2">
+            <label class="form-check-label" for="getdiff2">
+                Voir difference
             </label>
         </div>
         <span style="font-size: .7em;">Cliquez sur la carte pour activer</span>
@@ -574,6 +590,8 @@ export default {
 
         let counter = 0
         let counter2 = 0
+        let counter_1diff = 0
+        let counter_2diff = 0
         let getProxy = (data) => {
             return JSON.parse(JSON.stringify(data))
         }
@@ -726,84 +744,123 @@ export default {
 
 
                 })
-                let layersClone = [...view.getLayers()]
-                let enjeuxLayer = layersClone.filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+
+
 
                 let addDiffLayers = () => {
+                    let layersClone = [...view.getLayers()]
+                    let enjeuxLayer = layersClone.filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+                    view.getLayers().forEach((l) => {
+                        // if the table is updated, remove the previous layer 
+                        // if (('#' + index + counter - 1).toString() == l.id) {
+                        //     view.removeLayer(('#' + index + counter - 1).toString(), true);
+                        // }
+                        const lastindexsplit = l.id.split('_').length - 1
+
+                        if ((l.id.split('')[0]).toString() == '#' && l.id.split('_')[lastindexsplit].toString() == (counter_1diff - 1).toString()) {
+
+                            view.removeLayer(l.id, true)
+                        }
+
+                    })
+
+                    const getLevelScen = (scene) => {
+                        let level
+                        switch (scene) {
+                            case '01For':
+                                level = 0
+                                break
+                            case '02Moy':
+                                level = 1
+                                break
+                            case '04Fai':
+                                level = 2
+                                break
+                            default:
+                                level = null
+                        }
+
+                        return level
+                    }
+
+
+                    function setExtrusions(properties) {
+
+                        return properties.hauteur + 1;
+
+                    }
+
+                    function setAltitude(properties) {
+                        return parseFloat(properties.z_median);
+                    }
+
                     enjeuxLayer.forEach((lay, index) => {
-
-                        const getLevelScen = (scene) => {
-                            let level
-                            switch (scene) {
-                                case '01For':
-                                    level = 0
-                                    break
-                                case '02Moy':
-                                    level = 1
-                                    break
-                                case '04Fai':
-                                    level = 2
-                                    break
-                                default:
-                                    level = null
-                            }
-
-                            return level
-                        }
-                        view.getLayers().forEach((l) => {
-                            // if the table is updated, remove the previous layer 
-                            // if (('#' + index + counter - 1).toString() == l.id) {
-                            //     view.removeLayer(('#' + index + counter - 1).toString(), true);
-                            // }
-                            if (l.id.split('')[0] == '#' && l.id.split('')[2] == (counter - 1).toString()) {
-                                view.removeLayer(l.id)
-                            }
-                        })
-
-                        function setExtrusions(properties) {
-
-                            return properties.hauteur + 1;
-
-                        }
-
-                        function setAltitude(properties) {
-                            return parseFloat(properties.z_median);
-                        }
-                        console.log(getLevelScen(this.getScen1[0]), getLevelScen(this.getScen2[0]))
 
                         if (getLevelScen(this.getScen1[0]) < getLevelScen(this.getScen2[0])) {
                             let newfeature = lay.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] === true && el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] === false })
-                            console.log(newfeature)
+
                             lay.source.fetchedData.features = newfeature
                             lay.style.fill.color = new itowns.THREE.Color('#FF9900')
                             lay.style.fill.base_altitude = setAltitude
                             lay.style.fill.extrusion_height = setExtrusions
-
-
-
 
                             let source1 = new itowns.FileSource({
                                 fetchedData: lay.source.fetchedData,
                                 crs: 'EPSG:2154',
                                 format: 'application/json',
                             });
-                            let newLayerD1 = new itowns.FeatureGeometryLayer(('#' + index + counter).toString(), {
+                            let newLayerD1 = new itowns.FeatureGeometryLayer('#' + index + '_' + counter_1diff, {
                                 // Use a FileSource to load a single file once
                                 source: source1,
                                 opacity: 1,
                                 style: lay.style
                             })
                             view.addLayer(newLayerD1)
+
                         }
 
                     })
+
+                    counter_1diff++
+
                 }
 
-                try {
-                    addDiffLayers()
-                } catch (err) {
-                    console.log(err)
+
+
+                if ($('#getdiff1').is(":checked")) {
+                    try {
+                        setTimeout(() => {
+                            addDiffLayers()
+                        }, 5000)
+
+                    } catch (err) {
+                        console.log(err)
+                    }
+
+
+
+                } else {
+
+                    if (counter_1diff > 0) {
+                        view.getLayers().forEach((l) => {
+                            // if the table is updated, remove the previous layer 
+                            // if (('#' + index + counter - 1).toString() == l.id) {
+                            //     view.removeLayer(('#' + index + counter - 1).toString(), true);
+                            // }
+                            const lastindexsplit = l.id.split('_').length - 1
+
+                            if ((l.id.split('')[0]).toString() == '#' && l.id.split('_')[lastindexsplit].toString() == (counter_1diff - 1).toString()) {
+
+                                view.removeLayer(l.id, true)
+                            }
+
+                        })
+                    }
+
+                    console.log('diff no check')
                 }
+
+
 
 
                 counter++
@@ -1007,50 +1064,54 @@ export default {
 
 
                 })
-                let layersClone = [...planarView.getLayers()]
-                let enjeuxLayer = layersClone.filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+
+
+
                 let addDiffLayers = () => {
+                    let layersClone = [...planarView.getLayers()]
+                    let enjeuxLayer = layersClone.filter(el => { return el.isFeatureGeometryLayer === true }).filter(el => { return el.id.split('_')[2] != 'flat' })
+                    planarView.getLayers().forEach((l) => {
+                        // if the table is updated, remove the previous layer 
+                        // if (('#' + index + counter2 - 1).toString() == l.id) {
+                        //     planarView.removeLayer(('#' + index + counter2 - 1).toString(), true);
+                        // }
+                        const lastindexsplit = l.id.split('_').length - 1
+
+                        if ((l.id.split('')[0]).toString() == '#' && (l.id.split('_')[lastindexsplit]).toString() == (counter_2diff - 1).toString()) {
+                            planarView.removeLayer(l.id, true)
+                        }
+
+                    })
+                    const getLevelScen = (scene) => {
+                        let level
+                        switch (scene) {
+                            case '01For':
+                                level = 0
+                                break
+                            case '02Moy':
+                                level = 1
+                                break
+                            case '04Fai':
+                                level = 2
+                                break
+                            default:
+                                level = null
+
+                        }
+                        return level
+                    }
+
+
+
+                    function setExtrusions(properties) {
+                        return properties.hauteur + 1;
+                    }
+
+                    function setAltitude(properties) {
+                        return parseFloat(properties.z_median);
+                    }
                     enjeuxLayer.forEach((lay, index) => {
 
-                        const getLevelScen = (scene) => {
-                            let level
-                            switch (scene) {
-                                case '01For':
-                                    level = 0
-                                    break
-                                case '02Moy':
-                                    level = 1
-                                    break
-                                case '04Fai':
-                                    level = 2
-                                    break
-                                default:
-                                    level = null
-
-                            }
-                            return level
-                        }
-
-                        planarView.getLayers().forEach((l) => {
-                            // if the table is updated, remove the previous layer 
-                            // if (('#' + index + counter2 - 1).toString() == l.id) {
-                            //     planarView.removeLayer(('#' + index + counter2 - 1).toString(), true);
-                            // }
-                            if (l.id.split('')[0] == '#' && l.id.split('')[2] == (counter2 - 1).toString()) {
-                                planarView.removeLayer(l.id)
-                            }
-
-                        })
-
-                        function setExtrusions(properties) {
-                            return properties.hauteur + 1;
-                        }
-
-                        function setAltitude(properties) {
-                            return parseFloat(properties.z_median);
-                        }
-
-                        console.log(getLevelScen(this.getScen2[0]), getLevelScen(this.getScen1[0]))
                         if (getLevelScen(this.getScen2[0]) < getLevelScen(this.getScen1[0])) {
                             let newfeature = lay.source.fetchedData.features.filter(el => { return el.properties[`intersectwith_scenarios_${this.getScen1[0].toLowerCase()}`] === true && el.properties[`intersectwith_scenarios_${this.getScen2[0].toLowerCase()}`] === false })
 
@@ -1065,25 +1126,53 @@ export default {
                                 crs: 'EPSG:2154',
                                 format: 'application/json',
                             });
-                            let newLayerD2 = new itowns.FeatureGeometryLayer(('#' + index + counter2).toString(), {
+                            let newLayerD2 = new itowns.FeatureGeometryLayer(('#' + index + '_' + counter_2diff).toString(), {
                                 // Use a FileSource to load a single file once
                                 source: source2,
                                 opacity: 1,
                                 style: lay.style
                             })
                             planarView.addLayer(newLayerD2)
+
                         }
 
                     })
+
+                    counter_2diff++
                 }
 
-                try {
-                    addDiffLayers()
-                } catch (err) {
-                    console.log(err)
+
+
+                if ($('#getdiff2').is(":checked")) {
+                    try {
+                        setTimeout(() => {
+                            addDiffLayers()
+                        }, 5000)
+                    } catch (err) {
+                        console.log(err)
+                    }
+
+                } else {
+
+                    if (counter_2diff > 0) {
+                        planarView.getLayers().forEach((l) => {
+                            // if the table is updated, remove the previous layer 
+                            // if (('#' + index + counter2 - 1).toString() == l.id) {
+                            //     planarView.removeLayer(('#' + index + counter2 - 1).toString(), true);
+                            // }
+                            const lastindexsplit = l.id.split('_').length - 1
+
+                            if ((l.id.split('')[0]).toString() == '#' && (l.id.split('_')[lastindexsplit]).toString() == (counter_2diff - 1).toString()) {
+                                planarView.removeLayer(l.id, true)
+                            }
+
+                        })
+                    }
+
                 }
 
                 counter2++
+
                 console.log(counter2)
 
             })
@@ -1231,11 +1320,11 @@ export default {
 
 #com_scen1 {
     background-color: black;
-    opacity: 0.8;
+    opacity: 0.7;
     position: absolute;
     left: 2%;
     top: 5vh;
-    width: 10%;
+    width: 15%;
     z-index: 100;
     color: white;
     padding-left: 10px;
@@ -1243,11 +1332,11 @@ export default {
 
 #com_scen2 {
     background-color: black;
-    opacity: 0.8;
+    opacity: 0.7;
     position: absolute;
     right: 2%;
     top: 5vh;
-    width: 10%;
+    width: 15%;
     z-index: 100;
     color: white;
     padding-left: 10px;
