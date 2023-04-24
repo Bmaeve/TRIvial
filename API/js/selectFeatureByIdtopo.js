@@ -1,11 +1,21 @@
 let pool = require('../routes/poolPg');
 
-async function FeatureSelection(table_name, idTopo) {
+async function featureSelection(table_name, idTopo) {
+    /*
+    returns the single feature corresponding to the given id_bdtopo
+
+    table_name: name of the table
+    idTopo: value of the 'id_bdtopo' column
+    */
+
     let features = [];
 
     //SQL query
-    // WHERE 1=1 permit to add "AND" filters next
-    var query = "SELECT *,ST_AsGeoJSON(geom)::json as geometry FROM " + table_name + " WHERE id_bdtopo = '" + idTopo + "';";
+    var query = " \
+        SELECT *,ST_AsGeoJSON(geom)::json as geometry \
+        FROM " + table_name + " \
+        WHERE id_bdtopo = '" + idTopo + "'\
+        ;";
 
 
     // send and retrieve data
@@ -48,4 +58,4 @@ async function FeatureSelection(table_name, idTopo) {
 
 }
 
-module.exports = FeatureSelection;
+module.exports = featureSelection;

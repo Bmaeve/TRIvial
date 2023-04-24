@@ -1,7 +1,12 @@
 let pool = require('../routes/poolPg');
 let enjeux = require('../parameters/enjeux.json')
 
-function typesEnjeux(result_array) {
+function getTypesEnjeux() {
+    /*
+    return every types of enjeux which are available
+    */
+
+    let result_array = [];
     let promises = [];
 
     Object.keys(enjeux).forEach((enjeu) => {
@@ -53,7 +58,11 @@ function typesEnjeux(result_array) {
         promises.push(enjeuPromise);
     })
 
-    return promises;
+    // returns promise
+    return Promise.all(promises)
+        .then(() => {
+            return result_array;
+        })
 }
 
-module.exports = typesEnjeux;
+module.exports = getTypesEnjeux;

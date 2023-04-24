@@ -8,17 +8,15 @@ specifics to enjeux relative table
 
 let enjeux = require('../parameters/enjeux.json');
 let dataSelection = require('../js/dataSelection');
-let typesEnjeux = require('../js/typesEnjeux');
+let getTypesEnjeux = require('../js/typesEnjeux');
 let computeRowsConcernedByScenario = require('../js/computeRowsConcerned');
 
 /* returns types of enjeu */
 /* GET  request */
 router.get('/getTypesEnjeux', function (req, res, next) {
-  let result_array = []
-  let promises = typesEnjeux(result_array);
-  Promise.all(promises)
-    .then(() => {
-      res.status(200).jsonp(result_array) // api response
+  getTypesEnjeux()
+    .then((result) => {
+      res.status(200).jsonp(result) // api response
     })
     .catch((error) => {
       console.log("error in promise : " + error);
