@@ -15,8 +15,7 @@
         <p id="explications"> Maintenez le clic 1s sur un bâtiment</p>
         <!-- Itineraire calcul container -->
         <div class="sec_itin">
-
-            <ul>
+            <ul v-if="store.displayIti">
                 <li v-for="etape in liste_etapes" :key="etape.seq">
                     <p v-if="etape.rue_g != null">Parcourir {{ Math.round(etape.distance) }} m sur {{ etape.rue_g }}</p>
                     <p v-else-if="etape.rue_d != null">Parcourir {{ Math.round(etape.distance) }} m sur {{ etape.rue_d }}
