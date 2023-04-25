@@ -2,6 +2,7 @@
     <!-- Feature information block -->
     <div class="sec_info_enjeux">
         <span>Informations</span>
+        <p id="explications"> Cliquez sur un bâtiment</p>
         <!-- Feature information table block -->
         <div class="sec_info_enjeux_table" id="info_sec">
             <!-- Feature information table -->
@@ -11,14 +12,16 @@
     <!-- Itineraire calcul block -->
     <div class="sec_calcul_itin">
         <span>Itineraire</span>
-        <p id="explications"> Double-cliquez sur un bâtiment</p>
+        <p id="explications"> Maintenez le clic 1s sur un bâtiment</p>
         <!-- Itineraire calcul container -->
         <div class="sec_itin">
-
-            <ul>
+            <ul v-if="store.displayIti">
                 <li v-for="etape in liste_etapes" :key="etape.seq">
-                    Parcourir {{ Math.round(etape.distance) }} m sur {{ etape.rue_g }}
-                    <span id="inondation" v-if="etape.concerned == true">Attention route inondée !</span>
+                    <p v-if="etape.rue_g != null">Parcourir {{ Math.round(etape.distance) }} m sur {{ etape.rue_g }}</p>
+                    <p v-else-if="etape.rue_d != null">Parcourir {{ Math.round(etape.distance) }} m sur {{ etape.rue_d }}
+                    </p>
+                    <p v-else>Parcourir {{ Math.round(etape.distance) }} m</p>
+                    <p id="inondation" v-if="etape.concerned == true">==> Attention route inondée !</p>
                 </li>
             </ul>
         </div>
@@ -83,7 +86,7 @@ export default {
 /* Feature information table block*/
 .sec_info_enjeux_table {
     overflow-y: auto;
-    height: 25vh;
+    height: 20vh;
 }
 
 /* Itineraire calcul block */
