@@ -11,7 +11,7 @@
     <!-- Itineraire calcul block -->
     <div class="sec_calcul_itin">
         <span>Itineraire</span>
-        <p id="explications"> Double-cliquez sur un bâtiment</p>
+        <p id="explications"> Maintenez le clic 1s sur un bâtiment</p>
         <!-- Itineraire calcul container -->
         <div class="sec_itin">
 

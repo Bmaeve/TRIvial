@@ -180,7 +180,15 @@ let api2itowns = {
                 view.getLayers().forEach(layer => {
                     if (!["scenarios", "atmosphere", "DEM", "Ortho", "globe"].includes(layer.id) && !layer.id.includes("trans_l")) {
                         map.addEventListener('click', (e) => { picking(e, layer.id, where, view) }, true);
-                        map.addEventListener('dblclick', (e) => { itineraire(e, layer.id, where, view, data, parameters.concernedByScenario) }, true);
+                        map.addEventListener('mousedown', () => {
+                            let date1 = new Date();
+                            map.onmouseup = function (e) {
+                                let date2 = new Date();
+                                if (date2 - date1 > 800) {
+                                    itineraire(e, layer.id, where, view, data, parameters.concernedByScenario)
+                                }
+                            }
+                        })
                     }
                 })
 
@@ -334,6 +342,7 @@ function picking(event, layer, where, view) {
 }
 
 async function itineraire(event, layer, where, view, data, scenario) {
+    console.log("a")
     if (view.controls.isPaused) {
         //Trouver l'itinéraire
         let table;
@@ -418,20 +427,20 @@ async function itineraire(event, layer, where, view, data, scenario) {
 
                     };
                     console.log(index)
-                    try {
-                        let to_remove = [];
-                        view.getLayers().forEach(layer => {
-                            if (layer.id.includes('trans_l_flat')) {
-                                to_remove.push(layer.id);
-                            }
-                        })
-                        // view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
-                        to_remove.forEach(id => {
-                            view.removeLayer(id, true);
-                        })
-                    } catch (e) {
-                        //console.log(e)
-                    }
+                    // try {
+                    //     let to_remove = [];
+                    //     view.getLayers().forEach(layer => {
+                    //         if (layer.id.includes('trans_l_flat')) {
+                    //             to_remove.push(layer.id);
+                    //         }
+                    //     })
+                    //     view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
+                    //     to_remove.forEach(id => {
+                    //         view.removeLayer(id, true);
+                    //     })
+                    // } catch (e) {
+                    //     console.log(e)
+                    // }
 
                     api2itowns.addLayerToView(view, "trans_l_flat", parameters, where = "sec");
 
