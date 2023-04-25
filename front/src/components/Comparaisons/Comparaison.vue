@@ -33,7 +33,7 @@
             <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="getdiff1" value="true"
                 :disabled="getDisabled1">
             <label class="form-check-label" for="getdiff1">
-                Voir difference
+                Voir différence
             </label>
         </div>
         <span style="font-size: .7em;">Cliquez sur la carte pour activer</span>
@@ -71,7 +71,7 @@
             <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="getdiff2" value="true"
                 :disabled="getDisabled2">
             <label class="form-check-label" for="getdiff2">
-                Voir difference
+                Voir différence
             </label>
         </div>
         <span style="font-size: .7em;">Cliquez sur la carte pour activer</span>

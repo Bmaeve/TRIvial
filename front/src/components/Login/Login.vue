@@ -8,7 +8,7 @@
                     <h3>Analyse</h3>
                 </a></button>
             <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Comparaisons">
-                    <h3>Comparaisons</h3>
+                    <h3>Comparaison</h3>
                 </a></button>
             <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Secours">
                     <h3>Secours</h3>

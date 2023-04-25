@@ -9,7 +9,7 @@
             </li>
 
             <li class="MultiRangeSliderContainer">
-                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Hauteur de bâtiment</span>
+                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Hauteur des bâtiments</span>
                 <MultiRangeSlider baseClassName="multi-range-slider" :min="0" :max="300" :step="20" :ruler="true"
                     :label="true" :minValue="barMinValue" :maxValue="barMaxValue" @input="UpdateValues" />
                 <span style="float:left;font-size: 0.8em;">Min:{{ barMinValue }}</span> <span
