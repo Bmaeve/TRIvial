@@ -1,4 +1,4 @@
-**Rapport d'Utilisation - Projet de Fin d'Etudes - TRIvial**    
+**Rapport d'Utilisation - Projet de Fin d'Etudes - TRIvial** 
 =======
 Etudiant·e·s en Master 2/troisième année d'Ingénieur·e, spécialité **Technologies des Systèmes d'Information (TSI)**, à l'ENSG-Géomatique.
 
