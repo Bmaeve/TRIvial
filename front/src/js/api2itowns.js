@@ -180,19 +180,21 @@ let api2itowns = {
                 view.getLayers().forEach(layer => {
                     if (!["scenarios", "atmosphere", "DEM", "Ortho", "globe"].includes(layer.id) && !layer.id.includes("trans_l")) {
                         map.addEventListener('click', (e) => { picking(e, layer.id, where, view) }, true);
-                        //map.addEventListener('dblclick', (e) => { itineraire(e, layer.id, where, view, data, parameters.concernedByScenario) }, true)
-                        map.addEventListener('mousedown', () => {
-                            let date1 = new Date();
-                            map.onmouseup = function (e) {
-                                let date2 = new Date();
-                                if (date2 - date1 > 800) {
-                                    itineraire(e, layer.id, where, view, data, parameters.concernedByScenario)
+                        if (where == "sec" && !layer.id.includes('def')) {
+
+                            //map.addEventListener('dblclick', (e) => { itineraire(e, layer.id, where, view, data, parameters.concernedByScenario) }, true)
+                            map.addEventListener('mousedown', () => {
+                                let date1 = new Date();
+                                map.onmouseup = function (e) {
+                                    let date2 = new Date();
+                                    if (date2 - date1 > 800) {
+                                        itineraire(e, layer.id, where, view, data, parameters.concernedByScenario)
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
                     }
                 })
-
 
             })
         return promise;
@@ -213,6 +215,9 @@ let api2itowns = {
         })
         try {
             view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
+            if (where == "sec") {
+                view.removeLayer('def_' + (index['def']).toString(), true);
+            }
         } catch (e) {
             console.log(e)
         }
@@ -370,7 +375,6 @@ async function itineraire(event, layer, where, view, data, scenario) {
                         method: 'post'
                     })
                     let enj = await enj_promise.json();
-                    console.log(enj)
                     store.arrivee = enj;
                     //Coordinates of the "enjeu" we clicked on
                     let long_enj = enj.features[0].geometry.coordinates[0][0][0][0];
@@ -395,6 +399,9 @@ async function itineraire(event, layer, where, view, data, scenario) {
                         method: 'post'
                     })
                     let caserne = await caserne_promise.json();
+                    //Displaying the closest fire House
+                    let parameters_cas = { filters: [caserne.id.toString()], columnFiltered: "id", color: "purple", concernedByScenario: scenario }
+                    api2itowns.addLayerToView(view, "def", parameters_cas, where = "sec");
                     store.depart = caserne;
                     //Closest Fire House's coordinates
                     let long_caserne = caserne.geometry.coordinates[0][0][0][0];
