@@ -200,7 +200,6 @@ let api2itowns = {
 
     addEnjeuxToView(view, parameters, where = "an") {
         let promises = [];
-
         // removing useless layers
         Object.keys(last_parameters).forEach((last_table) => {
             if (!Object.keys(parameters).includes(last_table)) {
@@ -212,7 +211,11 @@ let api2itowns = {
                 }
             }
         })
-
+        try {
+            view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
+        } catch (e) {
+            console.log(e)
+        }
         // adding layers
         Object.keys(parameters).forEach((new_table) => {
             // check parameters are different with the last request, else nothing to do
