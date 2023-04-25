@@ -333,8 +333,7 @@ function picking(event, layer, where, view) {
 
 }
 
-function itineraire(event, layer, where, view, data, scenario) {
-
+async function itineraire(event, layer, where, view, data, scenario) {
     if (view.controls.isPaused) {
         //Trouver l'itinéraire
         let table;
@@ -351,102 +350,91 @@ function itineraire(event, layer, where, view, data, scenario) {
                     let id_vertex_enjeu;
                     let id_vertex_caserne;
                     let params = { id: batchId };
-                    fetch(host + 'data/' + table + '/selectData', {
+                    let enj_promise = await fetch(host + 'data/' + table + '/selectData', {
                         body: JSON.stringify(params),
                         headers: { 'Content-Type': 'application/json' },
                         method: 'post'
                     })
-                        .then(res => res.json())
-                        .then(enj => {
-                            store.arrivee = enj;
-                            //Coordonnées de l'enjeu sur lequel on a cliqué
-                            let long_enj = enj.features[0].geometry.coordinates[0][0][0][0];
-                            let lat_enj = enj.features[0].geometry.coordinates[0][0][0][1];
-                            //Aller chercher les coordonnées du vertex le plus proche de l'enjeu
-                            let params2 = { long: long_enj, lat: lat_enj };
-                            fetch(host + 'routing/getNearestVertex', {
-                                body: JSON.stringify(params2),
-                                headers: { 'Content-Type': 'application/json' },
-                                method: 'post'
-                            })
-                                .then(res => res.json())
-                                .then(vertex_enj => {
-                                    //Enregistrer l'id du morceau de route le plus proche
-                                    // de l'enjeu sélectionné
-                                    id_vertex_enjeu = vertex_enj.id;
-                                })
-
-                            //Aller chercher la caserne de pompiers la plus proche
-                            let params3 = { geometry: enj.features[0].geometry, scenario: scenario.toLowerCase() };
-                            fetch(host + 'data/getClosestFireHouse', {
-                                body: JSON.stringify(params3),
-                                headers: { 'Content-Type': 'application/json' },
-                                method: 'post'
-                            })
-                                .then(res => res.json())
-                                .then(caserne => {
-                                    store.depart = caserne;
-                                    //Coordonnées de la caserne la plus proche de l'enjeu
-                                    // sur lequel on a cliqué
-                                    let long_caserne = caserne.geometry.coordinates[0][0][0][0];
-                                    let lat_caserne = caserne.geometry.coordinates[0][0][0][1];
-                                    let params4 = { long: long_caserne, lat: lat_caserne };
-                                    fetch(host + 'routing/getNearestVertex', {
-                                        body: JSON.stringify(params4),
-                                        headers: { 'Content-Type': 'application/json' },
-                                        method: 'post'
-                                    })
-                                        .then(res => res.json())
-                                        .then(vertex_cas => {
-                                            //Enregistrer l'id du morceau de route le plus proche
-                                            // de la caserne
-                                            id_vertex_caserne = vertex_cas.id;
-
-                                            //Trouver le chemin le plus court entre les deux vertex trouvés
-                                            //On suppose que la source est la caserne et que la cible est l'enjeu
-                                            let params5 = { source: id_vertex_caserne, target: id_vertex_enjeu, scenario: scenario.toLowerCase() };
-                                            fetch(host + 'routing/getShortestPath', {
-                                                body: JSON.stringify(params5),
-                                                headers: { 'Content-Type': 'application/json' },
-                                                method: 'post'
-                                            })
-                                                .then(res => res.json())
-                                                .then(iti => {
-                                                    //Trier dans l'ordre l'itinéraire
-                                                    iti.sort(sorter('seq'));
-                                                    store.itineraire = iti;
-                                                    let ids = [];
-                                                    iti.forEach(route => {
-                                                        ids.push(route.id.toString());
-                                                    });
-                                                    let parameters = {
-                                                        filters: ids, columnFiltered: "uuid", color: "yellow", concernedByScenario: scenario
-
-                                                    };
-
-                                                    try {
-                                                        let to_remove = [];
-                                                        view.getLayers().forEach(layer => {
-                                                            if (layer.id.includes('trans_l_flat')) {
-                                                                to_remove.push(layer.id);
-                                                            }
-                                                        })
-                                                        // view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
-                                                        to_remove.forEach(id => {
-                                                            view.removeLayer(id, true);
-                                                        })
-                                                    } catch (e) {
-                                                        //console.log(e)
-                                                    }
-
-                                                    api2itowns.addLayerToView(view, "trans_l_flat", parameters, where = "sec");
-                                                })
-                                        })
-                                })
+                    let enj = await enj_promise.json();
+                    store.arrivee = enj;
+                    //Coordonnées de l'enjeu sur lequel on a cliqué
+                    let long_enj = enj.features[0].geometry.coordinates[0][0][0][0];
+                    let lat_enj = enj.features[0].geometry.coordinates[0][0][0][1];
+                    //Aller chercher les coordonnées du vertex le plus proche de l'enjeu
+                    let params2 = { long: long_enj, lat: lat_enj };
+                    let vertex_promise = await fetch(host + 'routing/getNearestVertex', {
+                        body: JSON.stringify(params2),
+                        headers: { 'Content-Type': 'application/json' },
+                        method: 'post'
+                    })
+                    let vertex_enj = await vertex_promise.json();
+                    //Enregistrer l'id du morceau de route le plus proche
+                    // de l'enjeu sélectionné
+                    id_vertex_enjeu = vertex_enj.id;
 
 
+                    //Aller chercher la caserne de pompiers la plus proche
+                    let params3 = { geometry: enj.features[0].geometry, scenario: scenario.toLowerCase() };
+                    let caserne_promise = await fetch(host + 'data/getClosestFireHouse', {
+                        body: JSON.stringify(params3),
+                        headers: { 'Content-Type': 'application/json' },
+                        method: 'post'
+                    })
+                    let caserne = await caserne_promise.json();
+                    store.depart = caserne;
+                    //Coordonnées de la caserne la plus proche de l'enjeu
+                    // sur lequel on a cliqué
+                    let long_caserne = caserne.geometry.coordinates[0][0][0][0];
+                    let lat_caserne = caserne.geometry.coordinates[0][0][0][1];
+                    let params4 = { long: long_caserne, lat: lat_caserne };
+                    let vertex_cas_promise = await fetch(host + 'routing/getNearestVertex', {
+                        body: JSON.stringify(params4),
+                        headers: { 'Content-Type': 'application/json' },
+                        method: 'post'
+                    })
+                    let vertex_cas = await vertex_cas_promise.json();
+                    //Enregistrer l'id du morceau de route le plus proche
+                    // de la caserne
+                    id_vertex_caserne = vertex_cas.id;
 
+                    //Trouver le chemin le plus court entre les deux vertex trouvés
+                    //On suppose que la source est la caserne et que la cible est l'enjeu
+                    let params5 = { source: id_vertex_caserne, target: id_vertex_enjeu, scenario: scenario.toLowerCase() };
+                    let iti_promise = await fetch(host + 'routing/getShortestPath', {
+                        body: JSON.stringify(params5),
+                        headers: { 'Content-Type': 'application/json' },
+                        method: 'post'
+                    })
+                    let iti = await iti_promise.json();
+                    //Trier dans l'ordre l'itinéraire
+                    iti.sort(sorter('seq'));
+                    store.itineraire = iti;
+                    let ids = [];
+                    iti.forEach(route => {
+                        ids.push(route.id.toString());
+                    });
+                    let parameters = {
+                        filters: ids, columnFiltered: "uuid", color: "yellow", concernedByScenario: scenario
+
+                    };
+                    console.log(index)
+                    try {
+                        let to_remove = [];
+                        view.getLayers().forEach(layer => {
+                            if (layer.id.includes('trans_l_flat')) {
+                                to_remove.push(layer.id);
+                            }
                         })
+                        // view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
+                        to_remove.forEach(id => {
+                            view.removeLayer(id, true);
+                        })
+                    } catch (e) {
+                        //console.log(e)
+                    }
+
+                    api2itowns.addLayerToView(view, "trans_l_flat", parameters, where = "sec");
+
                 }
             }
         } catch (error) {
