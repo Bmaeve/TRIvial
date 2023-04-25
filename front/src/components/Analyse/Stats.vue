@@ -125,7 +125,8 @@ export default {
     },
     methods: {
         btnEnregistrer() {
-            if (confirm("Voulez-vous enregistrer cette vue (sélection de paramètres) ?")) {
+            if (confirm("Voulez-vous enregistrer cette vue (sélection de paramètres) ? \
+            Afin d'utiliser le calcul d'itinéraire de manière optimale, nous conseillons de n'enregistrer que la couche des enjeux vers lequels vous voulez connaître les itinéraires !")) {
                 let fileName = prompt('Nommez votre fichier : ', "parameters");
 
                 let params = accessParams.getParams();

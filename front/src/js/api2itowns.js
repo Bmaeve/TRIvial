@@ -351,7 +351,6 @@ function picking(event, layer, where, view) {
 }
 
 async function itineraire(event, layer, where, view, data, scenario) {
-    console.log("a")
     if (view.controls.isPaused) {
         //Finding itinerary
         let table;
@@ -361,7 +360,6 @@ async function itineraire(event, layer, where, view, data, scenario) {
             }
         })
         let intersects = view.pickFeaturesAt(event, 3, layer);
-        console.log(intersects)
         try {
             if (intersects[layer].length !== 0) {
                 let batchId = intersects[layer][0].object.geometry.attributes.batchId.array[intersects[layer][0].face.a];
