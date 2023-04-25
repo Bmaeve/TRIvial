@@ -180,6 +180,7 @@ let api2itowns = {
                 view.getLayers().forEach(layer => {
                     if (!["scenarios", "atmosphere", "DEM", "Ortho", "globe"].includes(layer.id) && !layer.id.includes("trans_l")) {
                         map.addEventListener('click', (e) => { picking(e, layer.id, where, view) }, true);
+                        //map.addEventListener('dblclick', (e) => { itineraire(e, layer.id, where, view, data, parameters.concernedByScenario) }, true)
                         map.addEventListener('mousedown', () => {
                             let date1 = new Date();
                             map.onmouseup = function (e) {
@@ -344,7 +345,7 @@ function picking(event, layer, where, view) {
 async function itineraire(event, layer, where, view, data, scenario) {
     console.log("a")
     if (view.controls.isPaused) {
-        //Trouver l'itinéraire
+        //Finding itinerary
         let table;
         enjeux.forEach(enjeu => {
             if (layer.includes(enjeu)) {
@@ -352,6 +353,7 @@ async function itineraire(event, layer, where, view, data, scenario) {
             }
         })
         let intersects = view.pickFeaturesAt(event, 3, layer);
+        console.log(intersects)
         try {
             if (intersects[layer].length !== 0) {
                 let batchId = intersects[layer][0].object.geometry.attributes.batchId.array[intersects[layer][0].face.a];
@@ -365,11 +367,12 @@ async function itineraire(event, layer, where, view, data, scenario) {
                         method: 'post'
                     })
                     let enj = await enj_promise.json();
+                    console.log(enj)
                     store.arrivee = enj;
-                    //Coordonnées de l'enjeu sur lequel on a cliqué
+                    //Coordinates of the "enjeu" we clicked on
                     let long_enj = enj.features[0].geometry.coordinates[0][0][0][0];
                     let lat_enj = enj.features[0].geometry.coordinates[0][0][0][1];
-                    //Aller chercher les coordonnées du vertex le plus proche de l'enjeu
+                    //Getting the closest vertex's coordinates
                     let params2 = { long: long_enj, lat: lat_enj };
                     let vertex_promise = await fetch(host + 'routing/getNearestVertex', {
                         body: JSON.stringify(params2),
@@ -377,12 +380,11 @@ async function itineraire(event, layer, where, view, data, scenario) {
                         method: 'post'
                     })
                     let vertex_enj = await vertex_promise.json();
-                    //Enregistrer l'id du morceau de route le plus proche
-                    // de l'enjeu sélectionné
+                    //Registering the id of the vertex
                     id_vertex_enjeu = vertex_enj.id;
 
 
-                    //Aller chercher la caserne de pompiers la plus proche
+                    //Getting the closest fire house
                     let params3 = { geometry: enj.features[0].geometry, scenario: scenario.toLowerCase() };
                     let caserne_promise = await fetch(host + 'data/getClosestFireHouse', {
                         body: JSON.stringify(params3),
@@ -391,8 +393,7 @@ async function itineraire(event, layer, where, view, data, scenario) {
                     })
                     let caserne = await caserne_promise.json();
                     store.depart = caserne;
-                    //Coordonnées de la caserne la plus proche de l'enjeu
-                    // sur lequel on a cliqué
+                    //Closest Fire House's coordinates
                     let long_caserne = caserne.geometry.coordinates[0][0][0][0];
                     let lat_caserne = caserne.geometry.coordinates[0][0][0][1];
                     let params4 = { long: long_caserne, lat: lat_caserne };
@@ -402,12 +403,11 @@ async function itineraire(event, layer, where, view, data, scenario) {
                         method: 'post'
                     })
                     let vertex_cas = await vertex_cas_promise.json();
-                    //Enregistrer l'id du morceau de route le plus proche
-                    // de la caserne
+                    //Registering the id of the vertex
                     id_vertex_caserne = vertex_cas.id;
 
-                    //Trouver le chemin le plus court entre les deux vertex trouvés
-                    //On suppose que la source est la caserne et que la cible est l'enjeu
+                    //Finding shortest path between the two vertices
+                    //We suppose the source is the fire house and the target is the "enjeu" we clicked on
                     let params5 = { source: id_vertex_caserne, target: id_vertex_enjeu, scenario: scenario.toLowerCase() };
                     let iti_promise = await fetch(host + 'routing/getShortestPath', {
                         body: JSON.stringify(params5),
@@ -415,7 +415,7 @@ async function itineraire(event, layer, where, view, data, scenario) {
                         method: 'post'
                     })
                     let iti = await iti_promise.json();
-                    //Trier dans l'ordre l'itinéraire
+                    //Sorting itinerary steps
                     iti.sort(sorter('seq'));
                     store.itineraire = iti;
                     let ids = [];
