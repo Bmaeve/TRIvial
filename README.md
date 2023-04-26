@@ -94,8 +94,7 @@ Database: open_data
 
 ### Accès à l'application
 >* http://localhost:8080/  
-
-Une visualisation plus élaborée est disponible dans la branche *realisationMaquetteAnalayse*.  
+ 
 L'ajout des données est nécéssaire à la bonne visualisation de l'application (cf ci-après).
 
 
