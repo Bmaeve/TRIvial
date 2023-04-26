@@ -1,4 +1,4 @@
-//Premier test, juste pour tester le framework
+//API testing
 
 var assert = require('assert');
 let chai = require('chai');

@@ -4,7 +4,7 @@ var router = express.Router();
 let nearestVertex = require('../js/nearestVertexView')
 let shortestPath = require('../js/shortestPathView')
 
-
+/* Find nearest route portion to a point*/
 /* POST Resquest */
 router.post('/getNearestVertex', function (req, res) {
     let body = req.body;
@@ -16,6 +16,7 @@ router.post('/getNearestVertex', function (req, res) {
         })
 });
 
+/* Find shortest itienrary between two points*/
 /* POST Resquest */
 router.post('/getShortestPath', function (req, res) {
     let body = req.body;

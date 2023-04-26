@@ -1,5 +1,13 @@
 let pool = require('./poolPg');
 
+/**
+ * Get the shortest path between the building we clicked on and the closest fire house
+ * @param {integer} source 
+ * @param {integer} target 
+ * @param {string} scenario 
+ * @returns the steps of the itinerary found 
+ */
+
 async function shortestPathView(source, target, scenario) {
     //SQL request
     let query = "SELECT a.id, a.distance, a.seq, a.name, a.type, a.geom, f.nom_rue_g AS rue_g, f.nom_rue_d AS rue_d,f.intersectwith_scenarios_" + scenario + " AS concerned FROM (SELECT min(r.seq) AS seq, e.old_id AS id, e.name, e.type, \
