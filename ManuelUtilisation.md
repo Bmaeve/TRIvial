@@ -1,11 +1,11 @@
-**Rapport d'Utilisation - Projet de Fin d'Etudes - TRIvial** 
+**Manuel d'Utilisation - Projet de Fin d'Etudes - TRIvial** 
 =======
 Etudiant·e·s en Master 2/troisième année d'Ingénieur·e, spécialité **Technologies des Systèmes d'Information (TSI)**, à l'ENSG-Géomatique.
 
 *Ce rapport ou tutoriel d'utilisation est un fichier contenant des informations sur l'utilisation de notre preuve de concep, les autres fichiers du même répertoire et le contenu du rendu de notre projet.*
 
 ## Table des matières
-1. [Deploiement](#Deploiement)
+1. [Déploiement](#Déploiement)
 2. [Informations](#Informations)
 3. [Description](#Description)
 4. [Pré-requis](#Pré-requis)
@@ -40,7 +40,7 @@ Ce projet a été réalisé dans le cadre du module Projet de Fin d'Etudes de la
 + Office ;
 + Overleaf ;
 + phpPgAdmin ;
-+ Visual Studio Code and/or Atom.
++ Visual Studio Code.
 #### **Données utilisées** :
 Nous utilisons des données TRI ouvertes sur la ville de Paris (75), des données de recoupements provenant de diverses sources (site SEVEZO, données MENJVA, données FINESS BD TOPO, etc. (découvertes lors du Benchmarking)).
 #### **Récupération du projet** :
