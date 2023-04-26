@@ -47,7 +47,7 @@ Créer une couche, via QGIS (Menu Vecteur, Outils de Gestion de données, Fusion
 - Lancer le traitement FME (bouton RUN) ;
 - Le dossier output doit alors comprendre le fichier shapefile suivant (fichiers de données sur les scénarios) : *SCENARIOS.shp*.
 
-On obtient ainsi les tables nécéssaires à la création de la Base des Données.
+On obtient ainsi les tables nécessaires à la création de la Base des Données.
 ***
 
 
