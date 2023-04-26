@@ -89,8 +89,8 @@ Password: postgresql
 Database: open_data
 ```
 
-### Accès à l'API
->* http://localhost:3000/
+### Accès à la documentation de l'API
+>* http://localhost:3000/doc/
 
 ### Accès à l'application
 >* http://localhost:8080/  
