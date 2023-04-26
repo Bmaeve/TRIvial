@@ -1,22 +1,15 @@
-
-
+<!-- Menu buttons to redirect towards the different parts of the application -->
 <template>
     <div class="sec_log">
         <h3 class="title">MENU</h3>
         <div class="button_box">
-        <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Analyse">
-                    <!-- <img src="../../assets/analytique.png"
-                                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
+            <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Analyse">
                     <h3>Analyse</h3>
                 </a></button>
-        <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Comparaisons">
-                    <!-- <img src="../../assets/un-camion.png"
-                                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
-                    <h3>Comparaisons</h3>
+            <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Comparaisons">
+                    <h3>Comparaison</h3>
                 </a></button>
-        <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Secours">
-                    <!-- <img src="../../assets/comparaison.png"
-                                                                                                                                                                                                                                                                                                                width="150" height="150" /> -->
+            <button class="btn btn-outline-secondary" type="button"><a href="/TRIvial/Secours">
                     <h3>Secours</h3>
                 </a></button>
         </div>
@@ -58,7 +51,6 @@ export default {
     left: 35%;
     top: 20vh;
     width: 30%;
-    /* height: 30vh; */
     color: white;
     display: flex;
     flex-direction: column;

@@ -45,6 +45,7 @@ router.get('/:table/selectData', function (req, res) {
     })
 });
 
+/* every row is returned with its geometry and features in geojson format */
 /* POST Resquest */
 router.post('/getClosestFireHouse', function (req, res) {
   let body = req.body;

@@ -1,4 +1,5 @@
 <template>
+    <!-- Html code to display statistics -->
     <div id="an_stats" class=" bg-dark">
         <div class="card" id="card1">
             <div class="card-body" v-if="infosScenario.proba != ''">
@@ -84,6 +85,7 @@ export default {
         }
     },
     mounted() {
+        //Retrieving statistics' informations when the button is clicked on
         let bouton_valider = document.getElementById("validate");
         bouton_valider.addEventListener("click", () => {
             this.infosPop.totalEleves = null;
@@ -124,8 +126,10 @@ export default {
 
     },
     methods: {
+        //Function to register a view in json format
         btnEnregistrer() {
-            if (confirm("Voulez-vous enregistrer cette vue (sélection de paramètres) ?")) {
+            if (confirm("Voulez-vous enregistrer cette vue (sélection de paramètres) ? \
+            Afin d'utiliser le calcul d'itinéraire de manière optimale, nous conseillons de n'enregistrer que la couche des enjeux vers lequels vous voulez connaître les itinéraires !")) {
                 let fileName = prompt('Nommez votre fichier : ', "parameters");
 
                 let params = accessParams.getParams();
@@ -166,7 +170,6 @@ export default {
     right: 0.5%;
     bottom: 2vh;
     margin: auto;
-    /* width: 15%; */
 }
 
 #an_bouton2 button {

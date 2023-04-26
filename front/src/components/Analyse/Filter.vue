@@ -1,22 +1,22 @@
 <template>
     <div id="form" class="an_select_form">
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-
+            <!-- Scenario cursor -->
             <li class="nav-item">
                 <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Scénario</span>
                 <input v-model="rangeValue" type="range" class="form-range" min="1" max="3" step="1" id="rangeScenario">
                 <span>{{ rangeValueText }}</span>
             </li>
-
+            <!-- Building's height cursor -->
             <li class="MultiRangeSliderContainer">
-                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Hauteur de bâtiment</span>
+                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Hauteur des bâtiments</span>
                 <MultiRangeSlider baseClassName="multi-range-slider" :min="0" :max="300" :step="20" :ruler="true"
                     :label="true" :minValue="barMinValue" :maxValue="barMaxValue" @input="UpdateValues" />
                 <span style="float:left;font-size: 0.8em;">Min:{{ barMinValue }}</span> <span
                     style="float:right;font-size: 0.8em;">Max:{{ barMaxValue }}</span>
             </li>
             <li class="nav-item">
-
+                <!-- Checkboxes for "enjeu" and "type_enjeu" -->
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Enjeux</span>
                 <div>
                     <div :id="enjeu.id_parent" class="form-check enjeuxContainer" v-for="enjeu in enjeux" :key="enjeu.id"
@@ -43,6 +43,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Validation button to reload the Itowns view -->
                     <div class="validateContainer">
                         <button class="btn btn-success" id="validate" v-on:click="btnValidate" type="submit"
                             :disabled="btnIsDisabled">Valider</button>
@@ -111,6 +112,7 @@ export default {
         let new_enjeux = [];
 
         let types = [];
+        //Building the different types of arrays needed to make selections
         fetch("http://localhost:3000/enjeux/getTypesEnjeux")
             .then((res) => {
                 return res.json()

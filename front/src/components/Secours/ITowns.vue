@@ -7,7 +7,6 @@
     <viewImport @import="importScenario" />
 
     <SectionInfo />
-    <!-- :featureInfoData="featureInfo" :key="componentKey" -->
   </div>
   <div id="sec_map">
 
@@ -146,18 +145,6 @@ export default {
     const layerOrtho = new ColorLayer('Ortho', { source: orthoSource });
     view.addLayer(layerOrtho);
 
-    // // Define the source of the dem data
-    // var elevationSource = new WMTSSource({
-    //   url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-    //   crs: 'EPSG:4326',
-    //   name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.SRTM3',
-    //   tileMatrixSet: 'WGS84G',
-    //   format: 'image/x-bil;bits=32',
-    //   zoom: { min: 3, max: 10 }
-    // });
-    // // Create the dem ElevationLayer and add it to the view
-    // const layerDEM = new ElevationLayer('DEM', { source: elevationSource });
-    // view.addLayer(layerDEM);
 
     // Define the source of the dem data
     let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')

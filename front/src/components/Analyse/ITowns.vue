@@ -62,6 +62,7 @@ export default {
     onScenarioChanged(value) {
       this.scenarioId = value;
     },
+    //Function to execute when the validate button is clicked ons
     onValidate(params) {
       let promises = []
 
@@ -138,8 +139,6 @@ export default {
     let IGN_MNT = require('../DEMConfig/IGN_MNT_HIGHRES.json')
     let WORLD_DTM = require('../DEMConfig/WORLD_DTM.json')
 
-    console.log(IGN_MNT, WORLD_DTM)
-
     // defined in a json file.
     function addElevationLayerFromConfig(config) {
       config.source = new WMTSSource(config.source);
@@ -180,7 +179,6 @@ export default {
 
 /* Feature information table block*/
 .an_info_enjeux_table {
-  /* overflow-y: auto; */
   margin-top: 2%;
   height: 40vh;
 }

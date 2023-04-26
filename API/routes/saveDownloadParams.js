@@ -63,9 +63,6 @@ router.get('/filenames', function (req, res) {
 router.get('/getData', function (req, res) {
     let data = [];
     let paramsPath = path.join(store_directory, req.query.filename + ".json")
-    console.log(paramsPath)
-
-    //console.log(path)
     if (fs.existsSync(paramsPath)) {
         data.push(JSON.parse(fs.readFileSync(paramsPath)));
     } else {
