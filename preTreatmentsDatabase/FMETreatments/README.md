@@ -8,13 +8,6 @@ Etudiant·e·s en Master 2/troisième année d'Ingénieur·e, spécialité **Tec
 *Ces explications concernent les traitements des données de la ville de Paris. Elles sont normalement applicables à des données relatives à d'autres départements modulo quelques changements.*
 
 ## Table des matières
-1. [Préparation-Linux](#Préparation-de-Linux)
-2. [Installation-de-Docker](#Installation-de-Docker)
-3. [Lancement-de-Docker](#Lancement-de-Docker)
-4. [Accès-aux-différents-services](#Accès-aux-différents-services)
-5. [Import-des-données](#Import-des-données)
-
-## Table des matières
 1. [Mise-en-place-de-l-arborescence-du-pré-traitements](#Mise-en-place-de-l-arborescence-du-pré-traitements)
 2. [Traitements-via-QGIS](#Traitements-via-QGIS)
 3. [Traitements-via-FME](#Traitements-via-FME)
@@ -22,7 +15,7 @@ Etudiant·e·s en Master 2/troisième année d'Ingénieur·e, spécialité **Tec
 # Mise en place de l arborescence du pré-traitements
 Importer le dossier compressé *FMETreatments.zip* se trouvant dans le dossier *preTreatmentsDatabase/FMETreatments*.
 Extraire le dossier *FMETreatments* et se placer à la racine de ce dossier.
-Se placer à la racine du dossier *input* et ajouter les données suivantes importées (l'exemple ci desous reprend la situation pour le TRI de Paris) :
+Se placer à la racine du dossier *input* et ajouter les données suivantes importées (l'exemple ci dessous reprend la situation pour le TRI de Paris) :
 - tri_2020_sig_di_75 : [Données TRI](https://www.georisques.gouv.fr/donnees/bases-de-donnees/zonages-inondation-rapportage-2020) (contient tous les shapefile des données TRI) ;  
 - BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14 : [BD Topo de la ville de Paris concerné](https://wxs.ign.fr/859x8t863h6a09o9o6fy4v60/telechargement/inspire/BDTOPO-TOUSTHEMES-2008-09-14$BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14/file/BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14.7z), la version dépend des données TRI.
 
