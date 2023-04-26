@@ -83,7 +83,7 @@ Database: open_data
 ### Accès à la Base de données par Qgis
 ```
 Host: localhost
-Port: 5432
+Port: 5434
 Username: postgres
 Password: postgresql
 Database: open_data
