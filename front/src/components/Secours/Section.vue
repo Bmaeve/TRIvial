@@ -34,8 +34,6 @@
     </div>
     <div id="sec_bouton2">
         <a href="/TRIvial"> <button class="btn btn-outline-success">
-                <!-- <img src="../../assets/menu(1).png" width="50"
-                    height="50" /> -->
                 MENU
             </button></a>
     </div>
@@ -65,8 +63,6 @@ export default {
 </script>
 
 <style>
-/* Section */
-
 /* Section title */
 .sec_info_title {
     padding: 5px;
@@ -89,7 +85,6 @@ export default {
     height: 20vh;
 }
 
-/* Itineraire calcul block */
 
 
 /* Itineraire calcul container */

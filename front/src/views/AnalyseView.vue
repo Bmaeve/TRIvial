@@ -13,13 +13,11 @@
 <script>
 // @ is an alias to /src
 import ITowns from '@/components/Analyse/ITowns.vue';
-//import Selection from '@/components/Analyse/Selection.vue';
 import Stats from '@/components/Analyse/Stats.vue'
 
 export default {
   name: 'TRIVialView',
   components: {
-    //Selection,
     ITowns,
     Stats
   }, mounted() {

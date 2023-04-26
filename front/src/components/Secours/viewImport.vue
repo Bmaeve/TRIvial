@@ -4,7 +4,6 @@
         <span>Importer une vue enregistrée</span>
         <!-- Decision view select list -->
         <select class="form-select" size="3" aria-label="size 3 select example">
-            <!--<option v-for="item in plans" :value="item.id" :key="item.id">{{ item.title }}</option>-->
         </select>
         <br>
         <!-- Decision view import button -->
@@ -34,6 +33,7 @@ export default {
             store
         }
     }, mounted() {
+        //Displaying the list of files available 
         fetch('http://localhost:3000/saveDownParams/filenames')
             .then(res => res.json())
             .then(r => {
@@ -46,6 +46,7 @@ export default {
                 }
             })
     }, methods: {
+        //What to do when clicking on the "Importer" button
         btnImporter() {
             let items = document.getElementsByClassName("form-select")[0].children;
             let bool = true;

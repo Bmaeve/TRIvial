@@ -1,5 +1,12 @@
 let pool = require('./poolPg');
 
+/**
+ * Gives the nearest vertex from where we clicked
+ * @param {float} long 
+ * @param {float} lat 
+ * @returns the nearest vertex (route portion) from where we clicked
+ */
+
 async function nearestVertexView(long, lat) {
 
     //SQL request
