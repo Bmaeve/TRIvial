@@ -2,18 +2,24 @@
 =======
 Etudiant·e·s en Master 2/troisième année d'Ingénieur·e, spécialité **Technologies des Systèmes d'Information (TSI)**, à l'ENSG-Géomatique.
 
-*Ce README est un fichier contenant les informations sur le traitement FME appliqué aux données.*
+*Ce README est un fichier contenant les informations sur les traitements FME appliqué aux données.*
 
 **Avant-propos**  
-*Ces explications concernent le traitement des données de la ville de Paris. Elles sont normalement applicables à des données relatives à d'autres départements modulo quelques changements.*
+*Ces explications concernent les traitements des données de la ville de Paris. Elles sont normalement applicables à des données relatives à d'autres départements modulo quelques changements.*
 
+## Table des matières
+1. [Préparation-Linux](#Préparation-de-Linux)
+2. [Installation-de-Docker](#Installation-de-Docker)
+3. [Lancement-de-Docker](#Lancement-de-Docker)
+4. [Accès-aux-différents-services](#Accès-aux-différents-services)
+5. [Import-des-données](#Import-des-données)
 
 ## Table des matières
 1. [Mise-en-place-de-l-arborescence-du-pré-traitements](#Mise-en-place-de-l-arborescence-du-pré-traitements)
-2. [Pré-traitements-à-l-aide-QGIS](#Pré-traitements-à-l-aide-QGIS)
-3. [Traitement-à-l-aide-de-FME](#Traitement-à-l-aide-de-FME)
+2. [Traitements-via-QGIS](#Traitements-via-QGIS)
+3. [Traitements-via-FME](#Traitements-via-FME)
 
-# Mise en place de l'arborescence du pré-traitement
+# Mise en place de l arborescence du pré-traitements
 Importer le dossier compressé *FMETreatments.zip* se trouvant dans le dossier *preTreatmentsDatabase/FMETreatments*.
 Extraire le dossier *FMETreatments* et se placer à la racine de ce dossier.
 Se placer à la racine du dossier *input* et ajouter les données suivantes importées (l'exemple ci desous reprend la situation pour le TRI de Paris) :
@@ -31,12 +37,12 @@ Dans ce même dossier *intput*, créer un dossier DataSAN, se placer à sa racin
 Créer un dossier *output* pour les fichiers de sortie créés par FME.
 ***
 
-# Pré-traitements à l'aide QGIS
+# Traitements via QGIS
 Avant d'implémenter les traitements via FME, il est important de réaliser des pré-traitements en utilisant le logiciel QGIS.
 Créer une couche, via QGIS (Menu Vecteur, Outils de Gestion de données, Fusionner des couches vecteur). Cette couche fusionne les couches de la BD Topo suivantes : PISTE_AERODROME, TERRAIN_SPORT, RESERVOIR, CONSTRUCTION_SURFACIQUE, CIMETIERE, BATI_REMARQUABLE, BATI_INDUSTRIL, BATI_INDIFFERENCIE (tous les fichiers du dossier *input/BDTOPO_2-0_TOUSTHEMES_SHP_LAMB93_D075_2008-09-14/BDTOPO/1_DONNEES_LIVRAISON_2019-05-00233/BDT_2-0_SHP_LAMB93_D075-ED083/E_BATI* sauf CONSTRUCTION_LINEAIRE et CONSTRUCTION_PONCTUELLE). Importer, dans le dossier *input/dataCreated* existant, la couche fusionnée au format shapefile sous le nom *BATIS.shp*.
 ***
 
-# Traitement à l'aide de FME
+# Traitements via FME
 #### Création des données Enjeux :
 - Ouvrir le fichier FME *traitement_Enjeux.fmw* ;
 - Lancer le traitement FME (bouton RUN) ;
