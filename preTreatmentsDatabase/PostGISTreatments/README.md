@@ -43,7 +43,7 @@ On obtient ainsi automatiquement une table des données TRI enrichies par la BD 
 ***
 
 # Améliorations
-Pour intégrer la Base de Données produite par ce script dans l'application TRIvial, il est nécéssaire de développer ces nouvelles features :
+Pour intégrer la Base de Données produite par ce script dans l'application TRIvial, il est nécessaire de développer ces nouvelles features :
 
 - Création des Bases de Données automatisée ;
 - Jointure de la Base de Données avec d'autres sources (notamment menjva et finess déjà importées), ou possibilité de réaliser ces jointures "à la volée" dans l'application ;
