@@ -3,7 +3,7 @@ import AnalyseView from '../views/AnalyseView.vue'
 import LoginView from '../views/LoginView.vue'
 import SecoursView from '../views/SecoursView.vue'
 import ComparaisonView from '../views/ComparaisonView.vue'
-
+//The different routes of the application
 const routes = [
   {
     path: '/TRIvial/Analyse',

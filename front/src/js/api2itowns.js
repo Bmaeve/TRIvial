@@ -5,96 +5,21 @@ import { toWgs84 } from "reproject";
 
 let epsg = require('epsg');
 
-//Fonction pour trier la séquence dans l'ordre
+//Callback function to sort the itinerary sequences
 const sorter = (sortBy) => (a, b) => a[sortBy] > b[sortBy] ? 1 : -1;
 
 //import the store
 import { store } from '../components/Store.js'
 
-//let counter = 0
 
 let index = {}
 let last_parameters = {}
 let enjeux = ["admin", "def", "ens", "indus", "trans_s", "trans_l_noded", "san", "autre", "patrim"];
-let cleanProperties = (keys) => {
-    let value = '';
-    switch (keys) {
-        case 'Detail_enjeu':
-            value = 'Detail enjeu';
-            break;
-        case 'Nature_u00':
-            value = 'Nature';
-            break;
-        case 'Patronyme_':
-            value = 'Patronyme';
-            break;
-        case 'Code_posta':
-            value = 'Code postal';
-            break;
-        case 'Et_etabli0':
-            value = 'Etablissement';
-            break;
-        case 'Libbelle_ac':
-            value = 'Libelle ac';
-            break;
-        case 'Date_ouver':
-            value = "Date d'ouverture";
-            break;
-        case 'Rs':
-            value = 'Raison sociale';
-            break;
-        case 'Rslongue':
-            value = 'Raison sociale longue';
-            break;
-        case 'Numvoie':
-            value = 'Numero de voie';
-            break;
-        case 'Typvoie':
-            value = 'Type de voie';
-            break;
-        case 'Codepostal':
-            value = 'Code postal';
-            break;
-        case 'Libcatgre':
-            value = 'Categorie etablissement';
-            break;
-        case 'Libcodeape':
-            value = 'Code APE';
-            break;
-        case 'Liblongmft':
-            value = 'Code MFT longue';
-            break;
-        case 'Dateouvert':
-            value = "Date d'ouverture";
-            break;
-        case 'Datemaj':
-            value = 'Date mise a jour';
-            break;
-        case 'Cl_admin':
-            value = 'Classe Admin';
-            break;
-        case 'It_europ':
-            value = 'It europe';
-            break;
-        case 'Nb_voies':
-            value = 'Nbr voies';
-            break;
-        case 'Inseecom_d':
-            value = 'Inseecom';
-            break;
-        case 'Liblongcat':
-            value = 'Categorie';
-            break;
-
-        default:
-            value = keys;
-    }
-
-    return value
-}
 
 
+//The module to be exported to be able to display the right layers
 let api2itowns = {
+    //Function to add one layer to the Itowns view according to parameters
     async addLayerToView(view, table_name, parameters = {}, where = "an") {
         let color;
         if (parameters.color == undefined) {
@@ -104,13 +29,14 @@ let api2itowns = {
         } else {
             color = parameters.color
         }
-
+        //Incrementing the layer name because iTowns doesn't accept a new layer that has
+        //an old layer's name
         if (index[table_name] == undefined) {
             index[table_name] = 0
         } else {
             index[table_name]++
         }
-
+        //Calling our API with the given parameters
         let promise = fetch(host + 'data/' + table_name + '/selectData', {
             body: JSON.stringify(parameters),
             headers: { 'Content-Type': 'application/json' },
@@ -123,7 +49,7 @@ let api2itowns = {
                     'EPSG:2154',
                     '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
                 );
-
+                //Building a particular layer if it is a "scenario" layer
                 if (table_name == "scenarios") {
                     let source2 = new FileSource({
                         fetchedData: toWgs84(data, undefined, epsg), // reprojecting data for color layer
@@ -141,6 +67,7 @@ let api2itowns = {
                         }),
                     });
                 } else {
+                    //Else it is the same type of layer for every other "enjeu"
                     let source = new FileSource({
                         fetchedData: data,
                         crs: 'EPSG:2154',
@@ -162,6 +89,7 @@ let api2itowns = {
                         })
                     });
                 }
+                //Fetching the right div in the code
                 let map;
                 if (where == "an") {
                     map = document.getElementById('viewerDiv');
@@ -181,8 +109,6 @@ let api2itowns = {
                     if (!["scenarios", "atmosphere", "DEM", "Ortho", "globe"].includes(layer.id) && !layer.id.includes("trans_l")) {
                         map.addEventListener('click', (e) => { picking(e, layer.id, where, view) }, true);
                         if (where == "sec" && !layer.id.includes('def')) {
-
-                            //map.addEventListener('dblclick', (e) => { itineraire(e, layer.id, where, view, data, parameters.concernedByScenario) }, true)
                             map.addEventListener('mousedown', () => {
                                 let date1 = new Date();
                                 map.onmouseup = function (e) {
@@ -200,6 +126,7 @@ let api2itowns = {
         return promise;
     },
 
+    //Adding every "enjeu" selected in the panel to the view
     addEnjeuxToView(view, parameters, where = "an") {
         let promises = [];
         // removing useless layers
@@ -213,9 +140,10 @@ let api2itowns = {
                 }
             }
         })
+        //Trying to delete the itinerary in the "Secours" part 
         try {
-            view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
             if (where == "sec") {
+                view.removeLayer('trans_l_flat_' + (index['trans_l_flat']).toString(), true);
                 view.removeLayer('def_' + (index['def']).toString(), true);
                 store.displayIti = false;
                 htmlInfo.innerHTML = "";
@@ -236,7 +164,7 @@ let api2itowns = {
         last_parameters = parameters
         return (Promise.all(promises))
     },
-
+    //Displaying the impacted features in red to highlight them
     displayConcernedFeatures(enjeu, scenario, concerned_color = "red", not_concerned_color = "green") {
         let promise = fetch(host + "enjeux/" + enjeu + '/scenarios/computeConcernedRows?distinctScenario=scenario', {
             method: 'put'
@@ -260,17 +188,16 @@ let api2itowns = {
     }
 
 }
-
+//Calculate extrusion height
 function setExtrusions(properties) {
-
     return properties.hauteur;
-
 }
-
+//Calculate altitude height
 function setAltitude(properties) {
     return parseFloat(properties.z_median);
 }
 
+//Function to set the batch id 
 function setId(properties) {
     if (!properties.id) {
         return properties.uuid;
@@ -280,6 +207,7 @@ function setId(properties) {
     }
 
 }
+//Function to load the differents informations on the clicked feature
 let htmlInfo;
 function picking(event, layer, where, view) {
     if (view.controls.isPaused) {
@@ -287,12 +215,13 @@ function picking(event, layer, where, view) {
         let properties;
         let batchId;
         let info;
-
+        //Getting the right div 
         if (where == "an") {
             htmlInfo = document.getElementById('info');
         } else if (where == "sec") {
             htmlInfo = document.getElementById('info_sec');
         }
+        //Filling the table
         try {
             if (intersects[layer].length !== 0) {
                 htmlInfo.innerHTML = '';
@@ -351,7 +280,7 @@ function picking(event, layer, where, view) {
     }
 
 }
-
+//Function to compute an itinerary to the enjeu we clicked on from the closest fire house
 async function itineraire(event, layer, where, view, data, scenario) {
     if (view.controls.isPaused) {
         //Finding itinerary
@@ -446,6 +375,83 @@ async function itineraire(event, layer, where, view, data, scenario) {
             console.log(error)
         }
     }
+}
+//Clean names for "enjeu" properties
+let cleanProperties = (keys) => {
+    let value = '';
+    switch (keys) {
+        case 'Detail_enjeu':
+            value = 'Detail enjeu';
+            break;
+        case 'Nature_u00':
+            value = 'Nature';
+            break;
+        case 'Patronyme_':
+            value = 'Patronyme';
+            break;
+        case 'Code_posta':
+            value = 'Code postal';
+            break;
+        case 'Et_etabli0':
+            value = 'Etablissement';
+            break;
+        case 'Libbelle_ac':
+            value = 'Libelle ac';
+            break;
+        case 'Date_ouver':
+            value = "Date d'ouverture";
+            break;
+        case 'Rs':
+            value = 'Raison sociale';
+            break;
+        case 'Rslongue':
+            value = 'Raison sociale longue';
+            break;
+        case 'Numvoie':
+            value = 'Numero de voie';
+            break;
+        case 'Typvoie':
+            value = 'Type de voie';
+            break;
+        case 'Codepostal':
+            value = 'Code postal';
+            break;
+        case 'Libcatgre':
+            value = 'Categorie etablissement';
+            break;
+        case 'Libcodeape':
+            value = 'Code APE';
+            break;
+        case 'Liblongmft':
+            value = 'Code MFT longue';
+            break;
+        case 'Dateouvert':
+            value = "Date d'ouverture";
+            break;
+        case 'Datemaj':
+            value = 'Date mise a jour';
+            break;
+        case 'Cl_admin':
+            value = 'Classe Admin';
+            break;
+        case 'It_europ':
+            value = 'It europe';
+            break;
+        case 'Nb_voies':
+            value = 'Nbr voies';
+            break;
+        case 'Inseecom_d':
+            value = 'Inseecom';
+            break;
+        case 'Liblongcat':
+            value = 'Categorie';
+            break;
+
+        default:
+            value = keys;
+    }
+
+    return value
 }
 
 export default api2itowns;

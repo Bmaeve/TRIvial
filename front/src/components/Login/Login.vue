@@ -1,5 +1,4 @@
-
-
+<!-- Menu buttons to redirect towards the different parts of the application -->
 <template>
     <div class="sec_log">
         <h3 class="title">MENU</h3>

@@ -7,7 +7,6 @@
 <script>
 // @ is an alias to /src
 import ITowns from '@/components/Secours/ITowns.vue'
-//import SectionInfo from '@/components/Secours/Section.vue'
 
 export default {
   name: 'SecoursView',

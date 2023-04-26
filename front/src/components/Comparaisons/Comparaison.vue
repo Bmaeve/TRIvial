@@ -173,6 +173,7 @@
             </tbody>
         </table>
     </div>
+    <!-- Statistics container -->
     <div id="com_stats1">
         <div v-if="getScen1Text != undefined">
             <div id="messageAlter" class="com_stats_title"><span>Statistiques en cas de crue de {{ getScen1Text }}</span>
@@ -229,7 +230,7 @@
 // import itowns module
 import * as itowns from "../../../node_modules/itowns/dist/itowns";
 // import itowns api
-import api2itowns from './api2itowns2.js'
+import api2itowns from './api2comparaison.js'
 import api2stats from '../../js/api2stats'
 // import left scene component
 import Scene1 from '@/components/Comparaisons/Scene1.vue'
@@ -386,6 +387,7 @@ export default {
                 $('#com_btn_stats')[0].disabled = false;
             }
         },
+        // show or hide the statistics panel
         changeStatsTitle() {
             if (this.title_stats == 'Voir les statistiques') {
                 this.title_stats = 'Masquer les statistiques'
