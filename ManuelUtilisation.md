@@ -21,9 +21,9 @@ Se rendre sur le [Tutoriel d'Installation](https://github.com/Bmaeve/TRIvial/blo
 Notre preuve de concept TRIvial : [http://localhost:8080/TRIvial](http://localhost:8080/TRIvial). C'est le menu principal de redirection figure \ref{menu}. 
 ![adding menu](./images/menu.png)  
 
-L'application est divisée en trois pages :
+**L'application est divisée en trois pages :**
 
-## La page Analyse
+### La page Analyse
 Elle permet à l'utilisateur de visualiser et d'analyser les scénarios et leurs enjeux ainsi que de prendre des décisions lors de la gestion d'une crise liée à une inondation. Une carte 2D/3D s'affiche avec une partie à gauche comprenant trois onglets de sélection :
 - Scénario : permet de choisir le scénario d'aléa à afficher, il peut être de probabilité faible, moyenne ou forte. Ces choix sont générés automatiquement à partir des scénarios disponibles dans la Base de Données ;
 - Hauteur des bâtiments : Filtre les bâtiments selon leur hauteur ;
@@ -32,16 +32,17 @@ Elle permet à l'utilisateur de visualiser et d'analyser les scénarios et leurs
 Lors de la validation, les données sélectionnées par les filtres sont affichées sur la carte. Les enjeux touchés par le scénario concerné s'affichent en rouge. La sélection (clic) d'un objet sur la carte (bâtiment, etc.) fait afficher les informations de ce dernier dans l'onglet *Informations*. Les statistiques affichées en bas de la page concernent les enjeux Enseignement et Santé, ells présentent quelle proportion des enjeux a été touchée, avec le nombre de personnes concernées. Le bouton *Enregistrer* la vue permet d'enregistrer, dans un fichier json, les filtres de sélection des données (le scénario, la hauteur des bâtiments et les enjeux, ainsi que leur couleur). 
 ![adding analyse](./images/analyse.png)  
 
-## La page Secours
+### La page Secours
 Elle permet aux secouristes de visualiser une vue enregistrée par un utilisateur de la partie Analyse. Ils peuvent alors choisir l'itinéraire à prendre pour secourir un enjeu sélectionné. Une carte 2D/3D s'affiche avec une partie à gauche comprenant un onglet de sélection *Importer une vue enregistrée*, un affichage d'informations *Informations*, un affichage des étapes d'un itinéraire *Itinéraire* et un bouton *Menu* sont affichés au bas de l'écran. L'utilisateur a la possibilité de sélectionner une vue enregistrée précédemment via la page Analyse. De même que sur la page Analyse, lorsqu'il sélectionne (clique) sur un objet sur la carte (bâtiment, etc.), les informations de ce dernier s'affichent dans l'onglet *Informations*.  
 
 Lorsque l'utilisateur effectue un clic-long (d'une seconde), un itinéraire est calculé et s'affiche entre l'objet sélectionné et la caserne de pompiers la plus proche. L'itinéraire choisi est représenté en jaune, il passe cependant par des routes inondées, alors représentées en rouge. La prise en compte du réseau touché par le scénario représente une amélioration future.
 ![adding secours](./images/secours.png)  
 
-## La page Comparaisons
+### La page Comparaisons
 Elle permet aux utilisateurs de comparer et d'analyser des scénarios. Cette page est composée :
 - de deux cartes 2D effectuant les mêmes mouvements de caméra en parallèle. Pour chacune d'elle la sélection d'un scénario permet d'afficher en rouge les bâtiments touchés par ce scénario et en blanc le reste des bâtiments ;
 - des boutons *Voir les informations*, *Voir les statistiques et *Menu*.
+
 L'utilisateur a la possibilité de cliquer sur le bouton *Voir les informations* et de sélectionner une catégorie de bâtiments (dans la barre de choix) ou un bâtiment (dans la table) pour obtenir des informations. En cliquant sur un enjeu dans la liste qui s'affiche, un zoom s'effectue sur celui-ci. Puis, il peut cliquer sur le bouton *Masquer les informations*. De la même manière, l'utilisateur a la possibilité de cliquer sur le bouton *Voir les statistiques* pour afficher les statistiques des scénarios. Lorsque l'utilisateur clique sur le bouton *Voir différence* d'un côté ou de l'autre (dans le scénario à droite ou à gauche), les bâtiments touchés sur un seul des deux scénarios sont affichés en orange.
 ![adding comparaisons](./images/comparaisons.png)  
 ***
