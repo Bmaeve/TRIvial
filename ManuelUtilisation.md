@@ -142,8 +142,7 @@ Vous trouverez ci-dessous une liste de tous les fichiers, documents et sous-doss
 + Un fichier *docker-compose.yml* permettant d'orchester les conteneurs du Docker et ses images (ensemble des ressources et services nécessaires à la réalisation de la solution) ;
 + Un dossier **preTreatmentsDatabase/PostGIStreatments** contenant le module permettant le calcul des tables de la BDD (version incomplète, non-intégrée au projet) ;
 + Un dossier **livrables** contenant les livrables attendus :
-    + Un fichier *PFE-TRIvial_analysis-report-Emma-Boris-Baptiste-Maeve.pdf* : le rapport d'analyse ; 
-    + Un fichier *PFE-TRIvial_demo-Emma-Boris-Baptiste-Maeve.mp4* : la vidéo de démonstration de la preuve de concep TRIvial.
+    + Un fichier *PFE-TRIvial_rapport-analyse-Emma-Boris-Baptiste-Maeve.pdf* : le rapport d'analyse.
 ***
 
 
